@@ -74,7 +74,7 @@ fun FabricsRoute(
       },
   ) { innerPadding ->
     val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-    if (uiState.isInitialLoading) {
+    if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
           stringResource(R.string.device_fabrics_loading),
           modifier = modifierWithInnerPadding,
@@ -99,13 +99,13 @@ private fun FabricsScreen(
     modifier: Modifier = Modifier,
 ) {
   PullToRefreshBox(
-      isRefreshing = uiState.isRefreshing,
+      isRefreshing = uiState.isBackgroundRefreshing,
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
     when {
-      uiState.errorRes != null -> {
-        ErrorMessage(stringResource(uiState.errorRes))
+      uiState.errorMessageRes != null -> {
+        ErrorMessage(stringResource(uiState.errorMessageRes))
       }
       uiState.fabrics.isEmpty() -> {
         EmptyState(stringResource(R.string.device_fabrics_empty))

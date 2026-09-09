@@ -60,7 +60,7 @@ fun DiagnosticsRoute(
       },
   ) { innerPadding ->
     val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-    if (uiState.isInitialLoading) {
+    if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
           stringResource(R.string.device_diagnostics_loading),
           modifier = modifierWithInnerPadding,
@@ -83,12 +83,12 @@ private fun DiagnosticsScreen(
     modifier: Modifier = Modifier,
 ) {
   PullToRefreshBox(
-      isRefreshing = uiState.isRefreshing,
+      isRefreshing = uiState.isBackgroundRefreshing,
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
-    if (uiState.errorRes != null) {
-      Text(stringResource(uiState.errorRes), color = MaterialTheme.colorScheme.error)
+    if (uiState.errorMessageRes != null) {
+      Text(stringResource(uiState.errorMessageRes), color = MaterialTheme.colorScheme.error)
     }
     Column(
         modifier =

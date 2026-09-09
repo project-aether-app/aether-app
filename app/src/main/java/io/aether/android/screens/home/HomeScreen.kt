@@ -51,7 +51,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -92,10 +91,8 @@ import io.aether.android.TaskStatus
 import io.aether.android.commissioning.AppCommissioningService
 import io.aether.android.isMultiAdminCommissioning
 import io.aether.android.isOnDisplayString
-import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.getDeviceTypeIconId
-import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.common.MsgAlertDialog
 import io.aether.android.screens.thread.getActivity
 import io.aether.android.spacing
@@ -126,36 +123,11 @@ internal fun HomeRoute(
 ) {
   // Launching GPS commissioning requires Activity.
   val activity = LocalContext.current.getActivity()
-
-  // UI Model for all the devices shown on the screen.
-  val devicesUiModel by homeViewModel.devicesUiModelLiveData.observeAsState()
-  val devices = devicesUiModel?.devices
-  val devicesList = devices ?: emptyList()
-
-  // Tells whether a device attestation failure was ignored.
-  // This is used in the "Device information" screen to warn the user about that fact.
-  // We're doing it this way as we cannot ask permission to the user while the
-  // decision has to be made because UI is fully controlled by GPS at that point.
-  val deviceAttestationFailureIgnored by
-      homeViewModel.deviceAttestationFailureIgnored.collectAsStateWithLifecycle()
-
-  // Controls when the "New Device" alert dialog is shown.
-  // When that alert dialog completes, control needs to go back to the ViewModel to complete
-  // the commissioning flow.
-  val showNewDeviceAlertDialog by
-      homeViewModel.showNewDeviceNameAlertDialog.collectAsStateWithLifecycle()
+  val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
   val onCommissionedDeviceNameCaptured: (name: String) -> Unit = remember {
     { homeViewModel.onCommissionedDeviceNameCaptured(it) }
   }
-
-  // Controls the Msg AlertDialog.
-  // When the user dismisses the Msg AlertDialog, we "consume" the dialog.
-  val msgDialogInfo by homeViewModel.msgDialogInfo.collectAsStateWithLifecycle()
   val onDismissMsgDialog: () -> Unit = remember { { homeViewModel.dismissMsgDialog() } }
-
-  // Status of multiadmin commissioning.
-  val multiadminCommissionDeviceTaskStatus by
-      homeViewModel.multiadminCommissionDeviceTaskStatus.collectAsStateWithLifecycle()
 
   // Functions invoked when UI controls are clicked on a specific device in the list.
   val onDeviceClick: (deviceUiModel: DeviceUiModel) -> Unit = remember {
@@ -205,7 +177,7 @@ internal fun HomeRoute(
     Timber.d("Received intent=$intent")
     if (isMultiAdminCommissioning(intent)) {
       Timber.d("Invocation multiAdminCommissioning")
-      if (multiadminCommissionDeviceTaskStatus == TaskStatus.NotStarted) {
+      if (uiState.multiadminCommissionDeviceTaskStatus == TaskStatus.NotStarted) {
         Timber.d("TaskStatus.NotStarted so starting multiadmin commissioning")
         homeViewModel.setMultiadminCommissioningTaskStatus(TaskStatus.InProgress)
         multiAdminCommissionDevice(
@@ -215,7 +187,7 @@ internal fun HomeRoute(
             commissionDeviceLauncher,
         )
       } else {
-        Timber.d("Task status=$multiadminCommissionDeviceTaskStatus")
+        Timber.d("Task status=${uiState.multiadminCommissionDeviceTaskStatus}")
       }
     } else {
       Timber.d("Invocation main")
@@ -239,7 +211,7 @@ internal fun HomeRoute(
   }
 
   Box(modifier = Modifier.fillMaxSize()) {
-    if (devicesList.isEmpty()) {
+    if (uiState.devices.isEmpty()) {
       NoDevices()
     }
     Scaffold(
@@ -277,11 +249,8 @@ internal fun HomeRoute(
     ) { innerPadding ->
       val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
       HomeScreen(
-          devicesList,
-          msgDialogInfo,
-          onDismissMsgDialog,
-          showNewDeviceAlertDialog,
-          deviceAttestationFailureIgnored,
+          uiState = uiState,
+          onConsumeMsgDialog = onDismissMsgDialog,
           onCommissionedDeviceNameCaptured,
           onCommissionDevice,
           onDeviceClick,
@@ -300,11 +269,8 @@ fun getPlayServicesVersion(context: Context): Long {
 
 @Composable
 private fun HomeScreen(
-    devicesList: List<DeviceUiModel>,
-    msgDialogInfo: DialogInfo?,
+    uiState: HomeUiState,
     onConsumeMsgDialog: () -> Unit,
-    showNewDeviceAlertDialog: Boolean,
-    deviceAttestationFailureIgnored: Boolean,
     onCommissionedDeviceNameCaptured: (name: String) -> Unit,
     onCommissionDevice: () -> Unit,
     onDeviceClick: (deviceUiModel: DeviceUiModel) -> Unit,
@@ -344,26 +310,21 @@ private fun HomeScreen(
     )
   }
 
-  if (msgDialogInfo != null) {
-    MsgAlertDialog(msgDialogInfo, onConsumeMsgDialog)
+  if (uiState.msgDialogInfo != null) {
+    MsgAlertDialog(uiState.msgDialogInfo, onConsumeMsgDialog)
   }
 
-  if (showNewDeviceAlertDialog) {
-    NewDeviceAlertDialog(onCommissionedDeviceNameCaptured, deviceAttestationFailureIgnored)
+  if (uiState.showNewDeviceNameAlertDialog) {
+    NewDeviceAlertDialog(
+        onCommissionedDeviceNameCaptured,
+        uiState.deviceAttestationFailureIgnored,
+    )
   }
 
   LazyColumn(modifier = modifier) {
-    this.items(devicesList) { device ->
+    this.items(uiState.devices) { device ->
       val onDeviceItemClick: () -> Unit = { onDeviceClick(device) }
-      DeviceItem(
-          device.nodeId,
-          device.deviceTypeId,
-          device.name,
-          device.isOnline,
-          device.isOn,
-          onOnOffClick,
-          onDeviceItemClick,
-      )
+      DeviceItem(device = device, onOnOffClick = onOnOffClick, onDeviceClick = onDeviceItemClick)
     }
   }
 }
@@ -397,14 +358,15 @@ fun openPlayServicesInStore(context: Context) {
 
 @Composable
 private fun DeviceItem(
-    nodeId: NodeId,
-    deviceTypeId: DeviceTypeId,
-    name: String,
-    isOnline: Boolean,
-    isOn: Boolean,
+    device: DeviceUiModel,
     onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
     onDeviceClick: (() -> Unit),
 ) {
+  val nodeId = device.nodeId
+  val deviceTypeId = device.deviceTypeId
+  val name = device.name
+  val isOnline = device.isOnline
+  val isOn = device.isOn
   val bgColor =
       if (isOnline && isOn) MaterialTheme.colorScheme.surfaceVariant
       else MaterialTheme.colorScheme.surface

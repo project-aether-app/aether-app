@@ -47,7 +47,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -139,21 +138,7 @@ internal fun ThreadRoute(
       remember(threadNetworkUiState) {
         { actionRequest: ActionRequest -> threadNetworkUiState.processAction(actionRequest) }
       }
-
-  // The processing performed in ThreadNetworkUiState/ThreadViewModel impacts the Action Dialog
-  // to be shown in the UI.
-  // ThreadViewModel hoists the ActionDialogInfo StateFlow as the source of truth
-  // for the state of the Action Dialog shown in the UI.
-  val currentActionInfo by
-      threadViewModel.currentActionDialogInfoStateFlow.collectAsStateWithLifecycle()
-
-  // The processing performed in ThreadNetworkUiState/ThreadViewModel impacts the
-  // Thread Network Credentials Information to be shown in the UI
-  // (Thread Credentials Working Dataset).
-  // ThreadViewModel hoists the threadCredentialsInfo StateFlow as the source of truth
-  // for the state of the Working Dataset for the Thread Credentials.
-  val threadCredentialsInfo by
-      threadViewModel.threadCredentialsInfoStateFlow.collectAsStateWithLifecycle()
+  val uiState by threadViewModel.uiState.collectAsStateWithLifecycle()
 
   // Registers for activity result from Google Play Services.
   // This defines a launcher for the IntentSender of an Activity to
@@ -174,10 +159,9 @@ internal fun ThreadRoute(
       }
 
   // The IntentSender used to trigger the ThreadClient GPS activity.
-  val threadClientIntentSender by threadViewModel.threadClientIntentSender.observeAsState()
-  if (threadClientIntentSender != null) {
+  uiState.threadClientIntentSender?.let { threadClientIntentSender ->
     Timber.d("Launching GPS activity for Thread client")
-    threadClientLauncher.launch(IntentSenderRequest.Builder(threadClientIntentSender!!).build())
+    threadClientLauncher.launch(IntentSenderRequest.Builder(threadClientIntentSender).build())
     // Reset IntentSender so we don't redo the launch on configuration change where data
     // is reset in the fragment.
     threadViewModel.setThreadClientIntentSender(null)
@@ -211,8 +195,7 @@ internal fun ThreadRoute(
   ) { innerPadding ->
     val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     ThreadScreen(
-        currentActionInfo,
-        threadCredentialsInfo,
+        uiState = uiState,
         onThreadNetworkAction,
         modifier = modifierWithInnerPadding,
     )
@@ -221,14 +204,13 @@ internal fun ThreadRoute(
 
 @Composable
 private fun ThreadScreen(
-    currentActionInfo: ActionDialogInfo,
-    threadCredentialsInfo: ThreadCredentialsInfo,
+    uiState: ThreadUiState,
     onThreadNetworkAction: (ActionRequest) -> Unit,
     modifier: Modifier = Modifier,
 ) {
   // The action dialogs.
-  SimpleActionDialog(currentActionInfo, onThreadNetworkAction)
-  OtbrActionDialog(currentActionInfo, onThreadNetworkAction)
+  SimpleActionDialog(uiState.currentActionInfo, onThreadNetworkAction)
+  OtbrActionDialog(uiState.currentActionInfo, onThreadNetworkAction)
 
   Box(modifier = modifier) {
     Column(
@@ -248,7 +230,7 @@ private fun ThreadScreen(
       Spacer(Modifier.padding(10.dp))
 
       // Section that shows the current Thread network credentials working dataset.
-      WorkingDatasetSection(threadCredentialsInfo)
+      WorkingDatasetSection(uiState.threadCredentialsInfo)
     }
   }
 }

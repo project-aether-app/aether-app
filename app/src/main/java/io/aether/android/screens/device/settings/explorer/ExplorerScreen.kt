@@ -41,26 +41,11 @@ fun ExplorerRoute(
 ) {
   val typedNodeId = nodeId
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val navStack by viewModel.navStack.collectAsStateWithLifecycle()
-  val endpointSearchQuery by viewModel.endpointSearchQuery.collectAsStateWithLifecycle()
-  val clusterSearchQuery by viewModel.clusterSearchQuery.collectAsStateWithLifecycle()
-  val attributeSearchQuery by viewModel.attributeSearchQuery.collectAsStateWithLifecycle()
-  val commandSearchQuery by viewModel.commandSearchQuery.collectAsStateWithLifecycle()
-  val eventSearchQuery by viewModel.eventSearchQuery.collectAsStateWithLifecycle()
-  val loadingClusterKeys by viewModel.loadingClusterKeys.collectAsStateWithLifecycle()
-  val clusterDetailsByKey by viewModel.clusterDetailsByKey.collectAsStateWithLifecycle()
-  val attributeValueByKey by viewModel.attributeValueByKey.collectAsStateWithLifecycle()
-  val attributeReadSuccessCount by viewModel.attributeReadSuccessCount.collectAsStateWithLifecycle()
-  val attributeWriteSuccessCount by
-      viewModel.attributeWriteSuccessCount.collectAsStateWithLifecycle()
-  val commandInvokeSuccessCount by viewModel.commandInvokeSuccessCount.collectAsStateWithLifecycle()
-  val msgDialogInfo by viewModel.msgDialogInfo.collectAsStateWithLifecycle()
-  val knownClustersById by viewModel.knownClustersById.collectAsStateWithLifecycle()
 
   var showSearch by rememberSaveable { mutableStateOf(false) }
   val saveableStateHolder = rememberSaveableStateHolder()
 
-  val atRoot = navStack.size <= 1
+  val atRoot = uiState.navStack.size <= 1
   BackHandler(enabled = !atRoot) { viewModel.navigateBack() }
 
   LifecycleResumeEffect(nodeId) {
@@ -93,9 +78,11 @@ fun ExplorerRoute(
   ) { innerPadding ->
     val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
 
-    msgDialogInfo?.let { dialogInfo -> MsgAlertDialog(dialogInfo, viewModel::dismissMsgDialog) }
+    uiState.msgDialogInfo?.let { dialogInfo ->
+      MsgAlertDialog(dialogInfo, viewModel::dismissMsgDialog)
+    }
 
-    if (uiState !is ExplorerViewModel.UiState.Loaded) {
+    if (uiState.isFirstTimeLoading || uiState.deviceMatterInfoList == null) {
       LoadingIndicator(
           stringResource(R.string.device_explorer_loading_endpoints),
           modifier = modifierWithInnerPadding,
@@ -103,21 +90,21 @@ fun ExplorerRoute(
       return@Scaffold
     }
 
-    val infos = (uiState as ExplorerViewModel.UiState.Loaded).deviceMatterInfoList
+    val infos = uiState.deviceMatterInfoList
     Column(modifier = modifierWithInnerPadding) {
       BreadcrumbBar(
-          navStack = navStack,
+          navStack = uiState.navStack,
           deviceMatterInfoList = infos,
           onPopToIndex = viewModel::popToIndex,
       )
 
-      when (val level = navStack.last()) {
+      when (val level = uiState.navStack.last()) {
         ExplorerLevel.EndpointList ->
             saveableStateHolder.SaveableStateProvider("endpoint-list") {
               EndpointListContent(
                   infos = infos,
                   showSearch = showSearch,
-                  searchQuery = endpointSearchQuery,
+                  searchQuery = uiState.endpointSearchQuery,
                   onSearchQueryChange = viewModel::onEndpointSearchQueryChange,
                   onSelectEndpoint = viewModel::selectEndpoint,
               )
@@ -127,9 +114,9 @@ fun ExplorerRoute(
               ClusterListContent(
                   endpointId = level.endpointId,
                   infos = infos,
-                  knownClustersById = knownClustersById,
+                  knownClustersById = uiState.knownClustersById,
                   showSearch = showSearch,
-                  searchQuery = clusterSearchQuery,
+                  searchQuery = uiState.clusterSearchQuery,
                   onSearchQueryChange = viewModel::onClusterSearchQueryChange,
                   onSelectCluster = { clusterId ->
                     viewModel.selectCluster(typedNodeId, level.endpointId, clusterId)
@@ -143,12 +130,12 @@ fun ExplorerRoute(
           ) {
             ClusterDetailContent(
                 tab = level.tab,
-                isLoading = loadingClusterKeys.contains(key),
-                details = clusterDetailsByKey[key],
+                isLoading = uiState.loadingClusterKeys.contains(key),
+                details = uiState.clusterDetailsByKey[key],
                 showSearch = showSearch,
-                attributeSearchQuery = attributeSearchQuery,
-                commandSearchQuery = commandSearchQuery,
-                eventSearchQuery = eventSearchQuery,
+                attributeSearchQuery = uiState.attributeSearchQuery,
+                commandSearchQuery = uiState.commandSearchQuery,
+                eventSearchQuery = uiState.eventSearchQuery,
                 onAttributeSearchQueryChange = viewModel::onAttributeSearchQueryChange,
                 onCommandSearchQueryChange = viewModel::onCommandSearchQueryChange,
                 onEventSearchQueryChange = viewModel::onEventSearchQueryChange,
@@ -168,14 +155,14 @@ fun ExplorerRoute(
             AttributeDetailContent(
                 attribute = level.attribute,
                 currentValue =
-                    attributeValueByKey[
-                        viewModel.attributeKey(
-                            level.endpointId,
-                            level.clusterId,
-                            level.attribute.id,
-                        )],
-                readSuccessCount = attributeReadSuccessCount,
-                writeSuccessCount = attributeWriteSuccessCount,
+                    uiState.attributeValueByKey[
+                            viewModel.attributeKey(
+                                level.endpointId,
+                                level.clusterId,
+                                level.attribute.id,
+                            )],
+                readSuccessCount = uiState.attributeReadSuccessCount,
+                writeSuccessCount = uiState.attributeWriteSuccessCount,
                 onRead = {
                   viewModel.readAttribute(
                       typedNodeId,
@@ -197,7 +184,7 @@ fun ExplorerRoute(
         is ExplorerLevel.CommandInvoke ->
             CommandInvokeContent(
                 command = level.command,
-                invokeSuccessCount = commandInvokeSuccessCount,
+                invokeSuccessCount = uiState.commandInvokeSuccessCount,
                 onInvoke = { argumentValues ->
                   viewModel.invokeCommand(
                       typedNodeId,
