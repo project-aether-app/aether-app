@@ -230,7 +230,7 @@ constructor(
               _deviceRemovalCompleted.asStateFlow(),
               _pairingWindowOpenForDeviceSharing.asStateFlow(),
           ) { array ->
-            val deviceCoreData = array[0] as DeviceSettingsCoreData
+            val coreData = array[0] as DeviceSettingsCoreData
             val nodesState = array[1] as MatterFabricState
             val msgDialogInfo = array[2] as DialogInfo?
             val showShareDeviceAlertDialog = array[3] as Boolean
@@ -240,19 +240,19 @@ constructor(
             val pairingWindowOpenForDeviceSharing = array[7] as Boolean
 
             val node =
-                deviceCoreData.device?.let { dev ->
+                coreData.device?.let { dev ->
                   nodesState.nodesList.firstOrNull { it.nodeId == dev.nodeId.toLong() }
                 }
             val isOnline = node?.online ?: false
             val dateCommissioned = node?.dateCommissioned?.takeUnless { isDefaultTimestamp(it) }
 
             DeviceSettingsUiState(
-                isFirstTimeLoading = deviceCoreData.isFirstTimeLoading,
-                isBackgroundRefreshing = deviceCoreData.isBackgroundRefreshing,
+                isFirstTimeLoading = coreData.isFirstTimeLoading,
+                isBackgroundRefreshing = coreData.isBackgroundRefreshing,
                 isOnline = isOnline,
-                errorMessageRes = deviceCoreData.errorMessageRes,
-                device = deviceCoreData.device,
-                basicInformation = deviceCoreData.basicInformation,
+                errorMessageRes = coreData.errorMessageRes,
+                device = coreData.device,
+                basicInformation = coreData.basicInformation,
                 dateCommissioned = dateCommissioned,
                 msgDialogInfo = msgDialogInfo,
                 showShareDeviceAlertDialog = showShareDeviceAlertDialog,

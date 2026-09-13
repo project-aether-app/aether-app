@@ -48,6 +48,7 @@ import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
 import io.aether.android.matter.vendorLabel
+import io.aether.android.screens.common.ErrorMessage
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
 import io.aether.android.screens.device.actions.ForceRemoveDeviceConfirmationDialog
@@ -129,6 +130,13 @@ fun DeviceSettingsRoute(
         )
       },
   ) { innerPadding ->
+    if (uiState.isFirstTimeLoading) {
+      LoadingIndicator(
+          stringResource(R.string.loading_device_info),
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+      )
+      return@Scaffold
+    }
     DeviceSettingsScreen(
         uiState = uiState,
         onDismissMsgDialog = { viewModel.dismissMsgDialog() },
@@ -173,12 +181,13 @@ private fun DeviceSettingsScreen(
     modifier: Modifier = Modifier,
 ) {
 
+  uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
+
   uiState.msgDialogInfo?.let { dialogInfo ->
     MsgAlertDialog(dialogInfo, onDismissMsgDialog)
   }
 
-  if (uiState.isFirstTimeLoading || uiState.device == null) {
-    LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)
+  if (uiState.device == null) {
     return
   }
 

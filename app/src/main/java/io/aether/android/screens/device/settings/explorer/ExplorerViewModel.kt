@@ -78,7 +78,7 @@ data class ExplorerUiState(
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
-    val deviceMatterInfoList: List<DeviceMatterInfo>? = null,
+    val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
     val navStack: List<ExplorerLevel> = listOf(ExplorerLevel.EndpointList),
     val endpointSearchQuery: String = "",
     val clusterSearchQuery: String = "",
@@ -98,7 +98,7 @@ data class ExplorerUiState(
 )
 
 private data class ExplorerCoreData(
-    val deviceMatterInfoList: List<DeviceMatterInfo>? = null,
+    val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
     val errorMessageRes: Int? = null,
@@ -217,6 +217,7 @@ constructor(
   private val _knownClustersById =
       MutableStateFlow<Map<ClusterId, ExplorerClusterDefinition>>(emptyMap())
 
+  @Suppress("UNCHECKED_CAST")
   val uiState: StateFlow<ExplorerUiState> =
       combine(
               explorerCoreDataState,
@@ -224,7 +225,33 @@ constructor(
               _endpointSearchQuery.asStateFlow(),
               _clusterSearchQuery.asStateFlow(),
               _attributeSearchQuery.asStateFlow(),
-          ) { coreData, navStack, endpointSearchQuery, clusterSearchQuery, attributeSearchQuery ->
+              _commandSearchQuery.asStateFlow(),
+              _eventSearchQuery.asStateFlow(),
+              _loadingClusterKeys.asStateFlow(),
+              _clusterDetailsByKey.asStateFlow(),
+              _attributeValueByKey.asStateFlow(),
+              _attributeReadSuccessCount.asStateFlow(),
+              _attributeWriteSuccessCount.asStateFlow(),
+              _commandInvokeSuccessCount.asStateFlow(),
+              _msgDialogInfo.asStateFlow(),
+              _knownClustersById.asStateFlow(),
+          ) { array ->
+            var coreData = array[0] as ExplorerCoreData
+            var navStack = array[1] as List<ExplorerLevel>
+            var endpointSearchQuery = array[2] as String
+            var clusterSearchQuery = array[3] as String
+            var attributeSearchQuery = array[4] as String
+            var commandSearchQuery = array[5] as String
+            var eventSearchQuery = array[6] as String
+            var loadingClusterKeys = array[7] as Set<ExplorerClusterKey>
+            var clusterDetailsByKey = array[8] as Map<ExplorerClusterKey, ExplorerClusterDetails>
+            var attributeValueByKey = array[9] as Map<String, String>
+            var attributeReadSuccessCount = array[10] as Int
+            var attributeWriteSuccessCount = array[11] as Int
+            var commandInvokeSuccessCount = array[12] as Int
+            var msgDialogInfo = array[13] as DialogInfo?
+            var knownClustersById = array[14] as Map<ClusterId, ExplorerClusterDefinition>
+
             ExplorerUiState(
                 isFirstTimeLoading = coreData.isFirstTimeLoading,
                 isBackgroundRefreshing = coreData.isBackgroundRefreshing,
@@ -235,47 +262,17 @@ constructor(
                 endpointSearchQuery = endpointSearchQuery,
                 clusterSearchQuery = clusterSearchQuery,
                 attributeSearchQuery = attributeSearchQuery,
-                commandSearchQuery = _commandSearchQuery.value,
-                eventSearchQuery = _eventSearchQuery.value,
-                loadingClusterKeys = _loadingClusterKeys.value,
-                clusterDetailsByKey = _clusterDetailsByKey.value,
-                attributeValueByKey = _attributeValueByKey.value,
-                attributeReadSuccessCount = _attributeReadSuccessCount.value,
-                attributeWriteSuccessCount = _attributeWriteSuccessCount.value,
-                commandInvokeSuccessCount = _commandInvokeSuccessCount.value,
-                msgDialogInfo = _msgDialogInfo.value,
-                knownClustersById = _knownClustersById.value,
+                commandSearchQuery = commandSearchQuery,
+                eventSearchQuery = eventSearchQuery,
+                loadingClusterKeys = loadingClusterKeys,
+                clusterDetailsByKey = clusterDetailsByKey,
+                attributeValueByKey = attributeValueByKey,
+                attributeReadSuccessCount = attributeReadSuccessCount,
+                attributeWriteSuccessCount = attributeWriteSuccessCount,
+                commandInvokeSuccessCount = commandInvokeSuccessCount,
+                msgDialogInfo = msgDialogInfo,
+                knownClustersById = knownClustersById,
             )
-          }
-          .combine(_commandSearchQuery.asStateFlow()) { state, commandSearchQuery ->
-            state.copy(commandSearchQuery = commandSearchQuery)
-          }
-          .combine(_eventSearchQuery.asStateFlow()) { state, eventSearchQuery ->
-            state.copy(eventSearchQuery = eventSearchQuery)
-          }
-          .combine(_loadingClusterKeys.asStateFlow()) { state, loadingClusterKeys ->
-            state.copy(loadingClusterKeys = loadingClusterKeys)
-          }
-          .combine(_clusterDetailsByKey.asStateFlow()) { state, clusterDetailsByKey ->
-            state.copy(clusterDetailsByKey = clusterDetailsByKey)
-          }
-          .combine(_attributeValueByKey.asStateFlow()) { state, attributeValueByKey ->
-            state.copy(attributeValueByKey = attributeValueByKey)
-          }
-          .combine(_attributeReadSuccessCount.asStateFlow()) { state, attributeReadSuccessCount ->
-            state.copy(attributeReadSuccessCount = attributeReadSuccessCount)
-          }
-          .combine(_attributeWriteSuccessCount.asStateFlow()) { state, attributeWriteSuccessCount ->
-            state.copy(attributeWriteSuccessCount = attributeWriteSuccessCount)
-          }
-          .combine(_commandInvokeSuccessCount.asStateFlow()) { state, commandInvokeSuccessCount ->
-            state.copy(commandInvokeSuccessCount = commandInvokeSuccessCount)
-          }
-          .combine(_msgDialogInfo.asStateFlow()) { state, msgDialogInfo ->
-            state.copy(msgDialogInfo = msgDialogInfo)
-          }
-          .combine(_knownClustersById.asStateFlow()) { state, knownClustersById ->
-            state.copy(knownClustersById = knownClustersById)
           }
           .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExplorerUiState())
 
