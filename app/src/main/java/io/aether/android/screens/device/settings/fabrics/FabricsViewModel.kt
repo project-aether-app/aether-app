@@ -24,7 +24,7 @@ data class FabricsUiState(
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
     val isOnline: Boolean = false,
-    @StringRes val errorMessageRes: Int? = null,
+    @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
     val fabrics: List<ManagedFabric> = emptyList(),

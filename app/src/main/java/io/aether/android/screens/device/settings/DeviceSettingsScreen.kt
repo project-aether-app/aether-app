@@ -172,14 +172,16 @@ private fun DeviceSettingsScreen(
     onForceRemoveDeviceResult: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-  if (uiState.msgDialogInfo != null) {
-    MsgAlertDialog(uiState.msgDialogInfo, onDismissMsgDialog)
+
+  uiState.msgDialogInfo?.let { dialogInfo ->
+    MsgAlertDialog(dialogInfo, onDismissMsgDialog)
   }
 
   if (uiState.isFirstTimeLoading || uiState.device == null) {
     LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)
     return
   }
+
   val device = uiState.device
   val basicInformation = uiState.basicInformation
   val isOnline = uiState.isOnline

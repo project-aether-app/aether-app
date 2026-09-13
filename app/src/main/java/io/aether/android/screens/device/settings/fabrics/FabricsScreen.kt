@@ -102,10 +102,8 @@ private fun FabricsScreen(
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
+    uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
     when {
-      uiState.errorMessageRes != null -> {
-        ErrorMessage(stringResource(uiState.errorMessageRes))
-      }
       uiState.fabrics.isEmpty() -> {
         EmptyState(stringResource(R.string.device_fabrics_empty))
       }

@@ -148,13 +148,14 @@ private fun DeviceScreen(
     onDismissMsgDialog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+  uiState.msgDialogInfo?.let { dialogInfo ->
+    MsgAlertDialog(dialogInfo, onDismissMsgDialog)
+  }
+
   if (uiState.isFirstTimeLoading || uiState.device == null) {
     LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)
     return
-  }
-
-  if (uiState.msgDialogInfo != null) {
-    MsgAlertDialog(uiState.msgDialogInfo, onDismissMsgDialog)
   }
 
   val endpointsToShow = uiState.allEndpointUiModels.ifEmpty { listOf(uiState.device) }

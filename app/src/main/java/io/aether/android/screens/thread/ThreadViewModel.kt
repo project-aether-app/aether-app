@@ -31,7 +31,7 @@ data class ThreadUiState(
     val isFirstTimeLoading: Boolean = false,
     val isBackgroundRefreshing: Boolean = false,
     val isOnline: Boolean = false,
-    @StringRes val errorMessageRes: Int? = null,
+    @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
     val threadCredentialsInfo: ThreadCredentialsInfo = ThreadCredentialsInfo(),

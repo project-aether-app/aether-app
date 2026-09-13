@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.DISCRIMINATOR
 import io.aether.android.Device
 import io.aether.android.ITERATION
+import io.aether.android.MatterFabricState
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_API
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS
 import io.aether.android.OpenCommissioningWindowApi
@@ -52,7 +53,7 @@ data class DeviceSettingsUiState(
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
     val isOnline: Boolean = false,
-    @StringRes val errorMessageRes: Int? = null,
+    @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
     val device: Device? = null,
@@ -226,14 +227,18 @@ constructor(
               _showShareDeviceAlertDialog.asStateFlow(),
               _showRemoveDeviceAlertDialog.asStateFlow(),
               _showRemoveDeviceConfirmAlertDialog.asStateFlow(),
-          ) {
-              deviceCoreData,
-              nodesState,
-              msgDialogInfo,
-              showShareDeviceAlertDialog,
-              showRemoveDeviceAlertDialog,
-              showRemoveDeviceConfirmAlertDialog,
-            ->
+              _deviceRemovalCompleted.asStateFlow(),
+              _pairingWindowOpenForDeviceSharing.asStateFlow(),
+          ) { array ->
+            val deviceCoreData = array[0] as DeviceSettingsCoreData
+            val nodesState = array[1] as MatterFabricState
+            val msgDialogInfo = array[2] as DialogInfo?
+            val showShareDeviceAlertDialog = array[3] as Boolean
+            val showRemoveDeviceAlertDialog = array[4] as Boolean
+            val showRemoveDeviceConfirmAlertDialog = array[5] as Boolean
+            val deviceRemovalCompleted = array[6] as Boolean
+            val pairingWindowOpenForDeviceSharing = array[7] as Boolean
+
             val node =
                 deviceCoreData.device?.let { dev ->
                   nodesState.nodesList.firstOrNull { it.nodeId == dev.nodeId.toLong() }
@@ -253,17 +258,9 @@ constructor(
                 showShareDeviceAlertDialog = showShareDeviceAlertDialog,
                 showRemoveDeviceAlertDialog = showRemoveDeviceAlertDialog,
                 showRemoveDeviceConfirmAlertDialog = showRemoveDeviceConfirmAlertDialog,
-                deviceRemovalCompleted = _deviceRemovalCompleted.value,
-                pairingWindowOpenForDeviceSharing = _pairingWindowOpenForDeviceSharing.value,
+                deviceRemovalCompleted = deviceRemovalCompleted,
+                pairingWindowOpenForDeviceSharing = pairingWindowOpenForDeviceSharing,
             )
-          }
-          .combine(_deviceRemovalCompleted.asStateFlow()) { state, deviceRemovalCompleted ->
-            state.copy(deviceRemovalCompleted = deviceRemovalCompleted)
-          }
-          .combine(_pairingWindowOpenForDeviceSharing.asStateFlow()) {
-              state,
-              pairingWindowOpenForDeviceSharing ->
-            state.copy(pairingWindowOpenForDeviceSharing = pairingWindowOpenForDeviceSharing)
           }
           .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceSettingsUiState())
 

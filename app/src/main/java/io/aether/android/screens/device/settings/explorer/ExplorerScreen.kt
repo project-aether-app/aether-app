@@ -88,7 +88,7 @@ fun ExplorerRoute(
       return@Scaffold
     }
 
-    val infos = uiState.deviceMatterInfoList
+    val infos = uiState.deviceMatterInfoList ?: emptyList()
     Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       BreadcrumbBar(
           navStack = uiState.navStack,
@@ -107,6 +107,7 @@ fun ExplorerRoute(
                   onSelectEndpoint = viewModel::selectEndpoint,
               )
             }
+
         is ExplorerLevel.ClusterList ->
             saveableStateHolder.SaveableStateProvider("cluster-list-${level.endpointId}") {
               ClusterListContent(
@@ -121,6 +122,7 @@ fun ExplorerRoute(
                   },
               )
             }
+
         is ExplorerLevel.ClusterDetail -> {
           val key = ExplorerClusterKey(level.endpointId, level.clusterId)
           saveableStateHolder.SaveableStateProvider(
@@ -149,6 +151,7 @@ fun ExplorerRoute(
             )
           }
         }
+
         is ExplorerLevel.AttributeDetail ->
             AttributeDetailContent(
                 attribute = level.attribute,
@@ -179,6 +182,7 @@ fun ExplorerRoute(
                   )
                 },
             )
+
         is ExplorerLevel.CommandInvoke ->
             CommandInvokeContent(
                 command = level.command,
