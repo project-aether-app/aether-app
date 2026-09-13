@@ -247,7 +247,6 @@ internal fun HomeRoute(
           }
         },
     ) { innerPadding ->
-      val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
       HomeScreen(
           uiState = uiState,
           onConsumeMsgDialog = onDismissMsgDialog,
@@ -255,7 +254,7 @@ internal fun HomeRoute(
           onCommissionDevice,
           onDeviceClick,
           onOnOffClick,
-          modifier = modifierWithInnerPadding,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
     }
   }

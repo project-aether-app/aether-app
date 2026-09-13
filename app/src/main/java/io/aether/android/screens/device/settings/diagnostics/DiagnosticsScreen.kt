@@ -59,18 +59,17 @@ fun DiagnosticsRoute(
         }
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
           stringResource(R.string.device_diagnostics_loading),
-          modifier = modifierWithInnerPadding,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
       return@Scaffold
     }
     DiagnosticsScreen(
         uiState = uiState,
         onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }

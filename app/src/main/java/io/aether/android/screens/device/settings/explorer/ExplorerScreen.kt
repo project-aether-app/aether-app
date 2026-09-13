@@ -76,8 +76,6 @@ fun ExplorerRoute(
         )
       }
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-
     uiState.msgDialogInfo?.let { dialogInfo ->
       MsgAlertDialog(dialogInfo, viewModel::dismissMsgDialog)
     }
@@ -85,13 +83,13 @@ fun ExplorerRoute(
     if (uiState.isFirstTimeLoading || uiState.deviceMatterInfoList == null) {
       LoadingIndicator(
           stringResource(R.string.device_explorer_loading_endpoints),
-          modifier = modifierWithInnerPadding,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
       return@Scaffold
     }
 
     val infos = uiState.deviceMatterInfoList
-    Column(modifier = modifierWithInnerPadding) {
+    Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       BreadcrumbBar(
           navStack = uiState.navStack,
           deviceMatterInfoList = infos,

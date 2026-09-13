@@ -125,14 +125,13 @@ internal fun DeviceRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     DeviceScreen(
         uiState = uiState,
         onOnOffClick,
         onBrightnessChange,
         onColorTemperatureChange,
         onDismissMsgDialog,
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }

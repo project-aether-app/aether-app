@@ -193,11 +193,10 @@ internal fun ThreadRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     ThreadScreen(
         uiState = uiState,
         onThreadNetworkAction,
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }

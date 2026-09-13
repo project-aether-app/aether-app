@@ -129,7 +129,6 @@ fun DeviceSettingsRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     DeviceSettingsScreen(
         uiState = uiState,
         onDismissMsgDialog = { viewModel.dismissMsgDialog() },
@@ -152,7 +151,7 @@ fun DeviceSettingsRoute(
           viewModel.dismissRemoveDeviceConfirmAlertDialog()
           if (doIt) viewModel.removeDeviceWithoutUnlink(nodeId)
         },
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }

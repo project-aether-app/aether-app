@@ -63,8 +63,7 @@ internal fun ScannerRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-    ScannerScreen(uiState = uiState, modifier = modifierWithInnerPadding)
+    ScannerScreen(uiState = uiState, modifier = Modifier.fillMaxSize().padding(innerPadding))
   }
 }
 
