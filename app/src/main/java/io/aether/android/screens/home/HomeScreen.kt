@@ -61,7 +61,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.pm.PackageInfoCompat
@@ -94,6 +93,7 @@ import io.aether.android.isOnDisplayString
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.getDeviceTypeIconId
 import io.aether.android.screens.common.MsgAlertDialog
+import io.aether.android.screens.common.OfflineLabel
 import io.aether.android.screens.thread.getActivity
 import io.aether.android.spacing
 import timber.log.Timber
@@ -387,6 +387,9 @@ private fun DeviceItem(
       onClick = onDeviceClick,
   ) {
     Column(modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent)) {
+      if (!isOnline) {
+        OfflineLabel(modifier = Modifier.fillMaxWidth())
+      }
       Row(
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingSmall),
@@ -401,15 +404,6 @@ private fun DeviceItem(
         }
         Spacer(Modifier.weight(1f))
         Switch(enabled = isOnline, checked = isOn, onCheckedChange = onCheckedChange)
-      }
-      if (!isOnline) {
-        Text(
-            text = stringResource(R.string.device_offline_label),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.error,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.paddingSmall),
-        )
       }
     }
   }

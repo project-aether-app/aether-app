@@ -30,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -40,6 +39,7 @@ import io.aether.android.data.DevicesStateRepository
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
+import io.aether.android.screens.common.OfflineLabel
 import io.aether.android.screens.device.control.ColorTemperatureDeviceControl
 import io.aether.android.screens.device.control.DimmableDeviceControl
 import io.aether.android.screens.device.control.OnOffDeviceControl
@@ -168,13 +168,7 @@ private fun DeviceScreen(
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     if (!uiState.isOnline) {
-      Text(
-          text = stringResource(R.string.device_offline_label),
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.error,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth(),
-      )
+      OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
     endpointsToShow.forEach { endpointModel ->
       Surface(

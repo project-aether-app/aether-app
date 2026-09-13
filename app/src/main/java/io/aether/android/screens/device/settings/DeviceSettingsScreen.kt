@@ -36,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +50,7 @@ import io.aether.android.matter.vendorLabel
 import io.aether.android.screens.common.ErrorMessage
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
+import io.aether.android.screens.common.OfflineLabel
 import io.aether.android.screens.device.actions.ForceRemoveDeviceConfirmationDialog
 import io.aether.android.screens.device.actions.RemoveDeviceConfirmationDialog
 import io.aether.android.screens.device.actions.ShareDeviceConfirmationDialog
@@ -251,15 +251,8 @@ private fun DeviceSettingsScreen(
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     if (!isOnline) {
-      Text(
-          text = stringResource(R.string.device_offline_label),
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.error,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth(),
-      )
+      OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
-
     // Basic section
     SettingsSection(stringResource(R.string.device_settings_section_basic)) {
       val unknown = stringResource(R.string.device_type_unknown)
