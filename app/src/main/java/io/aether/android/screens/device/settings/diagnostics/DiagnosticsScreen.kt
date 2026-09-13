@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
 import io.aether.android.matter.NodeId
+import io.aether.android.screens.common.ErrorMessage
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
@@ -59,18 +60,17 @@ fun DiagnosticsRoute(
         }
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-    if (uiState.isInitialLoading) {
+    if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
           stringResource(R.string.device_diagnostics_loading),
-          modifier = modifierWithInnerPadding,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
       return@Scaffold
     }
     DiagnosticsScreen(
         uiState = uiState,
         onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
@@ -83,13 +83,11 @@ private fun DiagnosticsScreen(
     modifier: Modifier = Modifier,
 ) {
   PullToRefreshBox(
-      isRefreshing = uiState.isRefreshing,
+      isRefreshing = uiState.isBackgroundRefreshing,
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
-    if (uiState.errorRes != null) {
-      Text(stringResource(uiState.errorRes), color = MaterialTheme.colorScheme.error)
-    }
+    uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
     Column(
         modifier =
             Modifier.fillMaxSize()

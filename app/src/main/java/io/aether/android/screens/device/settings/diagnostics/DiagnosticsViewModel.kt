@@ -30,14 +30,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class DiagnosticsUiState(
-    val isInitialLoading: Boolean = true,
-    val isRefreshing: Boolean = false,
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    val isOnline: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
     val generalDiagnostics: GeneralDiagnosticsData? = null,
     val softwareDiagnostics: SoftwareDiagnosticsData? = null,
     val ethernetNetworkDiagnostics: EthernetNetworkDiagnosticsData? = null,
     val wifiNetworkDiagnostics: WiFiNetworkDiagnosticsData? = null,
     val threadNetworkDiagnostics: ThreadNetworkDiagnosticsData? = null,
-    @field:StringRes val errorRes: Int? = null,
 )
 
 private data class RefreshRequest(val nodeId: NodeId)
@@ -134,20 +138,20 @@ constructor(private val diagnosticsRepository: DiagnosticsRepository) : ViewMode
               }
             }
           }
-          .scan(DiagnosticsUiState(isInitialLoading = true)) { previousState, partial ->
+          .scan(DiagnosticsUiState(isFirstTimeLoading = true)) { previousState, partial ->
             when (partial) {
               is PartialState.Loading ->
                   previousState.copy(
-                      isRefreshing = previousState.generalDiagnostics != null,
-                      isInitialLoading = previousState.generalDiagnostics == null,
-                      errorRes = null,
+                      isBackgroundRefreshing = previousState.generalDiagnostics != null,
+                      isFirstTimeLoading = previousState.generalDiagnostics == null,
+                      errorMessageRes = null,
                   )
               is PartialState.GeneralDiagnosticsSuccess ->
                   previousState.copy(
-                      isInitialLoading = false,
-                      isRefreshing = false,
+                      isFirstTimeLoading = false,
+                      isBackgroundRefreshing = false,
                       generalDiagnostics = partial.diag,
-                      errorRes = null,
+                      errorMessageRes = null,
                   )
               is PartialState.SoftwareDiagnosticsSuccess ->
                   previousState.copy(softwareDiagnostics = partial.diag)
@@ -159,16 +163,16 @@ constructor(private val diagnosticsRepository: DiagnosticsRepository) : ViewMode
                   previousState.copy(threadNetworkDiagnostics = partial.diag)
               is PartialState.Error ->
                   previousState.copy(
-                      isInitialLoading = false,
-                      isRefreshing = false,
-                      errorRes = partial.errorRes,
+                      isFirstTimeLoading = false,
+                      isBackgroundRefreshing = false,
+                      errorMessageRes = partial.errorRes,
                   )
             }
           }
           .stateIn(
               viewModelScope,
               SharingStarted.WhileSubscribed(5000),
-              DiagnosticsUiState(isInitialLoading = true),
+              DiagnosticsUiState(isFirstTimeLoading = true),
           )
 
   fun loadDiagnostics(nodeId: NodeId, forceRefresh: Boolean = false) {

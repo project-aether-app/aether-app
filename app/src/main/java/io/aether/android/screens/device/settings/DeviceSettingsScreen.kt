@@ -36,14 +36,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.protobuf.Timestamp
-import io.aether.android.Device
 import io.aether.android.R
-import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.formatTimestamp
 import io.aether.android.getDeviceTypeDisplayStringId
 import io.aether.android.matter.DeviceTypeId
@@ -51,9 +47,10 @@ import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
 import io.aether.android.matter.vendorLabel
-import io.aether.android.screens.common.DialogInfo
+import io.aether.android.screens.common.ErrorMessage
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
+import io.aether.android.screens.common.OfflineLabel
 import io.aether.android.screens.device.actions.ForceRemoveDeviceConfirmationDialog
 import io.aether.android.screens.device.actions.RemoveDeviceConfirmationDialog
 import io.aether.android.screens.device.actions.ShareDeviceConfirmationDialog
@@ -76,20 +73,6 @@ fun DeviceSettingsRoute(
   val activity = LocalContext.current.getActivity()
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val device = (uiState as? DeviceSettingsViewModel.UiState.Loaded)?.device
-  val basicInformation = (uiState as? DeviceSettingsViewModel.UiState.Loaded)?.basicInformation
-  val isOnline = (uiState as? DeviceSettingsViewModel.UiState.Loaded)?.isOnline ?: false
-  val dateCommissioned = (uiState as? DeviceSettingsViewModel.UiState.Loaded)?.dateCommissioned
-  val msgDialogInfo by viewModel.msgDialogInfo.collectAsStateWithLifecycle()
-  val showShareDeviceAlertDialog by
-      viewModel.showShareDeviceAlertDialog.collectAsStateWithLifecycle()
-  val showRemoveDeviceAlertDialog by
-      viewModel.showRemoveDeviceAlertDialog.collectAsStateWithLifecycle()
-  val showRemoveDeviceConfirmAlertDialog by
-      viewModel.showRemoveDeviceConfirmAlertDialog.collectAsStateWithLifecycle()
-  val deviceRemovalCompleted by viewModel.deviceRemovalCompleted.collectAsStateWithLifecycle()
-  val pairingWindowOpenForDeviceSharing by
-      viewModel.pairingWindowOpenForDeviceSharing.collectAsStateWithLifecycle()
 
   // GPS share activity launcher.
   val shareDeviceLauncher =
@@ -104,10 +87,10 @@ fun DeviceSettingsRoute(
       }
 
   // Launch the GPS share activity once the pairing window is open.
-  if (pairingWindowOpenForDeviceSharing) {
-    val deviceName = device?.name ?: ""
-    LaunchedEffect(pairingWindowOpenForDeviceSharing) {
-      if (pairingWindowOpenForDeviceSharing) {
+  if (uiState.pairingWindowOpenForDeviceSharing) {
+    val deviceName = uiState.device?.name ?: ""
+    LaunchedEffect(uiState.pairingWindowOpenForDeviceSharing) {
+      if (uiState.pairingWindowOpenForDeviceSharing) {
         viewModel.resetPairingWindowOpenForDeviceSharing()
         activity?.let { act ->
           shareDevice(
@@ -122,7 +105,7 @@ fun DeviceSettingsRoute(
   }
 
   // Navigate back to home when removal is done.
-  if (deviceRemovalCompleted) {
+  if (uiState.deviceRemovalCompleted) {
     navigateToHome()
     viewModel.resetDeviceRemovalCompleted()
   }
@@ -147,16 +130,15 @@ fun DeviceSettingsRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
+    if (uiState.isFirstTimeLoading) {
+      LoadingIndicator(
+          stringResource(R.string.loading_device_info),
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+      )
+      return@Scaffold
+    }
     DeviceSettingsScreen(
-        device = device,
-        basicInformation = basicInformation,
-        isOnline = isOnline,
-        dateCommissioned = dateCommissioned,
-        msgDialogInfo = msgDialogInfo,
-        showShareDeviceAlertDialog = showShareDeviceAlertDialog,
-        showRemoveDeviceAlertDialog = showRemoveDeviceAlertDialog,
-        showRemoveDeviceConfirmAlertDialog = showRemoveDeviceConfirmAlertDialog,
+        uiState = uiState,
         onDismissMsgDialog = { viewModel.dismissMsgDialog() },
         onDeviceNameChange = { name -> viewModel.renameDevice(nodeId, name) },
         onDeviceTypeChange = { type -> viewModel.changeDeviceType(nodeId, type) },
@@ -177,21 +159,14 @@ fun DeviceSettingsRoute(
           viewModel.dismissRemoveDeviceConfirmAlertDialog()
           if (doIt) viewModel.removeDeviceWithoutUnlink(nodeId)
         },
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
 
 @Composable
 private fun DeviceSettingsScreen(
-    device: Device?,
-    basicInformation: BasicInformationAttributes?,
-    isOnline: Boolean,
-    dateCommissioned: Timestamp?,
-    msgDialogInfo: DialogInfo?,
-    showShareDeviceAlertDialog: Boolean,
-    showRemoveDeviceAlertDialog: Boolean,
-    showRemoveDeviceConfirmAlertDialog: Boolean,
+    uiState: DeviceSettingsUiState,
     onDismissMsgDialog: () -> Unit,
     onDeviceNameChange: (String) -> Unit,
     onDeviceTypeChange: (DeviceTypeId) -> Unit,
@@ -206,14 +181,20 @@ private fun DeviceSettingsScreen(
     modifier: Modifier = Modifier,
 ) {
 
-  if (msgDialogInfo != null) {
-    MsgAlertDialog(msgDialogInfo, onDismissMsgDialog)
+  uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
+
+  uiState.msgDialogInfo?.let { dialogInfo ->
+    MsgAlertDialog(dialogInfo, onDismissMsgDialog)
   }
 
-  if (device == null) {
-    LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)
+  if (uiState.device == null) {
     return
   }
+
+  val device = uiState.device
+  val basicInformation = uiState.basicInformation
+  val isOnline = uiState.isOnline
+  val dateCommissioned = uiState.dateCommissioned
 
   var showRenameDialog by remember { mutableStateOf(false) }
   var showTypeDialog by remember { mutableStateOf(false) }
@@ -244,21 +225,21 @@ private fun DeviceSettingsScreen(
     )
   }
 
-  if (showShareDeviceAlertDialog) {
+  if (uiState.showShareDeviceAlertDialog) {
     ShareDeviceConfirmationDialog(
         onConfirm = { onShareDeviceResult(true) },
         onDismissRequest = { onShareDeviceResult(false) },
     )
   }
 
-  if (showRemoveDeviceAlertDialog) {
+  if (uiState.showRemoveDeviceAlertDialog) {
     RemoveDeviceConfirmationDialog(
         onConfirm = { onRemoveDeviceResult(true) },
         onDismissRequest = { onRemoveDeviceResult(false) },
     )
   }
 
-  if (showRemoveDeviceConfirmAlertDialog) {
+  if (uiState.showRemoveDeviceConfirmAlertDialog) {
     ForceRemoveDeviceConfirmationDialog(
         onConfirm = { onForceRemoveDeviceResult(true) },
         onDismissRequest = { onForceRemoveDeviceResult(false) },
@@ -270,15 +251,8 @@ private fun DeviceSettingsScreen(
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     if (!isOnline) {
-      Text(
-          text = stringResource(R.string.device_offline_label),
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.error,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth(),
-      )
+      OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
-
     // Basic section
     SettingsSection(stringResource(R.string.device_settings_section_basic)) {
       val unknown = stringResource(R.string.device_type_unknown)

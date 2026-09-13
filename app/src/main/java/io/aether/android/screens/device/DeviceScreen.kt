@@ -27,22 +27,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.aether.android.MatterFabricState
 import io.aether.android.R
 import io.aether.android.data.DevicesStateRepository
 import io.aether.android.matter.NodeId
-import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
+import io.aether.android.screens.common.OfflineLabel
 import io.aether.android.screens.device.control.ColorTemperatureDeviceControl
 import io.aether.android.screens.device.control.DimmableDeviceControl
 import io.aether.android.screens.device.control.OnOffDeviceControl
@@ -74,26 +71,9 @@ internal fun DeviceRoute(
   Timber.d("Opening device nodeId=$nodeId")
 
   // Observes values needed by the DeviceScreen.
-  val deviceUiModel by deviceViewModel.deviceUiModel.collectAsStateWithLifecycle()
-  Timber.d("Loaded device nodeId=${deviceUiModel?.nodeId}")
-
-  // All endpoint models for the same physical node.
-  val allEndpointUiModels by deviceViewModel.allEndpointUiModels.collectAsStateWithLifecycle()
-
-  // Controls the Msg AlertDialog.
-  val msgDialogInfo by deviceViewModel.msgDialogInfo.collectAsStateWithLifecycle()
+  val uiState by deviceViewModel.uiState.collectAsStateWithLifecycle()
+  Timber.d("Loaded device nodeId=${uiState.device?.nodeId}")
   val onDismissMsgDialog: () -> Unit = remember { { deviceViewModel.dismissMsgDialog() } }
-
-  val lastUpdatedEndpointState by
-      deviceViewModel.devicesStateRepository.lastUpdatedEndpointState.observeAsState()
-  val devicesState by
-      deviceViewModel.devicesStateRepository.devicesStateFlow.collectAsStateWithLifecycle(
-          initialValue = MatterFabricState.getDefaultInstance()
-      )
-  val isOnline =
-      devicesState.nodesList.firstOrNull { it.nodeId == nodeId.toLong() }?.online
-          ?: deviceUiModel?.isOnline
-          ?: true
 
   // Per-endpoint callbacks.
   val onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit = remember {
@@ -114,8 +94,8 @@ internal fun DeviceRoute(
     onPauseOrDispose { deviceViewModel.stopMonitoringStateChanges() }
   }
 
-  LaunchedEffect(deviceUiModel?.nodeId) {
-    if (deviceUiModel != null) {
+  LaunchedEffect(uiState.device?.nodeId) {
+    if (uiState.device != null) {
       deviceViewModel.startMonitoringStateChanges()
     }
   }
@@ -123,7 +103,7 @@ internal fun DeviceRoute(
   Scaffold(
       topBar = {
         TopAppBar(
-            title = { Text(deviceUiModel?.name ?: stringResource(R.string.device_screen_title)) },
+            title = { Text(uiState.device?.name ?: stringResource(R.string.device_screen_title)) },
             navigationIcon = {
               IconButton(onClick = onBackClick) {
                 Icon(
@@ -133,7 +113,7 @@ internal fun DeviceRoute(
               }
             },
             actions = {
-              if (deviceUiModel != null) {
+              if (uiState.device != null) {
                 IconButton(onClick = { navigateToDeviceSettings(nodeId) }) {
                   Icon(
                       imageVector = Icons.Filled.Settings,
@@ -145,18 +125,13 @@ internal fun DeviceRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     DeviceScreen(
-        deviceUiModel,
-        allEndpointUiModels,
-        isOnline,
-        lastUpdatedEndpointState,
+        uiState = uiState,
         onOnOffClick,
         onBrightnessChange,
         onColorTemperatureChange,
-        msgDialogInfo,
         onDismissMsgDialog,
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
@@ -166,27 +141,24 @@ internal fun DeviceRoute(
 
 @Composable
 private fun DeviceScreen(
-    deviceUiModel: DeviceUiModel?,
-    allEndpointUiModels: List<DeviceUiModel>,
-    isOnline: Boolean,
-    lastUpdatedEndpointState: DevicesStateRepository.EndpointStateSnapshot?,
+    uiState: DeviceScreenUiState,
     onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit,
     onBrightnessChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
     onColorTemperatureChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
-    msgDialogInfo: DialogInfo?,
     onDismissMsgDialog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-  if (deviceUiModel == null) {
+
+  uiState.msgDialogInfo?.let { dialogInfo ->
+    MsgAlertDialog(dialogInfo, onDismissMsgDialog)
+  }
+
+  if (uiState.isFirstTimeLoading || uiState.device == null) {
     LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)
     return
   }
 
-  if (msgDialogInfo != null) {
-    MsgAlertDialog(msgDialogInfo, onDismissMsgDialog)
-  }
-
-  val endpointsToShow = allEndpointUiModels.ifEmpty { listOf(deviceUiModel) }
+  val endpointsToShow = uiState.allEndpointUiModels.ifEmpty { listOf(uiState.device) }
 
   Column(
       modifier =
@@ -195,14 +167,8 @@ private fun DeviceScreen(
               .padding(MaterialTheme.spacing.paddingNormal),
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
-    if (!isOnline) {
-      Text(
-          text = stringResource(R.string.device_offline_label),
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.error,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth(),
-      )
+    if (!uiState.isOnline) {
+      OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
     endpointsToShow.forEach { endpointModel ->
       Surface(
@@ -213,7 +179,7 @@ private fun DeviceScreen(
         Column(modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent)) {
           EndpointDeviceControl(
               endpointModel = endpointModel,
-              lastUpdatedEndpointState = lastUpdatedEndpointState,
+              lastUpdatedEndpointState = uiState.lastUpdatedEndpointState,
               onOnOffClick = { value -> onOnOffClick(endpointModel, value) },
               onBrightnessChange = { value -> onBrightnessChange(endpointModel, value) },
               onColorTemperatureChange = { value ->

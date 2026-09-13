@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
@@ -69,6 +70,40 @@ data class ExplorerClusterDetails(
     val events: List<ExplorerEventUiItem> = emptyList(),
 )
 
+data class ExplorerUiState(
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    val isOnline: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
+    val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
+    val navStack: List<ExplorerLevel> = listOf(ExplorerLevel.EndpointList),
+    val endpointSearchQuery: String = "",
+    val clusterSearchQuery: String = "",
+    val attributeSearchQuery: String = "",
+    val commandSearchQuery: String = "",
+    val eventSearchQuery: String = "",
+    val loadingClusterKeys: Set<ExplorerClusterKey> = emptySet(),
+    val clusterDetailsByKey: Map<ExplorerClusterKey, ExplorerClusterDetails> = emptyMap(),
+    val attributeValueByKey: Map<String, String> = emptyMap(),
+    val attributeReadSuccessCount: Int = 0,
+    val attributeWriteSuccessCount: Int = 0,
+    val commandInvokeSuccessCount: Int = 0,
+    val knownClustersById: Map<ClusterId, ExplorerClusterDefinition> = emptyMap(),
+
+    // UI Overlay / Dialog States
+    val msgDialogInfo: DialogInfo? = null,
+)
+
+private data class ExplorerCoreData(
+    val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    val errorMessageRes: Int? = null,
+)
+
 sealed class ExplorerLevel {
   object EndpointList : ExplorerLevel()
 
@@ -100,36 +135,43 @@ constructor(
     private val clustersHelper: ClustersHelper,
 ) : ViewModel() {
 
-  sealed interface UiState {
-    data object Loading : UiState
-
-    data class Loaded(val deviceMatterInfoList: List<DeviceMatterInfo>) : UiState
-
-    data class Error(@field:StringRes val messageRes: Int) : UiState
-  }
-
   private val refreshTrigger = MutableSharedFlow<NodeId>(replay = 1)
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  val uiState: StateFlow<UiState> =
+  private val explorerCoreDataState: StateFlow<ExplorerCoreData> =
       refreshTrigger
           .flatMapLatest { nodeId ->
             flow {
-              emit(UiState.Loading)
-              emit(
-                  runCatching {
-                    UiState.Loaded(
-                        clustersHelper.fetchDeviceMatterInfo(nodeId).sortedBy { it.endpointId }
+              emit(ExplorerCoreData(isFirstTimeLoading = true))
+              runCatching {
+                clustersHelper.fetchDeviceMatterInfo(nodeId).sortedBy { it.endpointId }
+              }
+                  .onSuccess { list ->
+                    emit(
+                        ExplorerCoreData(
+                            deviceMatterInfoList = list,
+                            isFirstTimeLoading = false,
+                            isBackgroundRefreshing = false,
+                        )
                     )
                   }
-                      .getOrElse {
-                        Timber.e(it, "loadExplorer failed")
-                        UiState.Error(R.string.device_explorer_error_action_failed)
-                      }
-              )
+                  .onFailure {
+                    Timber.e(it, "loadExplorer failed")
+                    emit(
+                        ExplorerCoreData(
+                            isFirstTimeLoading = false,
+                            isBackgroundRefreshing = false,
+                            errorMessageRes = R.string.device_explorer_error_action_failed,
+                        )
+                    )
+                  }
             }
           }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UiState.Loading)
+          .stateIn(
+              viewModelScope,
+              SharingStarted.WhileSubscribed(5000),
+              ExplorerCoreData(),
+          )
 
   fun loadExplorer(nodeId: NodeId) = refreshTrigger.tryEmit(nodeId)
 
@@ -169,15 +211,70 @@ constructor(
   val attributeWriteSuccessCount: StateFlow<Int> = _attributeWriteSuccessCount.asStateFlow()
 
   private val _commandInvokeSuccessCount = MutableStateFlow(0)
-  val commandInvokeSuccessCount: StateFlow<Int> = _commandInvokeSuccessCount.asStateFlow()
 
   private val _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
-  val msgDialogInfo: StateFlow<DialogInfo?> = _msgDialogInfo.asStateFlow()
 
   private val _knownClustersById =
       MutableStateFlow<Map<ClusterId, ExplorerClusterDefinition>>(emptyMap())
-  val knownClustersById: StateFlow<Map<ClusterId, ExplorerClusterDefinition>> =
-      _knownClustersById.asStateFlow()
+
+  @Suppress("UNCHECKED_CAST")
+  val uiState: StateFlow<ExplorerUiState> =
+      combine(
+              explorerCoreDataState,
+              _navStack.asStateFlow(),
+              _endpointSearchQuery.asStateFlow(),
+              _clusterSearchQuery.asStateFlow(),
+              _attributeSearchQuery.asStateFlow(),
+              _commandSearchQuery.asStateFlow(),
+              _eventSearchQuery.asStateFlow(),
+              _loadingClusterKeys.asStateFlow(),
+              _clusterDetailsByKey.asStateFlow(),
+              _attributeValueByKey.asStateFlow(),
+              _attributeReadSuccessCount.asStateFlow(),
+              _attributeWriteSuccessCount.asStateFlow(),
+              _commandInvokeSuccessCount.asStateFlow(),
+              _msgDialogInfo.asStateFlow(),
+              _knownClustersById.asStateFlow(),
+          ) { array ->
+            var coreData = array[0] as ExplorerCoreData
+            var navStack = array[1] as List<ExplorerLevel>
+            var endpointSearchQuery = array[2] as String
+            var clusterSearchQuery = array[3] as String
+            var attributeSearchQuery = array[4] as String
+            var commandSearchQuery = array[5] as String
+            var eventSearchQuery = array[6] as String
+            var loadingClusterKeys = array[7] as Set<ExplorerClusterKey>
+            var clusterDetailsByKey = array[8] as Map<ExplorerClusterKey, ExplorerClusterDetails>
+            var attributeValueByKey = array[9] as Map<String, String>
+            var attributeReadSuccessCount = array[10] as Int
+            var attributeWriteSuccessCount = array[11] as Int
+            var commandInvokeSuccessCount = array[12] as Int
+            var msgDialogInfo = array[13] as DialogInfo?
+            var knownClustersById = array[14] as Map<ClusterId, ExplorerClusterDefinition>
+
+            ExplorerUiState(
+                isFirstTimeLoading = coreData.isFirstTimeLoading,
+                isBackgroundRefreshing = coreData.isBackgroundRefreshing,
+                isOnline = false,
+                errorMessageRes = coreData.errorMessageRes,
+                deviceMatterInfoList = coreData.deviceMatterInfoList,
+                navStack = navStack,
+                endpointSearchQuery = endpointSearchQuery,
+                clusterSearchQuery = clusterSearchQuery,
+                attributeSearchQuery = attributeSearchQuery,
+                commandSearchQuery = commandSearchQuery,
+                eventSearchQuery = eventSearchQuery,
+                loadingClusterKeys = loadingClusterKeys,
+                clusterDetailsByKey = clusterDetailsByKey,
+                attributeValueByKey = attributeValueByKey,
+                attributeReadSuccessCount = attributeReadSuccessCount,
+                attributeWriteSuccessCount = attributeWriteSuccessCount,
+                commandInvokeSuccessCount = commandInvokeSuccessCount,
+                msgDialogInfo = msgDialogInfo,
+                knownClustersById = knownClustersById,
+            )
+          }
+          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExplorerUiState())
 
   init {
     viewModelScope.launch(Dispatchers.IO) {
