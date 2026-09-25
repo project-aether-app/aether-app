@@ -149,9 +149,7 @@ private fun DeviceScreen(
     modifier: Modifier = Modifier,
 ) {
 
-  uiState.msgDialogInfo?.let { dialogInfo ->
-    MsgAlertDialog(dialogInfo, onDismissMsgDialog)
-  }
+  uiState.msgDialogInfo?.let { dialogInfo -> MsgAlertDialog(dialogInfo, onDismissMsgDialog) }
 
   if (uiState.isFirstTimeLoading || uiState.device == null) {
     LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)

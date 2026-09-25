@@ -117,9 +117,7 @@ constructor(private val diagnosticsRepository: DiagnosticsRepository) : ViewMode
 
                 channelFlow {
                   launch { softwareDef.await()?.let { send(DiagnosticUpdate.Software(it)) } }
-                  launch {
-                    ethernetDef.await()?.let { send(DiagnosticUpdate.EthernetNetwork(it)) }
-                  }
+                  launch { ethernetDef.await()?.let { send(DiagnosticUpdate.EthernetNetwork(it)) } }
                   launch { wifiDef.await()?.let { send(DiagnosticUpdate.WiFiNetwork(it)) } }
                   launch { threadDef.await()?.let { send(DiagnosticUpdate.ThreadNetwork(it)) } }
                 }

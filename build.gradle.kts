@@ -20,4 +20,7 @@ plugins {
 
   // Hilt
   alias(libs.plugins.hilt) apply false
+
+  // Paparazzi (screen offline rendering)
+  alias(libs.plugins.paparazzi) apply false
 }

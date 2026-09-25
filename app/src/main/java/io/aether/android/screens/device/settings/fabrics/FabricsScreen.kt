@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -41,13 +42,12 @@ import io.aether.android.R
 import io.aether.android.data.models.ManagedFabric
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.vendorLabel
-import io.aether.android.screens.common.EmptyState
-import io.aether.android.screens.common.ErrorMessage
+import io.aether.android.screens.common.EmptyStateBanner
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.GroupBox
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FabricsRoute(
     nodeId: NodeId,
@@ -58,6 +58,22 @@ fun FabricsRoute(
 
   LaunchedEffect(nodeId) { viewModel.loadFabrics(nodeId) }
 
+  FabricsRouteContent(
+      uiState = uiState,
+      onBackClick = onBackClick,
+      onRefresh = { viewModel.loadFabrics(nodeId) },
+      onRemoveController = { index -> viewModel.removeFabric(nodeId, index) },
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FabricsRouteContent(
+    uiState: FabricsUiState,
+    onBackClick: () -> Unit,
+    onRefresh: () -> Unit,
+    onRemoveController: (Int) -> Unit,
+) {
   Scaffold(
       topBar = {
         TopAppBar(
@@ -82,14 +98,13 @@ fun FabricsRoute(
     }
     FabricsScreen(
         uiState = uiState,
-        onRefresh = { viewModel.loadFabrics(nodeId) },
-        onRemoveController = { index -> viewModel.removeFabric(nodeId, index) },
+        onRefresh = onRefresh,
+        onRemoveController = onRemoveController,
         modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FabricsScreen(
     uiState: FabricsUiState,
@@ -102,10 +117,15 @@ private fun FabricsScreen(
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
-    uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
     when {
+      uiState.errorMessageRes != null -> {
+        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+      }
       uiState.fabrics.isEmpty() -> {
-        EmptyState(stringResource(R.string.device_fabrics_empty))
+        EmptyStateBanner(
+            message = stringResource(R.string.device_fabrics_empty),
+            icon = Icons.Default.Info,
+        )
       }
       else -> {
         Column(

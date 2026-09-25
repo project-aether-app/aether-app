@@ -47,7 +47,7 @@ import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
 import io.aether.android.matter.vendorLabel
-import io.aether.android.screens.common.ErrorMessage
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
 import io.aether.android.screens.common.OfflineLabel
@@ -181,11 +181,9 @@ private fun DeviceSettingsScreen(
     modifier: Modifier = Modifier,
 ) {
 
-  uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
+  uiState.errorMessageRes?.let { EmptyStateErrorBanner(stringResource(it)) }
 
-  uiState.msgDialogInfo?.let { dialogInfo ->
-    MsgAlertDialog(dialogInfo, onDismissMsgDialog)
-  }
+  uiState.msgDialogInfo?.let { dialogInfo -> MsgAlertDialog(dialogInfo, onDismissMsgDialog) }
 
   if (uiState.device == null) {
     return

@@ -28,7 +28,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
 import io.aether.android.matter.NodeId
-import io.aether.android.screens.common.ErrorMessage
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
@@ -87,7 +87,7 @@ private fun DiagnosticsScreen(
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
-    uiState.errorMessageRes?.let { ErrorMessage(stringResource(it)) }
+    uiState.errorMessageRes?.let { EmptyStateErrorBanner(stringResource(it)) }
     Column(
         modifier =
             Modifier.fillMaxSize()

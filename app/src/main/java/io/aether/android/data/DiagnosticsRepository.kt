@@ -274,9 +274,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
           }
         }
       }
-      .onFailure { e ->
-        Timber.e(e, "Failed to read WiFi Network Diagnostics for nodeId=$nodeId")
-      }
+      .onFailure { e -> Timber.e(e, "Failed to read WiFi Network Diagnostics for nodeId=$nodeId") }
       .getOrNull()
 
   private fun extractWiFiNetworkDiagnosticsData(nodeState: NodeState): WiFiNetworkDiagnosticsData {
