@@ -52,7 +52,6 @@ data class DeviceSettingsUiState(
     // Lifecycle Flags
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
-    val isOnline: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
@@ -64,7 +63,7 @@ data class DeviceSettingsUiState(
     val msgDialogInfo: DialogInfo? = null,
     val showShareDeviceAlertDialog: Boolean = false,
     val showRemoveDeviceAlertDialog: Boolean = false,
-    val showRemoveDeviceConfirmAlertDialog: Boolean = false,
+    val showLocalRemoveDeviceAlertDialog: Boolean = false,
     val deviceRemovalCompleted: Boolean = false,
     val pairingWindowOpenForDeviceSharing: Boolean = false,
 )
@@ -212,7 +211,7 @@ constructor(
 
   private var _showRemoveDeviceAlertDialog = MutableStateFlow(false)
 
-  private var _showRemoveDeviceConfirmAlertDialog = MutableStateFlow(false)
+  private var _showLocalRemoveDeviceAlertDialog = MutableStateFlow(false)
 
   // Communicates to the UI that removal of the device has completed successfully.
   private var _deviceRemovalCompleted = MutableStateFlow(false)
@@ -226,7 +225,7 @@ constructor(
               _msgDialogInfo.asStateFlow(),
               _showShareDeviceAlertDialog.asStateFlow(),
               _showRemoveDeviceAlertDialog.asStateFlow(),
-              _showRemoveDeviceConfirmAlertDialog.asStateFlow(),
+              _showLocalRemoveDeviceAlertDialog.asStateFlow(),
               _deviceRemovalCompleted.asStateFlow(),
               _pairingWindowOpenForDeviceSharing.asStateFlow(),
           ) { array ->
@@ -235,7 +234,7 @@ constructor(
             val msgDialogInfo = array[2] as DialogInfo?
             val showShareDeviceAlertDialog = array[3] as Boolean
             val showRemoveDeviceAlertDialog = array[4] as Boolean
-            val showRemoveDeviceConfirmAlertDialog = array[5] as Boolean
+            val showLocalRemoveDeviceAlertDialog = array[5] as Boolean
             val deviceRemovalCompleted = array[6] as Boolean
             val pairingWindowOpenForDeviceSharing = array[7] as Boolean
 
@@ -245,11 +244,12 @@ constructor(
                 }
             val isOnline = node?.online ?: false
             val dateCommissioned = node?.dateCommissioned?.takeUnless { isDefaultTimestamp(it) }
+            // TODO: Fix isOnline handling.
+            // coreData.device?.isOnline = isOnline
 
             DeviceSettingsUiState(
                 isFirstTimeLoading = coreData.isFirstTimeLoading,
                 isBackgroundRefreshing = coreData.isBackgroundRefreshing,
-                isOnline = isOnline,
                 errorMessageRes = coreData.errorMessageRes,
                 device = coreData.device,
                 basicInformation = coreData.basicInformation,
@@ -257,7 +257,7 @@ constructor(
                 msgDialogInfo = msgDialogInfo,
                 showShareDeviceAlertDialog = showShareDeviceAlertDialog,
                 showRemoveDeviceAlertDialog = showRemoveDeviceAlertDialog,
-                showRemoveDeviceConfirmAlertDialog = showRemoveDeviceConfirmAlertDialog,
+                showLocalRemoveDeviceAlertDialog = showLocalRemoveDeviceAlertDialog,
                 deviceRemovalCompleted = deviceRemovalCompleted,
                 pairingWindowOpenForDeviceSharing = pairingWindowOpenForDeviceSharing,
             )
@@ -315,12 +315,12 @@ constructor(
     _showRemoveDeviceAlertDialog.value = false
   }
 
-  fun showRemoveDeviceConfirmAlertDialog() {
-    _showRemoveDeviceConfirmAlertDialog.value = true
+  fun showLocalRemoveDeviceAlertDialog() {
+    _showLocalRemoveDeviceAlertDialog.value = true
   }
 
   fun dismissRemoveDeviceConfirmAlertDialog() {
-    _showRemoveDeviceConfirmAlertDialog.value = false
+    _showLocalRemoveDeviceAlertDialog.value = false
   }
 
   fun resetDeviceRemovalCompleted() {
@@ -421,7 +421,7 @@ constructor(
       } catch (e: Exception) {
         Timber.e(e, "Unlinking the device failed.")
         dismissMsgDialog()
-        showRemoveDeviceConfirmAlertDialog()
+        showLocalRemoveDeviceAlertDialog()
         return@launch
       }
       Timber.d("Device removal succeeded nodeId=$nodeId")

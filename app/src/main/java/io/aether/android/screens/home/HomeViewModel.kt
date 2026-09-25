@@ -109,7 +109,6 @@ data class HomeUiState(
     // Lifecycle Flags
     val isFirstTimeLoading: Boolean = false,
     val isBackgroundRefreshing: Boolean = false,
-    val isOnline: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
@@ -204,7 +203,6 @@ constructor(
             HomeUiState(
                 isFirstTimeLoading = false,
                 isBackgroundRefreshing = false,
-                isOnline = false,
                 errorMessageRes = null,
                 devices = devicesUiModel.devices,
                 showOfflineDevices = devicesUiModel.showOfflineDevices,

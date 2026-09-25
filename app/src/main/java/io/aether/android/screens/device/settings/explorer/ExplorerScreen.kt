@@ -33,7 +33,6 @@ import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExplorerRoute(
     onBackClick: () -> Unit,
@@ -41,8 +40,6 @@ fun ExplorerRoute(
     viewModel: ExplorerViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var showSearch by rememberSaveable { mutableStateOf(false) }
-  val saveableStateHolder = rememberSaveableStateHolder()
 
   val atRoot = uiState.navStack.size <= 1
   BackHandler(enabled = !atRoot) { viewModel.navigateBack() }
@@ -52,12 +49,30 @@ fun ExplorerRoute(
     onPauseOrDispose {}
   }
 
+  ExplorerScreen(
+      nodeId = nodeId,
+      uiState = uiState,
+      onBackClick = if (atRoot) onBackClick else viewModel::navigateBack,
+      viewModel = viewModel,
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExplorerScreen(
+    nodeId: NodeId,
+    uiState: ExplorerUiState,
+    onBackClick: () -> Unit,
+    viewModel: ExplorerViewModel,
+) {
+  var showSearch by rememberSaveable { mutableStateOf(false) }
+  val saveableStateHolder = rememberSaveableStateHolder()
   Scaffold(
       topBar = {
         TopAppBar(
             title = { Text(stringResource(R.string.device_settings_admin_explorer)) },
             navigationIcon = {
-              IconButton(onClick = if (atRoot) onBackClick else viewModel::navigateBack) {
+              IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.back_button),
@@ -82,7 +97,7 @@ fun ExplorerRoute(
       )
       return@Scaffold
     }
-    ExplorerScreen(
+    Explorer(
         nodeId = nodeId,
         uiState = uiState,
         modifier = Modifier.fillMaxSize().padding(innerPadding),
@@ -94,7 +109,7 @@ fun ExplorerRoute(
 }
 
 @Composable
-private fun ExplorerScreen(
+private fun Explorer(
     nodeId: NodeId,
     uiState: ExplorerUiState,
     modifier: Modifier = Modifier,

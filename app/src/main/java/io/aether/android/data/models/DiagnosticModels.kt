@@ -8,14 +8,14 @@ import java.net.Inet6Address
 import java.net.InetAddress
 
 data class NetworkInterface(
-    val name: String,
-    val isOperational: Boolean,
-    val offPremiseServicesReachableIPv4: Boolean?,
-    val offPremiseServicesReachableIPv6: Boolean?,
-    val hardwareAddress: ByteArray,
-    val ipv4Addresses: List<InetAddress>,
-    val ipv6Addresses: List<Inet6Address>,
     val type: Enums.DiagnosticsGeneralClusterInterfaceType,
+    val hardwareAddress: ByteArray,
+    val name: String,
+    val offPremiseServicesReachableIPv4: Boolean? = null,
+    val offPremiseServicesReachableIPv6: Boolean? = null,
+    val ipv4Addresses: List<InetAddress> = emptyList(),
+    val ipv6Addresses: List<Inet6Address> = emptyList(),
+    val isOperational: Boolean = false,
 )
 
 data class GeneralDiagnosticsData(
@@ -33,10 +33,10 @@ data class GeneralDiagnosticsData(
 
 data class ThreadMetrics(
     val id: ULong,
-    val name: String?,
-    val stackFreeCurrent: UInt?,
-    val stackFreeMinimum: UInt?,
-    val stackSize: UInt?,
+    val name: String? = null,
+    val stackFreeCurrent: UInt? = null,
+    val stackFreeMinimum: UInt? = null,
+    val stackSize: UInt? = null,
 )
 
 data class SoftwareDiagnosticsData(

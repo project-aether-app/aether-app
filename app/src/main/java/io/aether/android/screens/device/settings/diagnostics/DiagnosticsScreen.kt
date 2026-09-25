@@ -32,7 +32,6 @@ import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiagnosticsRoute(
     onBackClick: () -> Unit,
@@ -46,6 +45,20 @@ fun DiagnosticsRoute(
     onPauseOrDispose {}
   }
 
+  DiagnosticsScreen(
+      uiState = uiState,
+      onBackClick = onBackClick,
+      onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DiagnosticsScreen(
+    uiState: DiagnosticsUiState,
+    onBackClick: () -> Unit,
+    onRefresh: () -> Unit,
+) {
   Scaffold(
       topBar = {
         Column {
@@ -67,17 +80,16 @@ fun DiagnosticsRoute(
       )
       return@Scaffold
     }
-    DiagnosticsScreen(
+    Diagnostics(
         uiState = uiState,
-        onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
+        onRefresh = onRefresh,
         modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DiagnosticsScreen(
+private fun Diagnostics(
     uiState: DiagnosticsUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,

@@ -49,11 +49,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-data class DeviceScreenUiState(
+data class DeviceUiState(
     // Lifecycle Flags
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
-    val isOnline: Boolean = true,
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
@@ -95,7 +94,7 @@ constructor(
   private var _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
   private val msgDialogInfo: StateFlow<DialogInfo?> = _msgDialogInfo.asStateFlow()
 
-  val uiState: StateFlow<DeviceScreenUiState> =
+  val uiState: StateFlow<DeviceUiState> =
       combine(
               deviceUiModel,
               allEndpointUiModels,
@@ -115,10 +114,9 @@ constructor(
                 devicesState.nodesList
                     .firstOrNull { it.nodeId == deviceUiModel?.nodeId?.toLong() }
                     ?.online ?: deviceUiModel?.isOnline ?: true
-            DeviceScreenUiState(
+            DeviceUiState(
                 isFirstTimeLoading = deviceUiModel == null,
                 isBackgroundRefreshing = false,
-                isOnline = isOnline,
                 errorMessageRes = null,
                 device = deviceUiModel,
                 allEndpointUiModels = allEndpointUiModels,
@@ -126,7 +124,7 @@ constructor(
                 msgDialogInfo = msgDialogInfo,
             )
           }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceScreenUiState())
+          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceUiState())
 
   // -----------------------------------------------------------------------------------------------
   // Load device

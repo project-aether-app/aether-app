@@ -58,7 +58,6 @@ import io.aether.android.screens.device.actions.shareDevice
 import io.aether.android.screens.thread.getActivity
 import io.aether.android.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceSettingsRoute(
     navigateToHome: () -> Unit,
@@ -71,7 +70,6 @@ fun DeviceSettingsRoute(
 ) {
 
   val activity = LocalContext.current.getActivity()
-
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   // GPS share activity launcher.
@@ -115,6 +113,49 @@ fun DeviceSettingsRoute(
     onPauseOrDispose {}
   }
 
+  DeviceSettingsScreen(
+      uiState = uiState,
+      onBackClick = onBackClick,
+      onDismissMsgDialog = { viewModel.dismissMsgDialog() },
+      onDeviceNameChange = { name -> viewModel.renameDevice(nodeId, name) },
+      onDeviceTypeChange = { type -> viewModel.changeDeviceType(nodeId, type) },
+      onManageFabricsClick = { navigateToDeviceFabrics(nodeId) },
+      onDataModelExplorerClick = { navigateToDeviceExplorer(nodeId) },
+      onDiagnosticsClick = { navigateToDeviceDiagnostics(nodeId) },
+      onShareDeviceClick = { viewModel.showShareDeviceAlertDialog() },
+      onShareDeviceResult = { doIt ->
+        viewModel.dismissShareDeviceAlertDialog()
+        if (doIt) viewModel.openPairingWindow(nodeId)
+      },
+      onRemoveDeviceClick = { viewModel.showRemoveDeviceAlertDialog() },
+      onRemoveDeviceResult = { doIt ->
+        viewModel.dismissRemoveDeviceAlertDialog()
+        if (doIt) viewModel.removeDevice(nodeId)
+      },
+      onForceRemoveDeviceResult = { doIt ->
+        viewModel.dismissRemoveDeviceConfirmAlertDialog()
+        if (doIt) viewModel.removeDeviceWithoutUnlink(nodeId)
+      },
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeviceSettingsScreen(
+    uiState: DeviceSettingsUiState,
+    onBackClick: () -> Unit,
+    onDismissMsgDialog: () -> Unit,
+    onDeviceNameChange: (String) -> Unit,
+    onDeviceTypeChange: (DeviceTypeId) -> Unit,
+    onManageFabricsClick: () -> Unit,
+    onDataModelExplorerClick: () -> Unit,
+    onDiagnosticsClick: () -> Unit,
+    onShareDeviceClick: () -> Unit,
+    onShareDeviceResult: (Boolean) -> Unit,
+    onRemoveDeviceClick: () -> Unit,
+    onRemoveDeviceResult: (Boolean) -> Unit,
+    onForceRemoveDeviceResult: (Boolean) -> Unit,
+) {
   Scaffold(
       topBar = {
         TopAppBar(
@@ -137,35 +178,26 @@ fun DeviceSettingsRoute(
       )
       return@Scaffold
     }
-    DeviceSettingsScreen(
+    DeviceSettings(
         uiState = uiState,
-        onDismissMsgDialog = { viewModel.dismissMsgDialog() },
-        onDeviceNameChange = { name -> viewModel.renameDevice(nodeId, name) },
-        onDeviceTypeChange = { type -> viewModel.changeDeviceType(nodeId, type) },
-        onManageFabricsClick = { navigateToDeviceFabrics(nodeId) },
-        onDataModelExplorerClick = { navigateToDeviceExplorer(nodeId) },
-        onDiagnosticsClick = { navigateToDeviceDiagnostics(nodeId) },
-        onShareDeviceClick = { viewModel.showShareDeviceAlertDialog() },
-        onShareDeviceResult = { doIt ->
-          viewModel.dismissShareDeviceAlertDialog()
-          if (doIt) viewModel.openPairingWindow(nodeId)
-        },
-        onRemoveDeviceClick = { viewModel.showRemoveDeviceAlertDialog() },
-        onRemoveDeviceResult = { doIt ->
-          viewModel.dismissRemoveDeviceAlertDialog()
-          if (doIt) viewModel.removeDevice(nodeId)
-        },
-        onForceRemoveDeviceResult = { doIt ->
-          viewModel.dismissRemoveDeviceConfirmAlertDialog()
-          if (doIt) viewModel.removeDeviceWithoutUnlink(nodeId)
-        },
+        onDismissMsgDialog = onDismissMsgDialog,
+        onDeviceNameChange = onDeviceNameChange,
+        onDeviceTypeChange = onDeviceTypeChange,
+        onManageFabricsClick = onManageFabricsClick,
+        onDataModelExplorerClick = onDataModelExplorerClick,
+        onDiagnosticsClick = onDiagnosticsClick,
+        onShareDeviceClick = onShareDeviceClick,
+        onShareDeviceResult = onShareDeviceResult,
+        onRemoveDeviceClick = onRemoveDeviceClick,
+        onRemoveDeviceResult = onRemoveDeviceResult,
+        onForceRemoveDeviceResult = onForceRemoveDeviceResult,
         modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
 
 @Composable
-private fun DeviceSettingsScreen(
+private fun DeviceSettings(
     uiState: DeviceSettingsUiState,
     onDismissMsgDialog: () -> Unit,
     onDeviceNameChange: (String) -> Unit,
@@ -181,19 +213,6 @@ private fun DeviceSettingsScreen(
     modifier: Modifier = Modifier,
 ) {
 
-  uiState.errorMessageRes?.let { EmptyStateErrorBanner(stringResource(it)) }
-
-  uiState.msgDialogInfo?.let { dialogInfo -> MsgAlertDialog(dialogInfo, onDismissMsgDialog) }
-
-  if (uiState.device == null) {
-    return
-  }
-
-  val device = uiState.device
-  val basicInformation = uiState.basicInformation
-  val isOnline = uiState.isOnline
-  val dateCommissioned = uiState.dateCommissioned
-
   var showRenameDialog by remember { mutableStateOf(false) }
   var showTypeDialog by remember { mutableStateOf(false) }
   val scrollState =
@@ -201,54 +220,56 @@ private fun DeviceSettingsScreen(
         androidx.compose.foundation.ScrollState(0)
       }
 
-  if (showRenameDialog) {
-    ChangeDeviceNameDialog(
-        currentName = device.name,
-        onConfirm = { name ->
-          onDeviceNameChange(name)
-          showRenameDialog = false
-        },
-        onDismissRequest = { showRenameDialog = false },
-    )
-  }
+  val device = uiState.device
 
-  if (showTypeDialog) {
-    ChangeDeviceTypeDialog(
-        currentType = device.deviceTypeId,
-        onConfirm = { type ->
-          onDeviceTypeChange(type)
-          showTypeDialog = false
-        },
-        onDismissRequest = { showTypeDialog = false },
-    )
-  }
-
-  if (uiState.showShareDeviceAlertDialog) {
-    ShareDeviceConfirmationDialog(
-        onConfirm = { onShareDeviceResult(true) },
-        onDismissRequest = { onShareDeviceResult(false) },
-    )
-  }
-
-  if (uiState.showRemoveDeviceAlertDialog) {
-    RemoveDeviceConfirmationDialog(
-        onConfirm = { onRemoveDeviceResult(true) },
-        onDismissRequest = { onRemoveDeviceResult(false) },
-    )
-  }
-
-  if (uiState.showRemoveDeviceConfirmAlertDialog) {
-    ForceRemoveDeviceConfirmationDialog(
-        onConfirm = { onForceRemoveDeviceResult(true) },
-        onDismissRequest = { onForceRemoveDeviceResult(false) },
-    )
+  when {
+    device == null -> return
+    uiState.errorMessageRes != null -> {
+      EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+    }
+    uiState.msgDialogInfo != null -> {
+      MsgAlertDialog(uiState.msgDialogInfo, onDismissMsgDialog)
+    }
+    showRenameDialog ->
+        ChangeDeviceNameDialog(
+            currentName = device.name,
+            onConfirm = { name ->
+              onDeviceNameChange(name)
+              showRenameDialog = false
+            },
+            onDismissRequest = { showRenameDialog = false },
+        )
+    showTypeDialog ->
+        ChangeDeviceTypeDialog(
+            currentType = device.deviceTypeId,
+            onConfirm = { type ->
+              onDeviceTypeChange(type)
+              showTypeDialog = false
+            },
+            onDismissRequest = { showTypeDialog = false },
+        )
+    uiState.showShareDeviceAlertDialog ->
+        ShareDeviceConfirmationDialog(
+            onConfirm = { onShareDeviceResult(true) },
+            onDismissRequest = { onShareDeviceResult(false) },
+        )
+    uiState.showRemoveDeviceAlertDialog ->
+        RemoveDeviceConfirmationDialog(
+            onConfirm = { onRemoveDeviceResult(true) },
+            onDismissRequest = { onRemoveDeviceResult(false) },
+        )
+    uiState.showLocalRemoveDeviceAlertDialog ->
+        ForceRemoveDeviceConfirmationDialog(
+            onConfirm = { onForceRemoveDeviceResult(true) },
+            onDismissRequest = { onForceRemoveDeviceResult(false) },
+        )
   }
 
   Column(
       modifier = modifier.verticalScroll(scrollState).padding(MaterialTheme.spacing.paddingNormal),
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
-    if (!isOnline) {
+    if (!device.isOnline) {
       OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
     // Basic section
@@ -257,8 +278,9 @@ private fun DeviceSettingsScreen(
       SettingsInfoRow(stringResource(R.string.device_settings_basic_vendor)) {
         Text(
             vendorLabel(
-                basicInformation?.vendorId?.takeIf { it != VendorId(0u) } ?: device.vendorId,
-                basicInformation?.vendorName?.takeIf { it.isNotBlank() }
+                uiState.basicInformation?.vendorId?.takeIf { it != VendorId(0u) }
+                    ?: device.vendorId,
+                uiState.basicInformation?.vendorName?.takeIf { it.isNotBlank() }
                     ?: device.vendorName.takeIf { it.isNotBlank() },
             ),
         )
@@ -267,23 +289,27 @@ private fun DeviceSettingsScreen(
         Text(
             stringResource(
                 R.string.device_settings_basic_product_value,
-                basicInformation?.productName?.takeIf { it.isNotBlank() }
+                uiState.basicInformation?.productName?.takeIf { it.isNotBlank() }
                     ?: device.productName.takeIf { it.isNotBlank() }
                     ?: unknown,
-                basicInformation?.productId?.takeIf { it != ProductId(0u) }?.toString()
+                uiState.basicInformation?.productId?.takeIf { it != ProductId(0u) }?.toString()
                     ?: device.productId.toString(),
             ),
         )
       }
-      SettingsInfoRow(stringResource(R.string.device_settings_basic_hardware_version)) {
-        Text(basicInformation?.hardwareVersion?.takeIf { it.isNotBlank() } ?: unknown)
+      uiState.basicInformation?.hardwareVersion?.let {
+        SettingsInfoRow(stringResource(R.string.device_settings_basic_hardware_version)) {
+          Text(it.takeIf { it.isNotBlank() } ?: unknown)
+        }
       }
-      SettingsInfoRow(stringResource(R.string.device_settings_basic_software_version)) {
-        Text(basicInformation?.softwareVersion?.takeIf { it.isNotBlank() } ?: unknown)
+      uiState.basicInformation?.softwareVersion?.let {
+        SettingsInfoRow(stringResource(R.string.device_settings_basic_software_version)) {
+          Text(it.takeIf { it.isNotBlank() } ?: unknown)
+        }
       }
       SettingsInfoRow(stringResource(R.string.device_settings_basic_added_on)) {
         Text(
-            dateCommissioned
+            uiState.dateCommissioned
                 ?.takeUnless { it.seconds == 0L && it.nanos == 0 }
                 ?.let { formatTimestamp(LocalContext.current, it) } ?: unknown,
         )
@@ -300,7 +326,7 @@ private fun DeviceSettingsScreen(
           label = stringResource(R.string.device_settings_general_name),
           value =
               device.name.takeIf { it.isNotBlank() }
-                  ?: basicInformation?.nodeLabel?.takeIf { it.isNotBlank() }
+                  ?: uiState.basicInformation?.nodeLabel?.takeIf { it.isNotBlank() }
                   ?: unknown,
           onClick = { showRenameDialog = true },
       )

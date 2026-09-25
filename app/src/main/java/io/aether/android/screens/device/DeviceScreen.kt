@@ -100,6 +100,28 @@ internal fun DeviceRoute(
     }
   }
 
+  DeviceScreen(
+      uiState = uiState,
+      onBackClick = onBackClick,
+      onSettingsClick = { navigateToDeviceSettings(nodeId) },
+      onOnOffClick = onOnOffClick,
+      onBrightnessChange = onBrightnessChange,
+      onColorTemperatureChange = onColorTemperatureChange,
+      onDismissMsgDialog = onDismissMsgDialog,
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeviceScreen(
+    uiState: DeviceUiState,
+    onBackClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit,
+    onBrightnessChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
+    onColorTemperatureChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
+    onDismissMsgDialog: () -> Unit,
+) {
   Scaffold(
       topBar = {
         TopAppBar(
@@ -114,7 +136,7 @@ internal fun DeviceRoute(
             },
             actions = {
               if (uiState.device != null) {
-                IconButton(onClick = { navigateToDeviceSettings(nodeId) }) {
+                IconButton(onClick = onSettingsClick) {
                   Icon(
                       imageVector = Icons.Filled.Settings,
                       contentDescription = stringResource(R.string.device_settings),
@@ -125,7 +147,7 @@ internal fun DeviceRoute(
         )
       },
   ) { innerPadding ->
-    DeviceScreen(
+    Device(
         uiState = uiState,
         onOnOffClick,
         onBrightnessChange,
@@ -136,12 +158,9 @@ internal fun DeviceRoute(
   }
 }
 
-// -----------------------------------------------------------------------------------------------
-// Node-level screen: renders one device-type control per endpoint.
-
 @Composable
-private fun DeviceScreen(
-    uiState: DeviceScreenUiState,
+private fun Device(
+    uiState: DeviceUiState,
     onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit,
     onBrightnessChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
     onColorTemperatureChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
@@ -165,7 +184,7 @@ private fun DeviceScreen(
               .padding(MaterialTheme.spacing.paddingNormal),
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
-    if (!uiState.isOnline) {
+    if (!uiState.device.isOnline) {
       OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
     endpointsToShow.forEach { endpointModel ->

@@ -23,7 +23,6 @@ data class FabricsUiState(
     // Lifecycle Flags
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
-    val isOnline: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
@@ -56,6 +55,7 @@ constructor(
               fabrics = fabrics,
               isFirstTimeLoading = false,
               isBackgroundRefreshing = false,
+              errorMessageRes = if (fabrics.isEmpty()) R.string.device_fabrics_error else null,
           )
         }
       }
@@ -65,7 +65,7 @@ constructor(
               it.copy(
                   isFirstTimeLoading = false,
                   isBackgroundRefreshing = false,
-                  errorMessageRes = R.string.controllers_offline,
+                  errorMessageRes = R.string.device_fabrics_error,
               )
             }
           }

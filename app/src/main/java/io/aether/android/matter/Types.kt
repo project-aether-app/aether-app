@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import io.aether.android.R
 
-@OptIn(ExperimentalStdlibApi::class)
 internal val hexFormat = HexFormat {
   upperCase = true
   number.prefix = "0x"

@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -42,7 +41,6 @@ import io.aether.android.R
 import io.aether.android.data.models.ManagedFabric
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.vendorLabel
-import io.aether.android.screens.common.EmptyStateBanner
 import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.GroupBox
 import io.aether.android.screens.common.LoadingIndicator
@@ -58,7 +56,7 @@ fun FabricsRoute(
 
   LaunchedEffect(nodeId) { viewModel.loadFabrics(nodeId) }
 
-  FabricsRouteContent(
+  FabricsScreen(
       uiState = uiState,
       onBackClick = onBackClick,
       onRefresh = { viewModel.loadFabrics(nodeId) },
@@ -68,7 +66,7 @@ fun FabricsRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FabricsRouteContent(
+fun FabricsScreen(
     uiState: FabricsUiState,
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
@@ -96,7 +94,7 @@ fun FabricsRouteContent(
       )
       return@Scaffold
     }
-    FabricsScreen(
+    Fabrics(
         uiState = uiState,
         onRefresh = onRefresh,
         onRemoveController = onRemoveController,
@@ -106,7 +104,7 @@ fun FabricsRouteContent(
 }
 
 @Composable
-private fun FabricsScreen(
+private fun Fabrics(
     uiState: FabricsUiState,
     onRefresh: () -> Unit,
     onRemoveController: (Int) -> Unit,
@@ -120,12 +118,6 @@ private fun FabricsScreen(
     when {
       uiState.errorMessageRes != null -> {
         EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
-      }
-      uiState.fabrics.isEmpty() -> {
-        EmptyStateBanner(
-            message = stringResource(R.string.device_fabrics_empty),
-            icon = Icons.Default.Info,
-        )
       }
       else -> {
         Column(

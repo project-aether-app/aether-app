@@ -74,7 +74,6 @@ data class ExplorerUiState(
     // Lifecycle Flags
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
-    val isOnline: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data
@@ -255,7 +254,6 @@ constructor(
             ExplorerUiState(
                 isFirstTimeLoading = coreData.isFirstTimeLoading,
                 isBackgroundRefreshing = coreData.isBackgroundRefreshing,
-                isOnline = false,
                 errorMessageRes = coreData.errorMessageRes,
                 deviceMatterInfoList = coreData.deviceMatterInfoList,
                 navStack = navStack,

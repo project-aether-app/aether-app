@@ -33,7 +33,6 @@ data class DiagnosticsUiState(
     // Lifecycle Flags
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
-    val isOnline: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
 
     // Core Screen Data

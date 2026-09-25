@@ -109,6 +109,11 @@ fun formatTimestamp(context: Context, timestamp: Timestamp): String {
   return "${dateFormatter.format(date)} ${timeFormatter.format(date)}"
 }
 
+/** Create a com.google.protobuf.Timestamp from a Long representing epoch seconds. */
+fun Long.toTimestamp(): Timestamp {
+  return Timestamp.newBuilder().setSeconds(this).build()
+}
+
 /** Generates a random number to be used as a device identifier during device commissioning */
 fun generateNextDeviceId(): Long {
   val secureRandom =
