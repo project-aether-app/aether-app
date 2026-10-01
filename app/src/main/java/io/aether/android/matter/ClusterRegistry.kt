@@ -6,4 +6,10 @@
 package io.aether.android.matter
 
 val CLUSTERS =
-    CLUSTERS_1_0 + CLUSTERS_1_2 + CLUSTERS_1_3 + CLUSTERS_1_4 + CLUSTERS_1_5 + CLUSTERS_1_6
+    CLUSTERS_1_0 +
+        CLUSTERS_1_2 +
+        CLUSTERS_1_3 +
+        CLUSTERS_1_4 +
+        CLUSTERS_1_5 +
+        CLUSTERS_1_6 +
+        CLUSTERS_1_7

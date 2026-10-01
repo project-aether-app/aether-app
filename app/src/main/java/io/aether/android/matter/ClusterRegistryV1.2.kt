@@ -804,6 +804,12 @@ val CLUSTERS_1_2 =
                                 type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.HEPAFilterMonitoring.Attributes.Medium.ID to
+                            AttributeInfo(
+                                name = "Medium",
+                                type = DataType.MEDIUM_TYPE,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
@@ -860,6 +866,12 @@ val CLUSTERS_1_2 =
                             AttributeInfo(
                                 name = "ReplacementProductList",
                                 type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.Medium.ID to
+                            AttributeInfo(
+                                name = "Medium",
+                                type = DataType.MEDIUM_TYPE,
                                 readPrivilege = Privilege.VIEW,
                             ),
                     ),

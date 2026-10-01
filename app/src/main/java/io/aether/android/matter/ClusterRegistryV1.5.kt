@@ -217,6 +217,31 @@ val CLUSTERS_1_5 =
                                 privilege = Privilege.MANAGE,
                                 parameters = mapOf<UInt, ParameterInfo>(),
                             ),
+                        Clusters.ClosureControl.CommandsIncoming.GroupedMoveTo.ID to
+                            CommandInfo(
+                                name = "GroupedMoveTo",
+                                privilege = Privilege.OPERATE,
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "Position",
+                                                type =
+                                                    DataType
+                                                        .CLOSURE_CONTROL_CLUSTER_TARGET_POSITION_ENUM,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "Latch",
+                                                type = DataType.BOOLEAN,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "Speed",
+                                                type = DataType.THREE_LEVEL_AUTO_ENUM,
+                                            ),
+                                    ),
+                            ),
                     ),
                 commandsOutgoing = mapOf<CommandId, CommandInfo>(),
                 events =
@@ -368,6 +393,54 @@ val CLUSTERS_1_5 =
                                             ),
                                     ),
                             ),
+                        Clusters.ClosureDimension.CommandsIncoming.GroupedSetTarget.ID to
+                            CommandInfo(
+                                name = "GroupedSetTarget",
+                                privilege = Privilege.OPERATE,
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "Position",
+                                                type = DataType.PERCENT100THS,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "Latch",
+                                                type = DataType.BOOLEAN,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "Speed",
+                                                type = DataType.THREE_LEVEL_AUTO_ENUM,
+                                            ),
+                                    ),
+                            ),
+                        Clusters.ClosureDimension.CommandsIncoming.GroupedStep.ID to
+                            CommandInfo(
+                                name = "GroupedStep",
+                                privilege = Privilege.OPERATE,
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "Direction",
+                                                type =
+                                                    DataType
+                                                        .CLOSURE_DIMENSION_CLUSTER_STEP_DIRECTION_ENUM,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "NumberOfSteps",
+                                                type = DataType.U_INT16,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "Speed",
+                                                type = DataType.THREE_LEVEL_AUTO_ENUM,
+                                            ),
+                                    ),
+                            ),
                     ),
                 commandsOutgoing = mapOf<CommandId, CommandInfo>(),
                 events = mapOf<EventId, EventInfo>(),
@@ -456,6 +529,16 @@ val CLUSTERS_1_5 =
                                                 name = "Zone",
                                                 type = DataType.TWO_D_CARTESIAN_ZONE_STRUCT,
                                             ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "NodeID",
+                                                type = DataType.NODE_ID,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "EndpointID",
+                                                type = DataType.ENDPOINT_ID,
+                                            ),
                                     ),
                             ),
                         Clusters.ZoneManagement.CommandsIncoming.UpdateTwoDCartesianZone.ID to
@@ -473,6 +556,16 @@ val CLUSTERS_1_5 =
                                             ParameterInfo(
                                                 name = "Zone",
                                                 type = DataType.TWO_D_CARTESIAN_ZONE_STRUCT,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "NodeID",
+                                                type = DataType.NODE_ID,
+                                            ),
+                                        3u to
+                                            ParameterInfo(
+                                                name = "EndpointID",
+                                                type = DataType.ENDPOINT_ID,
                                             ),
                                     ),
                             ),

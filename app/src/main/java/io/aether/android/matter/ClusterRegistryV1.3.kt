@@ -1043,6 +1043,18 @@ val CLUSTERS_1_3 =
                                 type = DataType.LIST_MESSAGE_ID,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.Messages.Attributes.SupportedLanguageCodes.ID to
+                            AttributeInfo(
+                                name = "SupportedLanguageCodes",
+                                type = DataType.LIST_STRING,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.Messages.Attributes.SupportedMimeTypes.ID to
+                            AttributeInfo(
+                                name = "SupportedMimeTypes",
+                                type = DataType.LIST_STRING,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
@@ -1088,6 +1100,16 @@ val CLUSTERS_1_3 =
                                                 name = "Responses",
                                                 type = DataType.LIST_MESSAGE_RESPONSE_OPTION_STRUCT,
                                             ),
+                                        7u to
+                                            ParameterInfo(
+                                                name = "LanguageCode",
+                                                type = DataType.STRING,
+                                            ),
+                                        8u to
+                                            ParameterInfo(
+                                                name = "MessageURI",
+                                                type = DataType.STRING,
+                                            ),
                                     ),
                             ),
                         Clusters.Messages.CommandsIncoming.CancelMessagesRequest.ID to
@@ -1118,6 +1140,10 @@ val CLUSTERS_1_3 =
                         Clusters.Messages.Events.MessageComplete.ID to
                             EventInfo(
                                 name = "MessageComplete",
+                            ),
+                        Clusters.Messages.Events.MessageNotPresented.ID to
+                            EventInfo(
+                                name = "MessageNotPresented",
                             ),
                     ),
             ),
@@ -1172,6 +1198,12 @@ val CLUSTERS_1_3 =
                             AttributeInfo(
                                 name = "OptOutState",
                                 type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_OPT_OUT_STATE_ENUM,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.DeviceEnergyManagement.Attributes.PowerRangeAdjustment.ID to
+                            AttributeInfo(
+                                name = "PowerRangeAdjustment",
+                                type = DataType.POWER_RANGE_ADJUST_STRUCT,
                                 readPrivilege = Privilege.VIEW,
                             ),
                     ),
@@ -1309,6 +1341,45 @@ val CLUSTERS_1_3 =
                                 privilege = Privilege.OPERATE,
                                 parameters = mapOf<UInt, ParameterInfo>(),
                             ),
+                        Clusters.DeviceEnergyManagement.CommandsIncoming.PowerRangeAdjustRequest
+                            .ID to
+                            CommandInfo(
+                                name = "PowerRangeAdjustRequest",
+                                privilege = Privilege.OPERATE,
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "MinPower",
+                                                type = DataType.POWER_MILLIWATTS,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "MaxPower",
+                                                type = DataType.POWER_MILLIWATTS,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "Duration",
+                                                type = DataType.ELAPSED_SECONDS,
+                                            ),
+                                        3u to
+                                            ParameterInfo(
+                                                name = "Cause",
+                                                type =
+                                                    DataType
+                                                        .DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
+                                            ),
+                                    ),
+                            ),
+                        Clusters.DeviceEnergyManagement.CommandsIncoming
+                            .CancelPowerRangeAdjustRequest
+                            .ID to
+                            CommandInfo(
+                                name = "CancelPowerRangeAdjustRequest",
+                                privilege = Privilege.OPERATE,
+                                parameters = mapOf<UInt, ParameterInfo>(),
+                            ),
                     ),
                 commandsOutgoing = mapOf<CommandId, CommandInfo>(),
                 events =
@@ -1328,6 +1399,14 @@ val CLUSTERS_1_3 =
                         Clusters.DeviceEnergyManagement.Events.Resumed.ID to
                             EventInfo(
                                 name = "Resumed",
+                            ),
+                        Clusters.DeviceEnergyManagement.Events.PowerRangeAdjustStart.ID to
+                            EventInfo(
+                                name = "PowerRangeAdjustStart",
+                            ),
+                        Clusters.DeviceEnergyManagement.Events.PowerRangeAdjustEnd.ID to
+                            EventInfo(
+                                name = "PowerRangeAdjustEnd",
                             ),
                     ),
             ),
@@ -1662,6 +1741,13 @@ val CLUSTERS_1_3 =
                                 name = "ActiveEndpoints",
                                 type = DataType.LIST_ENDPOINT_ID,
                                 readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.PowerTopology.Attributes.ElectricalCircuitNodes.ID to
+                            AttributeInfo(
+                                name = "ElectricalCircuitNodes",
+                                type = DataType.LIST_CIRCUIT_NODE_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                                writePrivilege = Privilege.OPERATE,
                             ),
                     ),
                 commandsIncoming = mapOf<CommandId, CommandInfo>(),

@@ -50,6 +50,12 @@ val CLUSTERS_1_4 =
                                 type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.WaterTankLevelMonitoring.Attributes.Medium.ID to
+                            AttributeInfo(
+                                name = "Medium",
+                                type = DataType.MEDIUM_TYPE,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(

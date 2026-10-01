@@ -778,6 +778,10 @@ object Clusters {
         val ID = AttributeId(0x0016u)
       }
 
+      object DeviceLocation {
+        val ID = AttributeId(0x0017u)
+      }
+
       object ConfigurationVersion {
         val ID = AttributeId(0x0018u)
       }
@@ -1283,6 +1287,10 @@ object Clusters {
       object ReorderNetwork {
         val ID = CommandId(0x0008u)
       }
+
+      object QueryIdentity {
+        val ID = CommandId(0x0009u)
+      }
     }
 
     object CommandsOutgoing {
@@ -1296,6 +1304,10 @@ object Clusters {
 
       object ConnectNetworkResponse {
         val ID = CommandId(0x0007u)
+      }
+
+      object QueryIdentityResponse {
+        val ID = CommandId(0x000Au)
       }
     }
 
@@ -2070,6 +2082,10 @@ object Clusters {
         val ID = AttributeId(0x0016u)
       }
 
+      object DeviceLocation {
+        val ID = AttributeId(0x0017u)
+      }
+
       object ConfigurationVersion {
         val ID = AttributeId(0x0018u)
       }
@@ -2220,6 +2236,10 @@ object Clusters {
 
       object CurrentFabricIndex {
         val ID = AttributeId(0x0005u)
+      }
+
+      object PQCDeviceAttestationProfile {
+        val ID = AttributeId(0x0006u)
       }
     }
 
@@ -3302,6 +3322,38 @@ object Clusters {
     object Events {}
   }
 
+  object ThermostatMode {
+    val ID = ClusterId(0x0063u)
+
+    object Attributes {
+      object SupportedModes {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object CurrentMode {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object StartUpMode {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object OnMode {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object CoreModeTags {
+        val ID = AttributeId(0x0004u)
+      }
+    }
+
+    object CommandsIncoming {}
+
+    object CommandsOutgoing {}
+
+    object Events {}
+  }
+
   object TemperatureAlarm {
     val ID = ClusterId(0x0064u)
 
@@ -3429,6 +3481,10 @@ object Clusters {
       object ReplacementProductList {
         val ID = AttributeId(0x0005u)
       }
+
+      object Medium {
+        val ID = AttributeId(0x0006u)
+      }
     }
 
     object CommandsIncoming {
@@ -3469,6 +3525,10 @@ object Clusters {
       object ReplacementProductList {
         val ID = AttributeId(0x0005u)
       }
+
+      object Medium {
+        val ID = AttributeId(0x0006u)
+      }
     }
 
     object CommandsIncoming {
@@ -3508,6 +3568,10 @@ object Clusters {
 
       object ReplacementProductList {
         val ID = AttributeId(0x0005u)
+      }
+
+      object Medium {
+        val ID = AttributeId(0x0006u)
       }
     }
 
@@ -3901,6 +3965,14 @@ object Clusters {
       object ActiveMessageIDs {
         val ID = AttributeId(0x0001u)
       }
+
+      object SupportedLanguageCodes {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object SupportedMimeTypes {
+        val ID = AttributeId(0x0003u)
+      }
     }
 
     object CommandsIncoming {
@@ -3926,6 +3998,10 @@ object Clusters {
 
       object MessageComplete {
         val ID = EventId(0x0002u)
+      }
+
+      object MessageNotPresented {
+        val ID = EventId(0x0003u)
       }
     }
   }
@@ -3965,6 +4041,10 @@ object Clusters {
       object OptOutState {
         val ID = AttributeId(0x0007u)
       }
+
+      object PowerRangeAdjustment {
+        val ID = AttributeId(0x0008u)
+      }
     }
 
     object CommandsIncoming {
@@ -3999,6 +4079,14 @@ object Clusters {
       object CancelRequest {
         val ID = CommandId(0x0007u)
       }
+
+      object PowerRangeAdjustRequest {
+        val ID = CommandId(0x0008u)
+      }
+
+      object CancelPowerRangeAdjustRequest {
+        val ID = CommandId(0x0009u)
+      }
     }
 
     object CommandsOutgoing {}
@@ -4018,6 +4106,14 @@ object Clusters {
 
       object Resumed {
         val ID = EventId(0x0003u)
+      }
+
+      object PowerRangeAdjustStart {
+        val ID = EventId(0x0004u)
+      }
+
+      object PowerRangeAdjustEnd {
+        val ID = EventId(0x0005u)
       }
     }
   }
@@ -4225,6 +4321,10 @@ object Clusters {
       object ActiveEndpoints {
         val ID = AttributeId(0x0001u)
       }
+
+      object ElectricalCircuitNodes {
+        val ID = AttributeId(0x0002u)
+      }
     }
 
     object CommandsIncoming {}
@@ -4344,6 +4444,134 @@ object Clusters {
         val ID = EventId(0x0000u)
       }
     }
+  }
+
+  object ElectricalAlarm {
+    val ID = ClusterId(0x00A1u)
+
+    object Attributes {
+      object OverVoltageThreshold {
+        val ID = AttributeId(0x0080u)
+      }
+
+      object UnderVoltageThreshold {
+        val ID = AttributeId(0x0081u)
+      }
+
+      object OverFrequencyThreshold {
+        val ID = AttributeId(0x0082u)
+      }
+
+      object UnderFrequencyThreshold {
+        val ID = AttributeId(0x0083u)
+      }
+
+      object OverPowerThreshold {
+        val ID = AttributeId(0x0084u)
+      }
+
+      object UnderPowerThreshold {
+        val ID = AttributeId(0x0085u)
+      }
+
+      object OverCurrentThreshold {
+        val ID = AttributeId(0x0086u)
+      }
+
+      object UnderCurrentThreshold {
+        val ID = AttributeId(0x0087u)
+      }
+
+      object PowerImportThreshold {
+        val ID = AttributeId(0x0088u)
+      }
+
+      object PowerExportThreshold {
+        val ID = AttributeId(0x0089u)
+      }
+    }
+
+    object CommandsIncoming {
+      object SetElectricalAlarmThresholds {
+        val ID = CommandId(0x0080u)
+      }
+    }
+
+    object CommandsOutgoing {}
+
+    object Events {}
+  }
+
+  object ElectricalDistribution {
+    val ID = ClusterId(0x00A2u)
+
+    object Attributes {
+      object MaxContinuousCurrent {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object MaxVoltage {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object NumberOfPoles {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object EndOfLife {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object ServiceEntranceRated {
+        val ID = AttributeId(0x0004u)
+      }
+    }
+
+    object CommandsIncoming {}
+
+    object CommandsOutgoing {}
+
+    object Events {}
+  }
+
+  object ElectricalProtectionAlarm {
+    val ID = ClusterId(0x00A3u)
+
+    object Attributes {
+      object ArcCause {
+        val ID = AttributeId(0x0080u)
+      }
+
+      object OverLoadRating {
+        val ID = AttributeId(0x0081u)
+      }
+
+      object OverVoltageRating {
+        val ID = AttributeId(0x0082u)
+      }
+
+      object SurgeProtectionRating {
+        val ID = AttributeId(0x0083u)
+      }
+
+      object ShortCircuitRating {
+        val ID = AttributeId(0x0084u)
+      }
+
+      object ResidualCurrentRating {
+        val ID = AttributeId(0x0085u)
+      }
+
+      object ArcFaultRating {
+        val ID = AttributeId(0x0086u)
+      }
+    }
+
+    object CommandsIncoming {}
+
+    object CommandsOutgoing {}
+
+    object Events {}
   }
 
   object DoorLock {
@@ -4983,6 +5211,10 @@ object Clusters {
       object Calibrate {
         val ID = CommandId(0x0002u)
       }
+
+      object GroupedMoveTo {
+        val ID = CommandId(0x0003u)
+      }
     }
 
     object CommandsOutgoing {}
@@ -5066,6 +5298,14 @@ object Clusters {
 
       object Step {
         val ID = CommandId(0x0001u)
+      }
+
+      object GroupedSetTarget {
+        val ID = CommandId(0x0002u)
+      }
+
+      object GroupedStep {
+        val ID = CommandId(0x0003u)
       }
     }
 
@@ -5565,6 +5805,34 @@ object Clusters {
       object ThermostatSuggestionNotFollowingReason {
         val ID = AttributeId(0x0056u)
       }
+
+      object CriticalFreezeProtection {
+        val ID = AttributeId(0x0057u)
+      }
+
+      object CriticalOverheatProtection {
+        val ID = AttributeId(0x0058u)
+      }
+
+      object Sensors {
+        val ID = AttributeId(0x0059u)
+      }
+
+      object AvailableSensorHandles {
+        val ID = AttributeId(0x005Au)
+      }
+
+      object EnabledSensorHandles {
+        val ID = AttributeId(0x005Bu)
+      }
+
+      object NumberOfSensorScheduleTransitions {
+        val ID = AttributeId(0x005Cu)
+      }
+
+      object SensorSchedule {
+        val ID = AttributeId(0x005Du)
+      }
     }
 
     object CommandsIncoming {
@@ -5736,6 +6004,78 @@ object Clusters {
     }
 
     object CommandsIncoming {}
+
+    object CommandsOutgoing {}
+
+    object Events {}
+  }
+
+  object Humidistat {
+    val ID = ClusterId(0x0205u)
+
+    object Attributes {
+      object SupportedModes {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object Mode {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object SystemState {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object UserSetpoint {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object MinSetpoint {
+        val ID = AttributeId(0x0004u)
+      }
+
+      object MaxSetpoint {
+        val ID = AttributeId(0x0005u)
+      }
+
+      object Step {
+        val ID = AttributeId(0x0006u)
+      }
+
+      object TargetSetpoint {
+        val ID = AttributeId(0x0007u)
+      }
+
+      object MistType {
+        val ID = AttributeId(0x0008u)
+      }
+
+      object Continuous {
+        val ID = AttributeId(0x0009u)
+      }
+
+      object Sleep {
+        val ID = AttributeId(0x000Au)
+      }
+
+      object Optimal {
+        val ID = AttributeId(0x000Bu)
+      }
+
+      object CondPumpEnabled {
+        val ID = AttributeId(0x000Cu)
+      }
+
+      object CondRunCount {
+        val ID = AttributeId(0x000Du)
+      }
+    }
+
+    object CommandsIncoming {
+      object SetSettings {
+        val ID = CommandId(0x0000u)
+      }
+    }
 
     object CommandsOutgoing {}
 
@@ -6300,6 +6640,10 @@ object Clusters {
 
       object HoldTimeLimits {
         val ID = AttributeId(0x0004u)
+      }
+
+      object PredictedOccupancy {
+        val ID = AttributeId(0x0005u)
       }
 
       object PIROccupiedToUnoccupiedDelay {
@@ -7037,6 +7381,10 @@ object Clusters {
       object PredictedActivity {
         val ID = AttributeId(0x000Bu)
       }
+
+      object SensorFusionSupported {
+        val ID = AttributeId(0x000Cu)
+      }
     }
 
     object CommandsIncoming {}
@@ -7052,6 +7400,218 @@ object Clusters {
         val ID = EventId(0x0001u)
       }
     }
+  }
+
+  object AmbientSensingUnion {
+    val ID = ClusterId(0x0432u)
+
+    object Attributes {
+      object UnionName {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object UnionHealth {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object UnionContributorList {
+        val ID = AttributeId(0x0002u)
+      }
+    }
+
+    object CommandsIncoming {}
+
+    object CommandsOutgoing {}
+
+    object Events {
+      object UnionContributorAdded {
+        val ID = EventId(0x0000u)
+      }
+
+      object UnionContributorRemoved {
+        val ID = EventId(0x0001u)
+      }
+
+      object UnionContributorStatusChanged {
+        val ID = EventId(0x0002u)
+      }
+    }
+  }
+
+  object ProximityRanging {
+    val ID = ClusterId(0x0433u)
+
+    object Attributes {
+      object RangingCapabilities {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object WiFiDevIK {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object BLEDeviceID {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object BLTDevIK {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object BLTCSSecurityLevel {
+        val ID = AttributeId(0x0004u)
+      }
+
+      object BLTCSModeCapability {
+        val ID = AttributeId(0x0005u)
+      }
+
+      object SessionIDList {
+        val ID = AttributeId(0x0006u)
+      }
+
+      object RangingConstraints {
+        val ID = AttributeId(0x0007u)
+      }
+    }
+
+    object CommandsIncoming {
+      object StartRangingRequest {
+        val ID = CommandId(0x0000u)
+      }
+
+      object StopRangingRequest {
+        val ID = CommandId(0x0002u)
+      }
+    }
+
+    object CommandsOutgoing {
+      object StartRangingResponse {
+        val ID = CommandId(0x0001u)
+      }
+    }
+
+    object Events {
+      object RangingResult {
+        val ID = EventId(0x0000u)
+      }
+
+      object RangingSessionStatus {
+        val ID = EventId(0x0001u)
+      }
+    }
+  }
+
+  object SmokeConcentrationMeasurement {
+    val ID = ClusterId(0x0434u)
+
+    object Attributes {
+      object MeasuredValue {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object MinMeasuredValue {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object MaxMeasuredValue {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object PeakMeasuredValue {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object PeakMeasuredValueWindow {
+        val ID = AttributeId(0x0004u)
+      }
+
+      object AverageMeasuredValue {
+        val ID = AttributeId(0x0005u)
+      }
+
+      object AverageMeasuredValueWindow {
+        val ID = AttributeId(0x0006u)
+      }
+
+      object Uncertainty {
+        val ID = AttributeId(0x0007u)
+      }
+
+      object MeasurementUnit {
+        val ID = AttributeId(0x0008u)
+      }
+
+      object MeasurementMedium {
+        val ID = AttributeId(0x0009u)
+      }
+
+      object LevelValue {
+        val ID = AttributeId(0x000Au)
+      }
+    }
+
+    object CommandsIncoming {}
+
+    object CommandsOutgoing {}
+
+    object Events {}
+  }
+
+  object NetworkIdentityManagement {
+    val ID = ClusterId(0x0450u)
+
+    object Attributes {
+      object ActiveNetworkIdentities {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object Clients {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object ClientTableSize {
+        val ID = AttributeId(0x0002u)
+      }
+    }
+
+    object CommandsIncoming {
+      object AddClient {
+        val ID = CommandId(0x0000u)
+      }
+
+      object RemoveClient {
+        val ID = CommandId(0x0002u)
+      }
+
+      object QueryIdentity {
+        val ID = CommandId(0x0003u)
+      }
+
+      object ImportAdminSecret {
+        val ID = CommandId(0x0040u)
+      }
+
+      object ExportAdminSecret {
+        val ID = CommandId(0x0041u)
+      }
+    }
+
+    object CommandsOutgoing {
+      object AddClientResponse {
+        val ID = CommandId(0x0001u)
+      }
+
+      object QueryIdentityResponse {
+        val ID = CommandId(0x0004u)
+      }
+
+      object ExportAdminSecretResponse {
+        val ID = CommandId(0x0042u)
+      }
+    }
+
+    object Events {}
   }
 
   object WiFiNetworkManagement {
@@ -7172,6 +7732,86 @@ object Clusters {
     object CommandsOutgoing {
       object OperationalDatasetResponse {
         val ID = CommandId(0x0003u)
+      }
+    }
+
+    object Events {}
+  }
+
+  object CommissioningProxy {
+    val ID = ClusterId(0x0455u)
+
+    object Attributes {
+      object Transport {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object ScanMaxTime {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object MaxSessions {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object MaxCachedResults {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object NumCachedResults {
+        val ID = AttributeId(0x0004u)
+      }
+
+      object CacheTimeout {
+        val ID = AttributeId(0x0005u)
+      }
+
+      object CachedResults {
+        val ID = AttributeId(0x0006u)
+      }
+
+      object WiFiBand {
+        val ID = AttributeId(0x0007u)
+      }
+    }
+
+    object CommandsIncoming {
+      object ProxyConnectRequest {
+        val ID = CommandId(0x0000u)
+      }
+
+      object ProxyDisconnectRequest {
+        val ID = CommandId(0x0002u)
+      }
+
+      object ProxyScanRequest {
+        val ID = CommandId(0x0003u)
+      }
+
+      object ProxyBackGroundScanStartRequest {
+        val ID = CommandId(0x0005u)
+      }
+
+      object ProxyBackGroundScanStopRequest {
+        val ID = CommandId(0x0006u)
+      }
+
+      object ProxyMessageRequest {
+        val ID = CommandId(0x0007u)
+      }
+    }
+
+    object CommandsOutgoing {
+      object ProxyConnectResponse {
+        val ID = CommandId(0x0001u)
+      }
+
+      object ProxyScanResponse {
+        val ID = CommandId(0x0004u)
+      }
+
+      object ProxyMessageResponse {
+        val ID = CommandId(0x0008u)
       }
     }
 
@@ -7333,6 +7973,14 @@ object Clusters {
       object AvailableTextTracks {
         val ID = AttributeId(0x000Au)
       }
+
+      object AvailableCommands {
+        val ID = AttributeId(0x000Bu)
+      }
+
+      object ContentInfo {
+        val ID = AttributeId(0x000Cu)
+      }
     }
 
     object CommandsIncoming {
@@ -7489,6 +8137,14 @@ object Clusters {
       object SupportedStreamingProtocols {
         val ID = AttributeId(0x0001u)
       }
+
+      object Movable {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object Presets {
+        val ID = AttributeId(0x0003u)
+      }
     }
 
     object CommandsIncoming {
@@ -7499,15 +8155,31 @@ object Clusters {
       object LaunchURL {
         val ID = CommandId(0x0001u)
       }
+
+      object ContentReplicationRequest {
+        val ID = CommandId(0x0003u)
+      }
+
+      object PlayPreset {
+        val ID = CommandId(0x0005u)
+      }
     }
 
     object CommandsOutgoing {
       object LauncherResponse {
         val ID = CommandId(0x0002u)
       }
+
+      object ContentReplicationResponse {
+        val ID = CommandId(0x0004u)
+      }
     }
 
-    object Events {}
+    object Events {
+      object ContentReplication {
+        val ID = EventId(0x0000u)
+      }
+    }
   }
 
   object AudioOutput {
@@ -7621,7 +8293,11 @@ object Clusters {
   object AccountLogin {
     val ID = ClusterId(0x050Eu)
 
-    object Attributes {}
+    object Attributes {
+      object OAuthLoggedIn {
+        val ID = AttributeId(0x0000u)
+      }
+    }
 
     object CommandsIncoming {
       object GetSetupPIN {
@@ -7635,11 +8311,19 @@ object Clusters {
       object Logout {
         val ID = CommandId(0x0003u)
       }
+
+      object GetDeviceAuthURI {
+        val ID = CommandId(0x0004u)
+      }
     }
 
     object CommandsOutgoing {
       object GetSetupPINResponse {
         val ID = CommandId(0x0001u)
+      }
+
+      object GetDeviceAuthURIResponse {
+        val ID = CommandId(0x0005u)
       }
     }
 
@@ -7798,6 +8482,178 @@ object Clusters {
         val ID = CommandId(0x0001u)
       }
     }
+
+    object Events {}
+  }
+
+  object MediaFileManagement {
+    val ID = ClusterId(0x0511u)
+
+    object Attributes {
+      object TotalStorage {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object AvailableStorage {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object AvailableFiles {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object SupportedMimeTypes {
+        val ID = AttributeId(0x0003u)
+      }
+    }
+
+    object CommandsIncoming {
+      object AddFile {
+        val ID = CommandId(0x0000u)
+      }
+
+      object DeleteFile {
+        val ID = CommandId(0x0002u)
+      }
+
+      object RequestSharedFiles {
+        val ID = CommandId(0x0003u)
+      }
+
+      object GetSharedFile {
+        val ID = CommandId(0x0004u)
+      }
+
+      object OfferFile {
+        val ID = CommandId(0x0006u)
+      }
+    }
+
+    object CommandsOutgoing {
+      object AddFileResponse {
+        val ID = CommandId(0x0001u)
+      }
+
+      object GetSharedFileResponse {
+        val ID = CommandId(0x0005u)
+      }
+    }
+
+    object Events {
+      object SharedFilesAdded {
+        val ID = EventId(0x0000u)
+      }
+    }
+  }
+
+  object AudioControl {
+    val ID = ClusterId(0x0512u)
+
+    object Attributes {
+      object SoftMuted {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object PhysicallyMuted {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object Volume {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object MinDeviceVolume {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object MaxDeviceVolume {
+        val ID = AttributeId(0x0004u)
+      }
+
+      object MaxDeviceVolumeDB {
+        val ID = AttributeId(0x0005u)
+      }
+
+      object MaxUserVolume {
+        val ID = AttributeId(0x0006u)
+      }
+
+      object DefaultStepSize {
+        val ID = AttributeId(0x0007u)
+      }
+
+      object SetVolumeUnmutePolicy {
+        val ID = AttributeId(0x0008u)
+      }
+
+      object IncreaseVolumeUnmutePolicy {
+        val ID = AttributeId(0x0009u)
+      }
+
+      object IncreaseVolumeUnmuteVolume {
+        val ID = AttributeId(0x000Au)
+      }
+
+      object DecreaseVolumeUnmutePolicy {
+        val ID = AttributeId(0x000Bu)
+      }
+
+      object StartUpMuted {
+        val ID = AttributeId(0x000Cu)
+      }
+
+      object StartUpVolume {
+        val ID = AttributeId(0x000Du)
+      }
+
+      object Bass {
+        val ID = AttributeId(0x000Eu)
+      }
+
+      object Mid {
+        val ID = AttributeId(0x000Fu)
+      }
+
+      object Treble {
+        val ID = AttributeId(0x0010u)
+      }
+
+      object MinCorrection {
+        val ID = AttributeId(0x0011u)
+      }
+
+      object MaxCorrection {
+        val ID = AttributeId(0x0012u)
+      }
+    }
+
+    object CommandsIncoming {
+      object Mute {
+        val ID = CommandId(0x0000u)
+      }
+
+      object Unmute {
+        val ID = CommandId(0x0001u)
+      }
+
+      object ToggleMuted {
+        val ID = CommandId(0x0002u)
+      }
+
+      object SetVolume {
+        val ID = CommandId(0x0003u)
+      }
+
+      object IncreaseVolume {
+        val ID = CommandId(0x0004u)
+      }
+
+      object DecreaseVolume {
+        val ID = CommandId(0x0005u)
+      }
+    }
+
+    object CommandsOutgoing {}
 
     object Events {}
   }
@@ -8354,6 +9210,82 @@ object Clusters {
     object Events {
       object ChimeStartedPlaying {
         val ID = EventId(0x0000u)
+      }
+    }
+  }
+
+  object AVAnalysis {
+    val ID = ClusterId(0x0557u)
+
+    object Attributes {
+      object SupportedAmbientContexts {
+        val ID = AttributeId(0x0000u)
+      }
+
+      object ActiveAmbientContextTriggers {
+        val ID = AttributeId(0x0001u)
+      }
+
+      object MaxAnalysisStreamCount {
+        val ID = AttributeId(0x0002u)
+      }
+
+      object CurrentAnalysisStreamCount {
+        val ID = AttributeId(0x0003u)
+      }
+
+      object AnalysisStreams {
+        val ID = AttributeId(0x0004u)
+      }
+
+      object TrackingEnabled {
+        val ID = AttributeId(0x0005u)
+      }
+    }
+
+    object CommandsIncoming {
+      object EnableContextTriggers {
+        val ID = CommandId(0x0000u)
+      }
+
+      object DisableContextTriggers {
+        val ID = CommandId(0x0001u)
+      }
+
+      object EstablishAnalysisStream {
+        val ID = CommandId(0x0002u)
+      }
+
+      object ActivateAnalysisStream {
+        val ID = CommandId(0x0004u)
+      }
+
+      object DeactivateAnalysisStream {
+        val ID = CommandId(0x0005u)
+      }
+
+      object RemoveAnalysisStream {
+        val ID = CommandId(0x0006u)
+      }
+    }
+
+    object CommandsOutgoing {
+      object EstablishAnalysisStreamResponse {
+        val ID = CommandId(0x0003u)
+      }
+    }
+
+    object Events {
+      object AnalysisSessionStart {
+        val ID = EventId(0x0000u)
+      }
+
+      object AnalysisSessionEnd {
+        val ID = EventId(0x0001u)
+      }
+
+      object PerceivedContext {
+        val ID = EventId(0x0002u)
       }
     }
   }

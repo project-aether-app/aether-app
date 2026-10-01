@@ -38,6 +38,17 @@ object Enums {
     Removed(2),
   }
 
+  enum class AVAnalysisClusterAnalysisStreamState(val value: Int) {
+    PendingInitiation(0),
+    Failure(1),
+    WebRTCInitiated(2),
+    PushAVAllocated(3),
+    WebRTCActive(4),
+    PushAVActive(5),
+    PushAVPendingDeactivation(6),
+    WebRTCPendingDeactivation(7),
+  }
+
   enum class ActionsClusterActionError(val value: Int) {
     Unknown(0),
     Interrupted(1),
@@ -88,6 +99,17 @@ object Enums {
     ExtremelyPoor(6),
   }
 
+  enum class AmbientSensingUnionClusterUnionContributorStatus(val value: Int) {
+    UnionContributorOnline(0),
+    UnionContributorOffline(1),
+  }
+
+  enum class AmbientSensingUnionClusterUnionHealth(val value: Int) {
+    FullyFunctional(0),
+    LimitedDegraded(1),
+    NonFunctional(2),
+  }
+
   enum class ApplicationBasicClusterApplicationStatus(val value: Int) {
     Stopped(0),
     ActiveVisibleFocus(1),
@@ -102,6 +124,19 @@ object Enums {
     PendingUserApproval(3),
     Downloading(4),
     Installing(5),
+  }
+
+  enum class AudioControlClusterUnmutePolicy(val value: Int) {
+    UnmuteOrChangeVolume(0),
+    UnmuteOrDoNotChangeVolume(1),
+    DoNotUnmuteAndChangeVolume(2),
+    DoNotUnmuteAndDoNotChangeVolume(3),
+  }
+
+  enum class AudioControlClusterUnmuteVolume(val value: Int) {
+    MinDeviceVolume(0),
+    Volume(1),
+    VolumePlusStepSize(2),
   }
 
   enum class AudioOutputClusterOutputType(val value: Int) {
@@ -434,6 +469,8 @@ object Enums {
     NGM3(5),
     PM3(6),
     BQM3(7),
+    DBPM(8),
+    PCFT(9),
   }
 
   enum class ContentAppObserverClusterStatus(val value: Int) {
@@ -479,12 +516,24 @@ object Enums {
     Any(16),
   }
 
+  enum class ContentLauncherClusterQueueType(val value: Int) {
+    Replace(0),
+    Next(1),
+    Last(2),
+  }
+
   enum class ContentLauncherClusterStatus(val value: Int) {
     Success(0),
     URLNotAvailable(1),
     AuthFailed(2),
     TextTrackNotAvailable(3),
     AudioTrackNotAvailable(4),
+    InvalidData(5),
+    AccountMismatch(6),
+    ContentAppNotAvailable(7),
+    ReplicationNotAllowed(8),
+    ReplicationNotSupported(9),
+    PresetNotFound(10),
   }
 
   enum class DeviceEnergyManagementClusterAdjustmentCause(val value: Int) {
@@ -498,6 +547,7 @@ object Enums {
     Fault(2),
     UserOptOut(3),
     Cancelled(4),
+    Invalid(5),
   }
 
   enum class DeviceEnergyManagementClusterCostType(val value: Int) {
@@ -850,6 +900,13 @@ object Enums {
     RemoteOnlyUser(9),
   }
 
+  enum class ElectricalDistributionClusterEndOfLife(val value: Int) {
+    None(0),
+    Damaged(1),
+    Degraded(2),
+    Expired(3),
+  }
+
   enum class ElectricalEnergyMeasurementClusterMeasurementType(val value: Int) {
     Unspecified(0),
     Voltage(1),
@@ -900,6 +957,34 @@ object Enums {
     Unknown(0),
     DC(1),
     AC(2),
+  }
+
+  enum class ElectricalProtectionAlarmClusterCurrentTripCurve(val value: Int) {
+    TypeZ(0),
+    TypeB(1),
+    TypeC(2),
+    TypeK(3),
+    TypeD(4),
+  }
+
+  enum class ElectricalProtectionAlarmClusterCurrentWaveform(val value: Int) {
+    AC(0),
+    A(1),
+    F(2),
+    B(3),
+  }
+
+  enum class ElectricalProtectionAlarmClusterGroundFaultClass(val value: Int) {
+    ClassA(0),
+    ClassB(1),
+    ClassC(2),
+    ClassD(3),
+    ClassE(4),
+  }
+
+  enum class ElectricalProtectionAlarmClusterUtilizationCategory(val value: Int) {
+    CategoryA(0),
+    CategoryB(1),
   }
 
   enum class EnergyEVSEClusterEnergyTransferStoppedReason(val value: Int) {
@@ -1023,6 +1108,7 @@ object Enums {
     FailedAuth(3),
     NoAvailableKey(4),
     SendFailure(5),
+    UnknownGroup(6),
   }
 
   enum class GroupcastClusterGroupcastTesting(val value: Int) {
@@ -1034,6 +1120,20 @@ object Enums {
   enum class GroupcastClusterMulticastAddrPolicy(val value: Int) {
     IanaAddr(0),
     PerGroup(1),
+  }
+
+  enum class HumidistatClusterMode(val value: Int) {
+    Humidifier(0),
+    Dehumidifier(1),
+    Auto(2),
+    FanOnly(3),
+  }
+
+  enum class HumidistatClusterSystemState(val value: Int) {
+    Humidifying(0),
+    Dehumidifying(1),
+    Fan(2),
+    Idle(3),
   }
 
   enum class ICDManagementClusterClientType(val value: Int) {
@@ -1102,6 +1202,7 @@ object Enums {
 
   enum class JointFabricDatastoreClusterDatastoreAccessControlEntryPrivilege(val value: Int) {
     View(1),
+    ProxyView(2),
     Operate(3),
     Manage(4),
     Administer(5),
@@ -1270,6 +1371,16 @@ object Enums {
     Kelvin(2),
   }
 
+  enum class MediaFileManagementClusterFileStatus(val value: Int) {
+    Success(0),
+    InsufficientStorage(1),
+    InvalidFileID(2),
+    AuthenticationFailed(3),
+    FileNotAvailable(4),
+    InvalidRequest(5),
+    UnsupportedMimeType(6),
+  }
+
   enum class MediaInputClusterInputType(val value: Int) {
     Internal(0),
     Aux(1),
@@ -1304,6 +1415,13 @@ object Enums {
     EnhancedAudioIntelligibility(15),
     Emergency(16),
     Karaoke(17),
+  }
+
+  enum class MediaPlaybackClusterMediaType(val value: Int) {
+    Generic(0),
+    TVShow(1),
+    Music(2),
+    Podcast(3),
   }
 
   enum class MediaPlaybackClusterPlaybackState(val value: Int) {
@@ -1514,6 +1632,23 @@ object Enums {
     RapidFreeze(16385),
   }
 
+  enum class Mode_ThermostatClusterModeTag(val value: Int) {
+    Auto(0),
+    Quick(1),
+    Quiet(2),
+    LowNoise(3),
+    LowEnergy(4),
+    Vacation(5),
+    Min(6),
+    Max(7),
+    Night(8),
+    Day(9),
+    Off(16384),
+    Cool(16385),
+    Heat(16386),
+    EmergencyHeat(16387),
+  }
+
   enum class Mode_WaterHeaterClusterModeTag(val value: Int) {
     Auto(0),
     Quick(1),
@@ -1553,6 +1688,14 @@ object Enums {
     `6G`(3),
     `60G`(4),
     `1G`(5),
+  }
+
+  enum class NetworkIdentityManagementClusterIdentityType(val value: Int) {
+    ECDSA(1),
+  }
+
+  enum class NetworkIdentityManagementClusterStatusCode(val value: Int) {
+    ResponseTooLarge(2),
   }
 
   enum class OTAProviderClusterApplyUpdateAction(val value: Int) {
@@ -1627,6 +1770,12 @@ object Enums {
     Off(0),
     On(1),
     Toggle(2),
+  }
+
+  enum class OperationalCredentialClusterAttestationCryptoProfile(val value: Int) {
+    EcdsaMatterLegacy(0),
+    MlDsa44(1),
+    MlDsa65(2),
   }
 
   enum class OperationalCredentialClusterCertificateChainType(val value: Int) {
@@ -1875,6 +2024,77 @@ object Enums {
     UnderVoltage(2),
   }
 
+  enum class ProximityRangingClusterBLERBCSecurityMode(val value: Int) {
+    BLEDeviceIDObfuscation(0),
+    EncryptedAdvertisingData(1),
+  }
+
+  enum class ProximityRangingClusterBLTCSMode(val value: Int) {
+    PBROnly(0),
+    RTTOnly(1),
+    Both(2),
+  }
+
+  enum class ProximityRangingClusterBLTCSSecurityLevel(val value: Int) {
+    BLTCSSecurityLevelUnknown(0),
+    BLTCSSecurityLevelOne(1),
+    BLTCSSecurityLevelTwo(2),
+    BLTCSSecurityLevelThree(3),
+  }
+
+  enum class ProximityRangingClusterNADM(val value: Int) {
+    AttackExtremelyUnlikely(0),
+    AttackVeryUnlikely(1),
+    AttackIsPossible(3),
+    AttackIsLikely(4),
+    AttackVeryLikely(5),
+    AttackExtremelyLikely(6),
+    Unknown(255),
+  }
+
+  enum class ProximityRangingClusterRDRCapability(val value: Int) {
+    NoRDR(0),
+    AzimuthOnly(1),
+    AzimuthElevation(2),
+  }
+
+  enum class ProximityRangingClusterRDRReference(val value: Int) {
+    DeviceCoordinates(0),
+    EarthCoordinates(1),
+  }
+
+  enum class ProximityRangingClusterRangingRole(val value: Int) {
+    WiFiSubscriberRole(0),
+    WiFiPublisherRole(1),
+    BLEScanningRole(2),
+    BLEBeaconRole(3),
+    BLTInitiatorRole(4),
+    BLTReflectorRole(5),
+  }
+
+  enum class ProximityRangingClusterRangingSessionStatus(val value: Int) {
+    SessionStarted(0),
+    SessionEndTimeReached(1),
+    SessionStoppedByRequest(2),
+    PeerNotFound(3),
+    HardwareError(4),
+    SessionFailed(5),
+  }
+
+  enum class ProximityRangingClusterRangingTech(val value: Int) {
+    BluetoothChannelSounding(0),
+    WiFiRoundTripTimeRanging(1),
+    WiFiNextGenerationRanging(2),
+    BLEBeaconRSSIRanging(3),
+  }
+
+  enum class ProximityRangingClusterStatusCode(val value: Int) {
+    RejectedInfeasibleRanging(2),
+    RejectedInfeasibleRangingTriggers(3),
+    BusySessionCapacityReached(4),
+    BusyTryAgainLater(5),
+  }
+
   enum class PumpConfigurationControlClusterControlMode(val value: Int) {
     ConstantSpeed(0),
     ConstantPressure(1),
@@ -1929,6 +2149,7 @@ object Enums {
     Command(0),
     Motion(1),
     Continuous(2),
+    AmbientContext(3),
   }
 
   enum class PushAVStreamTransportClusterTriggerActivationReason(val value: Int) {

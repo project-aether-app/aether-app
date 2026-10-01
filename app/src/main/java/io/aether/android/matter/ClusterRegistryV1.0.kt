@@ -1942,6 +1942,13 @@ val CLUSTERS_1_0 =
                                 type = DataType.U_INT16,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.BasicInformation.Attributes.DeviceLocation.ID to
+                            AttributeInfo(
+                                name = "DeviceLocation",
+                                type = DataType.LOCATION_DESCRIPTOR_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                                writePrivilege = Privilege.ADMINISTER,
+                            ),
                         Clusters.BasicInformation.Attributes.ConfigurationVersion.ID to
                             AttributeInfo(
                                 name = "ConfigurationVersion",
@@ -2888,6 +2895,21 @@ val CLUSTERS_1_0 =
                                                 name = "Breadcrumb",
                                                 type = DataType.U_INT64,
                                             ),
+                                        3u to
+                                            ParameterInfo(
+                                                name = "NetworkIdentity",
+                                                type = DataType.OCTET_STRING,
+                                            ),
+                                        4u to
+                                            ParameterInfo(
+                                                name = "ClientIdentifier",
+                                                type = DataType.OCTET_STRING,
+                                            ),
+                                        5u to
+                                            ParameterInfo(
+                                                name = "PossessionNonce",
+                                                type = DataType.OCTET_STRING,
+                                            ),
                                     ),
                             ),
                         Clusters.NetworkCommissioning.CommandsIncoming.AddOrUpdateThreadNetwork
@@ -2968,6 +2990,24 @@ val CLUSTERS_1_0 =
                                             ),
                                     ),
                             ),
+                        Clusters.NetworkCommissioning.CommandsIncoming.QueryIdentity.ID to
+                            CommandInfo(
+                                name = "QueryIdentity",
+                                privilege = Privilege.ADMINISTER,
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "KeyIdentifier",
+                                                type = DataType.OCTET_STRING,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "PossessionNonce",
+                                                type = DataType.OCTET_STRING,
+                                            ),
+                                    ),
+                            ),
                     ),
                 commandsOutgoing =
                     mapOf<CommandId, CommandInfo>(
@@ -3026,6 +3066,16 @@ val CLUSTERS_1_0 =
                                                 name = "NetworkIndex",
                                                 type = DataType.U_INT8,
                                             ),
+                                        3u to
+                                            ParameterInfo(
+                                                name = "ClientIdentity",
+                                                type = DataType.OCTET_STRING,
+                                            ),
+                                        4u to
+                                            ParameterInfo(
+                                                name = "PossessionSignature",
+                                                type = DataType.OCTET_STRING,
+                                            ),
                                     ),
                             ),
                         Clusters.NetworkCommissioning.CommandsOutgoing.ConnectNetworkResponse.ID to
@@ -3049,6 +3099,23 @@ val CLUSTERS_1_0 =
                                             ParameterInfo(
                                                 name = "ErrorValue",
                                                 type = DataType.INT32,
+                                            ),
+                                    ),
+                            ),
+                        Clusters.NetworkCommissioning.CommandsOutgoing.QueryIdentityResponse.ID to
+                            CommandInfo(
+                                name = "QueryIdentityResponse",
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "Identity",
+                                                type = DataType.OCTET_STRING,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "PossessionSignature",
+                                                type = DataType.OCTET_STRING,
                                             ),
                                     ),
                             ),
@@ -4301,6 +4368,13 @@ val CLUSTERS_1_0 =
                                 type = DataType.U_INT16,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.BridgedDeviceBasicInformation.Attributes.DeviceLocation.ID to
+                            AttributeInfo(
+                                name = "DeviceLocation",
+                                type = DataType.LOCATION_DESCRIPTOR_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                                writePrivilege = Privilege.ADMINISTER,
+                            ),
                         Clusters.BridgedDeviceBasicInformation.Attributes.ConfigurationVersion.ID to
                             AttributeInfo(
                                 name = "ConfigurationVersion",
@@ -4541,6 +4615,12 @@ val CLUSTERS_1_0 =
                                 type = DataType.U_INT8,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.OperationalCredentials.Attributes.PQCDeviceAttestationProfile.ID to
+                            AttributeInfo(
+                                name = "PQCDeviceAttestationProfile",
+                                type = DataType.PQC_DEVICE_ATTESTATION_PROFILE_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
@@ -4570,6 +4650,23 @@ val CLUSTERS_1_0 =
                                                 type =
                                                     DataType
                                                         .OPERATIONAL_CREDENTIAL_CLUSTER_CERTIFICATE_CHAIN_TYPE_ENUM,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "CryptoProfile",
+                                                type =
+                                                    DataType
+                                                        .OPERATIONAL_CREDENTIAL_CLUSTER_ATTESTATION_CRYPTO_PROFILE_ENUM,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "SegmentID",
+                                                type = DataType.U_INT16,
+                                            ),
+                                        3u to
+                                            ParameterInfo(
+                                                name = "MaxSegmentSize",
+                                                type = DataType.U_INT16,
                                             ),
                                     ),
                             ),
@@ -4755,6 +4852,16 @@ val CLUSTERS_1_0 =
                                             ParameterInfo(
                                                 name = "Certificate",
                                                 type = DataType.OCTET_STRING,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "TotalDocumentSize",
+                                                type = DataType.U_INT16,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "NextSegmentID",
+                                                type = DataType.U_INT16,
                                             ),
                                     ),
                             ),
@@ -7560,6 +7667,51 @@ val CLUSTERS_1_0 =
                                 type = DataType.THERMOSTAT_SUGGESTION_NOT_FOLLOWING_REASON_BITMAP,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.Thermostat.Attributes.CriticalFreezeProtection.ID to
+                            AttributeInfo(
+                                name = "CriticalFreezeProtection",
+                                type = DataType.BOOLEAN,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.Thermostat.Attributes.CriticalOverheatProtection.ID to
+                            AttributeInfo(
+                                name = "CriticalOverheatProtection",
+                                type = DataType.BOOLEAN,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.Thermostat.Attributes.Sensors.ID to
+                            AttributeInfo(
+                                name = "Sensors",
+                                type = DataType.LIST_THERMOSTAT_SENSOR_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.Thermostat.Attributes.AvailableSensorHandles.ID to
+                            AttributeInfo(
+                                name = "AvailableSensorHandles",
+                                type = DataType.LIST_OCTET_STRING,
+                                readPrivilege = Privilege.VIEW,
+                                writePrivilege = Privilege.MANAGE,
+                            ),
+                        Clusters.Thermostat.Attributes.EnabledSensorHandles.ID to
+                            AttributeInfo(
+                                name = "EnabledSensorHandles",
+                                type = DataType.LIST_OCTET_STRING,
+                                readPrivilege = Privilege.VIEW,
+                                writePrivilege = Privilege.MANAGE,
+                            ),
+                        Clusters.Thermostat.Attributes.NumberOfSensorScheduleTransitions.ID to
+                            AttributeInfo(
+                                name = "NumberOfSensorScheduleTransitions",
+                                type = DataType.U_INT8,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.Thermostat.Attributes.SensorSchedule.ID to
+                            AttributeInfo(
+                                name = "SensorSchedule",
+                                type = DataType.LIST_SENSOR_SCHEDULE_TRANSITION_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                                writePrivilege = Privilege.MANAGE,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
@@ -9273,6 +9425,12 @@ val CLUSTERS_1_0 =
                                 type = DataType.HOLD_TIME_LIMITS_STRUCT,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.OccupancySensing.Attributes.PredictedOccupancy.ID to
+                            AttributeInfo(
+                                name = "PredictedOccupancy",
+                                type = DataType.LIST_PREDICTED_OCCUPANCY_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                         Clusters.OccupancySensing.Attributes.PIROccupiedToUnoccupiedDelay.ID to
                             AttributeInfo(
                                 name = "PIROccupiedToUnoccupiedDelay",
@@ -9794,6 +9952,18 @@ val CLUSTERS_1_0 =
                                 type = DataType.LIST_TRACK_STRUCT,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.MediaPlayback.Attributes.AvailableCommands.ID to
+                            AttributeInfo(
+                                name = "AvailableCommands",
+                                type = DataType.LIST_U_INT32,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.MediaPlayback.Attributes.ContentInfo.ID to
+                            AttributeInfo(
+                                name = "ContentInfo",
+                                type = DataType.CONTENT_INFO_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
@@ -10101,6 +10271,18 @@ val CLUSTERS_1_0 =
                                 type = DataType.MAP32,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.ContentLauncher.Attributes.Movable.ID to
+                            AttributeInfo(
+                                name = "Movable",
+                                type = DataType.BOOLEAN,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                        Clusters.ContentLauncher.Attributes.Presets.ID to
+                            AttributeInfo(
+                                name = "Presets",
+                                type = DataType.LIST_CONTENT_PRESET_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
@@ -10135,6 +10317,16 @@ val CLUSTERS_1_0 =
                                                 name = "UseCurrentContext",
                                                 type = DataType.BOOLEAN,
                                             ),
+                                        5u to
+                                            ParameterInfo(
+                                                name = "ContentAppVendorID",
+                                                type = DataType.U_INT16,
+                                            ),
+                                        6u to
+                                            ParameterInfo(
+                                                name = "ContentAppProductID",
+                                                type = DataType.U_INT16,
+                                            ),
                                     ),
                             ),
                         Clusters.ContentLauncher.CommandsIncoming.LaunchURL.ID to
@@ -10163,6 +10355,52 @@ val CLUSTERS_1_0 =
                                                 name = "PlaybackPreferences",
                                                 type = DataType.PLAYBACK_PREFERENCES_STRUCT,
                                             ),
+                                        4u to
+                                            ParameterInfo(
+                                                name = "ContentType",
+                                                type = DataType.STRING,
+                                            ),
+                                        5u to
+                                            ParameterInfo(
+                                                name = "ContentHeaders",
+                                                type = DataType.LIST_STRING,
+                                            ),
+                                        6u to
+                                            ParameterInfo(
+                                                name = "OffsetMillisecs",
+                                                type = DataType.U_INT32,
+                                            ),
+                                        7u to
+                                            ParameterInfo(
+                                                name = "QueueType",
+                                                type =
+                                                    DataType
+                                                        .CONTENT_LAUNCHER_CLUSTER_QUEUE_TYPE_ENUM,
+                                            ),
+                                        8u to
+                                            ParameterInfo(
+                                                name = "NextURL",
+                                                type = DataType.STRING,
+                                            ),
+                                    ),
+                            ),
+                        Clusters.ContentLauncher.CommandsIncoming.ContentReplicationRequest.ID to
+                            CommandInfo(
+                                name = "ContentReplicationRequest",
+                                privilege = Privilege.OPERATE,
+                                parameters = mapOf<UInt, ParameterInfo>(),
+                            ),
+                        Clusters.ContentLauncher.CommandsIncoming.PlayPreset.ID to
+                            CommandInfo(
+                                name = "PlayPreset",
+                                privilege = Privilege.OPERATE,
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "PresetID",
+                                                type = DataType.U_INT8,
+                                            ),
                                     ),
                             ),
                     ),
@@ -10186,8 +10424,32 @@ val CLUSTERS_1_0 =
                                             ),
                                     ),
                             ),
+                        Clusters.ContentLauncher.CommandsOutgoing.ContentReplicationResponse.ID to
+                            CommandInfo(
+                                name = "ContentReplicationResponse",
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "Status",
+                                                type =
+                                                    DataType.CONTENT_LAUNCHER_CLUSTER_STATUS_ENUM,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "ReplicationInfo",
+                                                type = DataType.REPLICATION_INFO_STRUCT,
+                                            ),
+                                    ),
+                            ),
                     ),
-                events = mapOf<EventId, EventInfo>(),
+                events =
+                    mapOf<EventId, EventInfo>(
+                        Clusters.ContentLauncher.Events.ContentReplication.ID to
+                            EventInfo(
+                                name = "ContentReplication",
+                            ),
+                    ),
             ),
         Clusters.AudioOutput.ID to
             ClusterInfo(
@@ -10394,7 +10656,15 @@ val CLUSTERS_1_0 =
         Clusters.AccountLogin.ID to
             ClusterInfo(
                 name = "Account Login",
-                attributes = mapOf<AttributeId, AttributeInfo>(),
+                attributes =
+                    mapOf<AttributeId, AttributeInfo>(
+                        Clusters.AccountLogin.Attributes.OAuthLoggedIn.ID to
+                            AttributeInfo(
+                                name = "OAuthLoggedIn",
+                                type = DataType.BOOLEAN,
+                                readPrivilege = Privilege.VIEW,
+                            ),
+                    ),
                 commandsIncoming =
                     mapOf<CommandId, CommandInfo>(
                         Clusters.AccountLogin.CommandsIncoming.GetSetupPIN.ID to
@@ -10446,6 +10716,12 @@ val CLUSTERS_1_0 =
                                             ),
                                     ),
                             ),
+                        Clusters.AccountLogin.CommandsIncoming.GetDeviceAuthURI.ID to
+                            CommandInfo(
+                                name = "GetDeviceAuthURI",
+                                privilege = Privilege.ADMINISTER,
+                                parameters = mapOf<UInt, ParameterInfo>(),
+                            ),
                     ),
                 commandsOutgoing =
                     mapOf<CommandId, CommandInfo>(
@@ -10458,6 +10734,38 @@ val CLUSTERS_1_0 =
                                             ParameterInfo(
                                                 name = "SetupPIN",
                                                 type = DataType.STRING,
+                                            ),
+                                    ),
+                            ),
+                        Clusters.AccountLogin.CommandsOutgoing.GetDeviceAuthURIResponse.ID to
+                            CommandInfo(
+                                name = "GetDeviceAuthURIResponse",
+                                parameters =
+                                    mapOf<UInt, ParameterInfo>(
+                                        0u to
+                                            ParameterInfo(
+                                                name = "UserCode",
+                                                type = DataType.STRING,
+                                            ),
+                                        1u to
+                                            ParameterInfo(
+                                                name = "VerificationURI",
+                                                type = DataType.STRING,
+                                            ),
+                                        2u to
+                                            ParameterInfo(
+                                                name = "VerificationURIComplete",
+                                                type = DataType.STRING,
+                                            ),
+                                        3u to
+                                            ParameterInfo(
+                                                name = "ExpiresIn",
+                                                type = DataType.U_INT16,
+                                            ),
+                                        4u to
+                                            ParameterInfo(
+                                                name = "Interval",
+                                                type = DataType.U_INT8,
                                             ),
                                     ),
                             ),

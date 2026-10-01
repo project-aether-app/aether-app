@@ -365,6 +365,12 @@ val CLUSTERS_1_6 =
                                 type = DataType.LIST_PREDICTED_ACTIVITY_STRUCT,
                                 readPrivilege = Privilege.VIEW,
                             ),
+                        Clusters.AmbientContextSensing.Attributes.SensorFusionSupported.ID to
+                            AttributeInfo(
+                                name = "SensorFusionSupported",
+                                type = DataType.LIST_SEMANTIC_TAG_STRUCT,
+                                readPrivilege = Privilege.VIEW,
+                            ),
                     ),
                 commandsIncoming = mapOf<CommandId, CommandInfo>(),
                 commandsOutgoing = mapOf<CommandId, CommandInfo>(),

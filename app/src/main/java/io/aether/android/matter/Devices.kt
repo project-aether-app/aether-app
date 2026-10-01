@@ -58,6 +58,14 @@ object Devices {
     val ID = DeviceTypeId(0x0019u)
   }
 
+  object StreamingAudioPlayer {
+    val ID = DeviceTypeId(0x0020u)
+  }
+
+  object CastingAudioPlayer {
+    val ID = DeviceTypeId(0x0021u)
+  }
+
   object Speaker {
     val ID = DeviceTypeId(0x0022u)
   }
@@ -174,12 +182,20 @@ object Devices {
     val ID = DeviceTypeId(0x007Cu)
   }
 
+  object HumidityConditioner {
+    val ID = DeviceTypeId(0x007Du)
+  }
+
   object NetworkInfrastructureManager {
     val ID = DeviceTypeId(0x0090u)
   }
 
   object ThreadBorderRouter {
     val ID = DeviceTypeId(0x0091u)
+  }
+
+  object CommissioningByProxy {
+    val ID = DeviceTypeId(0x0092u)
   }
 
   object OnOffLight {
@@ -274,6 +290,18 @@ object Devices {
     val ID = DeviceTypeId(0x0148u)
   }
 
+  object AVAnalysisNode {
+    val ID = DeviceTypeId(0x0149u)
+  }
+
+  object AmbientContextSensor {
+    val ID = DeviceTypeId(0x0150u)
+  }
+
+  object ProximityRanger {
+    val ID = DeviceTypeId(0x0152u)
+  }
+
   object WindowCovering {
     val ID = DeviceTypeId(0x0202u)
   }
@@ -366,6 +394,30 @@ object Devices {
     val ID = DeviceTypeId(0x0514u)
   }
 
+  object ArcFaultCircuitInterrupter {
+    val ID = DeviceTypeId(0x0515u)
+  }
+
+  object ElectricalCircuitBreaker {
+    val ID = DeviceTypeId(0x0516u)
+  }
+
+  object ElectricalDistributionEnclosure {
+    val ID = DeviceTypeId(0x0517u)
+  }
+
+  object ElectricalSurgeProtector {
+    val ID = DeviceTypeId(0x0518u)
+  }
+
+  object ResidualCurrentCircuitBreaker {
+    val ID = DeviceTypeId(0x0519u)
+  }
+
+  object AuxiliaryLoadSwitch {
+    val ID = DeviceTypeId(0x0520u)
+  }
+
   object ControlBridge {
     val ID = DeviceTypeId(0x0840u)
   }
@@ -390,6 +442,8 @@ val DEVICES =
         Devices.SolarPower.ID to "Solar Power",
         Devices.BatteryStorage.ID to "Battery Storage",
         Devices.SecondaryNetworkInterface.ID to "Secondary Network Interface",
+        Devices.StreamingAudioPlayer.ID to "Streaming Audio Player",
+        Devices.CastingAudioPlayer.ID to "Casting Audio Player",
         Devices.Speaker.ID to "Speaker",
         Devices.CastingVideoPlayer.ID to "Casting Video Player",
         Devices.ContentApp.ID to "Content App",
@@ -419,8 +473,10 @@ val DEVICES =
         Devices.ExtractorHood.ID to "Extractor Hood",
         Devices.Oven.ID to "Oven",
         Devices.LaundryDryer.ID to "Laundry Dryer",
+        Devices.HumidityConditioner.ID to "Humidity Conditioner",
         Devices.NetworkInfrastructureManager.ID to "Network Infrastructure Manager",
         Devices.ThreadBorderRouter.ID to "Thread Border Router",
+        Devices.CommissioningByProxy.ID to "Commissioning By Proxy",
         Devices.OnOffLight.ID to "On/Off Light",
         Devices.DimmableLight.ID to "Dimmable Light",
         Devices.OnOffLightSwitch.ID to "On/Off Light Switch",
@@ -444,6 +500,9 @@ val DEVICES =
         Devices.Chime.ID to "Chime",
         Devices.CameraController.ID to "Camera Controller",
         Devices.Doorbell.ID to "Doorbell",
+        Devices.AVAnalysisNode.ID to "AV Analysis Node",
+        Devices.AmbientContextSensor.ID to "Ambient Context Sensor",
+        Devices.ProximityRanger.ID to "Proximity Ranger",
         Devices.WindowCovering.ID to "Window Covering",
         Devices.WindowCoveringController.ID to "Window Covering Controller",
         Devices.Closure.ID to "Closure",
@@ -467,6 +526,12 @@ val DEVICES =
         Devices.MeterReferencePoint.ID to "Meter Reference Point",
         Devices.ElectricalEnergyTariff.ID to "Electrical Energy Tariff",
         Devices.ElectricalMeter.ID to "Electrical Meter",
+        Devices.ArcFaultCircuitInterrupter.ID to "Arc Fault Circuit Interrupter",
+        Devices.ElectricalCircuitBreaker.ID to "Electrical Circuit Breaker",
+        Devices.ElectricalDistributionEnclosure.ID to "Electrical Distribution Enclosure",
+        Devices.ElectricalSurgeProtector.ID to "Electrical Surge Protector",
+        Devices.ResidualCurrentCircuitBreaker.ID to "Residual Current Circuit Breaker",
+        Devices.AuxiliaryLoadSwitch.ID to "Auxiliary Load Switch",
         Devices.ControlBridge.ID to "Control Bridge",
         Devices.OnOffSensor.ID to "On/Off Sensor",
     )
