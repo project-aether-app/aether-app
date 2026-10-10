@@ -26,8 +26,8 @@ import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.shared.SetDeviceNameResult
 import io.aether.android.screens.shared.SetDeviceNameUseCase
-import javax.inject.Inject
 import java.time.Instant
+import javax.inject.Inject
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi

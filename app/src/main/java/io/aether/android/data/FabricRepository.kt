@@ -19,8 +19,8 @@ import io.aether.android.matter.toEndpointId
 import io.aether.android.matter.toNodeId
 import io.aether.android.matter.toProductId
 import io.aether.android.matter.toVendorId
-import java.time.Instant
 import java.io.IOException
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
