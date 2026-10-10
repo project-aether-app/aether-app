@@ -5,6 +5,7 @@ package io.aether.android.data
 
 import com.google.protobuf.Timestamp
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
 import io.aether.android.getTimestampForNow
 import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.EndpointId
@@ -36,7 +37,7 @@ class DevicesRepository @Inject constructor(private val fabricRepository: Fabric
 
   fun deviceFlow(nodeId: NodeId): Flow<Device> =
       fabricRepository.detailedDevicesFlow
-          .map { devices -> devices.firstOrNull { it.nodeId == nodeId } }
+          .map { devices -> devices.firstOrNull { it.id == nodeId } }
           .filterNotNull()
 
   suspend fun getDevice(nodeId: NodeId): Device =
@@ -51,7 +52,7 @@ class DevicesRepository @Inject constructor(private val fabricRepository: Fabric
       vendorName: String,
       productId: ProductId,
       productName: String,
-      endpoint: Device.Endpoint,
+      endpoint: Endpoint,
   ) =
       fabricRepository.addOrUpdateEndpoint(
           nodeId,

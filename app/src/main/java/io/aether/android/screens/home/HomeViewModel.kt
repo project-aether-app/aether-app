@@ -22,6 +22,9 @@ import io.aether.android.data.DevicesRepository
 import io.aether.android.data.FabricRepository
 import io.aether.android.data.UserPreferencesRepository
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
+import io.aether.android.data.models.Product
+import io.aether.android.data.models.Vendor
 import io.aether.android.matter.Clusters
 import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.EndpointId
@@ -114,8 +117,8 @@ constructor(
                   }
                 }
                 .map { info ->
-                  Device.Endpoint(
-                      endpointId = info.endpointId,
+                  Endpoint(
+                      id = info.endpointId,
                       label = deviceName,
                       deviceTypeId = info.types.firstOrNull() ?: DeviceTypeId(0u),
                       supportsLevelControl = info.serverClusters.contains(Clusters.LevelControl.ID),
@@ -130,11 +133,17 @@ constructor(
                 }
         devicesRepository.addOrUpdateDevice(
             Device(
-                nodeId = nodeId,
-                vendorId = result.commissionedDeviceDescriptor.vendorId.toVendorId(),
-                vendorName = vendorName,
-                productId = result.commissionedDeviceDescriptor.productId.toProductId(),
-                productName = productName,
+                id = nodeId,
+                vendor =
+                    Vendor(
+                        id = result.commissionedDeviceDescriptor.vendorId.toVendorId(),
+                        name = vendorName,
+                    ),
+                product =
+                    Product(
+                        id = result.commissionedDeviceDescriptor.productId.toProductId(),
+                        name = productName,
+                    ),
                 name = deviceName,
                 isOnline = true,
                 endpoints = endpoints,
@@ -159,10 +168,10 @@ constructor(
       runCatching {
         val device = devicesRepository.getDevice(nodeId)
         val endpoint = device.primaryEndpoint ?: return@launch
-        clustersHelper.setOnOffDeviceStateOnOffCluster(nodeId.toLong(), isOn, endpoint.endpointId)
+        clustersHelper.setOnOffDeviceStateOnOffCluster(nodeId.toLong(), isOn, endpoint.id)
         devicesRepository.upsertEndpointState(
             nodeId,
-            endpoint.endpointId,
+            endpoint.id,
             true,
             isOn,
             endpoint.level,
@@ -181,21 +190,21 @@ constructor(
     viewModelScope.launch {
       fabricRepository.getDevices().forEach { basicDevice ->
         val device =
-            runCatching { devicesRepository.getDevice(basicDevice.nodeId) }.getOrNull()
+            runCatching { devicesRepository.getDevice(basicDevice.id) }.getOrNull()
                 ?: return@forEach
         val endpoint = device.primaryEndpoint ?: return@forEach
         runCatching {
           subscriptionHelper.awaitSubscribeToPeriodicUpdates(
-              chipClient.getConnectedDevicePointer(device.nodeId),
-              object : SubscriptionHelper.SubscriptionEstablishedCallbackForDevice(device.nodeId) {
+              chipClient.getConnectedDevicePointer(device.id),
+              object : SubscriptionHelper.SubscriptionEstablishedCallbackForDevice(device.id) {
                 override fun onSubscriptionEstablished(subscriptionId: Long) {
                   viewModelScope.launch {
-                    devicesRepository.updateNodeOnlineState(device.nodeId, true)
+                    devicesRepository.updateNodeOnlineState(device.id, true)
                   }
                 }
               },
-              SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(device.nodeId),
-              object : SubscriptionHelper.ReportCallbackForDevice(device.nodeId) {
+              SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(device.id),
+              object : SubscriptionHelper.ReportCallbackForDevice(device.id) {
                 override fun onError(
                     attributePath: chip.devicecontroller.model.ChipAttributePath?,
                     eventPath: chip.devicecontroller.model.ChipEventPath?,
@@ -203,7 +212,7 @@ constructor(
                 ) {
                   if (ex.isCommunicationTimeoutError()) {
                     viewModelScope.launch {
-                      devicesRepository.updateNodeOnlineState(device.nodeId, false)
+                      devicesRepository.updateNodeOnlineState(device.id, false)
                     }
                   }
                 }
@@ -214,7 +223,7 @@ constructor(
               },
           )
         }
-            .onFailure { Timber.w(it, "Failed to subscribe nodeId=${device.nodeId}") }
+            .onFailure { Timber.w(it, "Failed to subscribe nodeId=${device.id}") }
       }
     }
   }
@@ -224,30 +233,30 @@ constructor(
       fabricRepository.getDevices().forEach { device ->
         runCatching {
           subscriptionHelper.awaitUnsubscribeToPeriodicUpdates(
-              chipClient.getConnectedDevicePointer(device.nodeId),
+              chipClient.getConnectedDevicePointer(device.id),
           )
         }
-            .onFailure { Timber.w(it, "Failed to unsubscribe nodeId=${device.nodeId}") }
+            .onFailure { Timber.w(it, "Failed to unsubscribe nodeId=${device.id}") }
       }
     }
   }
 
   private fun updateEndpointFromReport(
       device: Device,
-      endpoint: Device.Endpoint,
+      endpoint: Endpoint,
       nodeState: NodeState,
   ) {
     val on =
         subscriptionHelper.extractAttribute(
             nodeState,
-            endpoint.endpointId,
+            endpoint.id,
             Clusters.OnOff.ID,
             Clusters.OnOff.Attributes.OnOff.ID.toLong(),
         ) as Boolean? ?: return
     viewModelScope.launch {
       devicesRepository.upsertEndpointState(
-          device.nodeId,
-          endpoint.endpointId,
+          device.id,
+          endpoint.id,
           true,
           on,
           endpoint.level,

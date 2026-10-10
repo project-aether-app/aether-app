@@ -96,7 +96,7 @@ constructor(
               // Use existing state as a local cache: emit stale data immediately so the UI
               // never flashes "Loading" or shows unknown values while refreshing.
               val cached = deviceCoreDataState.value
-              if (cached.device != null && cached.device.nodeId == nodeId) {
+              if (cached.device != null && cached.device.id == nodeId) {
                 emit(cached.copy(isBackgroundRefreshing = true))
               } else {
                 emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
@@ -111,14 +111,13 @@ constructor(
                 }
                 // Fetch fresh data from storage (fast local read). getDevice() throws if the
                 // device isn't found, so fall back to a stub device instead of propagating.
-                val fallbackDevice = Device(nodeId = nodeId)
+                val fallbackDevice = Device(id = nodeId)
                 val deviceDeferred = async {
                   runCatching { devicesRepository.getDevice(nodeId) }
                       .onFailure { Timber.w(it, "Storage read failed") }
                       .getOrDefault(fallbackDevice)
                 }
-                val cachedBasicInfo =
-                    cached.takeIf { it.device?.nodeId == nodeId }?.basicInformation
+                val cachedBasicInfo = cached.takeIf { it.device?.id == nodeId }?.basicInformation
                 // Race the local storage fetch against the timeout.
                 val device =
                     select<Device> {
@@ -235,7 +234,7 @@ constructor(
 
             val node =
                 coreData.device?.let { dev ->
-                  devices.filterIsInstance<Device>().firstOrNull { it.nodeId == dev.nodeId }
+                  devices.filterIsInstance<Device>().firstOrNull { it.id == dev.id }
                 }
             val isOnline = node?.isOnline ?: false
             val dateCommissioned = node?.dateCommissioned

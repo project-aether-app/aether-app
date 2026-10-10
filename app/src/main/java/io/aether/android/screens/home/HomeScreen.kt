@@ -131,7 +131,7 @@ internal fun HomeRoute(
   val onDismissMsgDialog: () -> Unit = remember { { homeViewModel.dismissMsgDialog() } }
 
   // Functions invoked when UI controls are clicked on a specific device in the list.
-  val onDeviceClick: (device: Device) -> Unit = remember { { navigateToDevice(it.nodeId) } }
+  val onDeviceClick: (device: Device) -> Unit = remember { { navigateToDevice(it.id) } }
   val onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit = remember {
     { nodeId, value -> homeViewModel.updateDeviceStateOn(nodeId, value) }
   }
@@ -360,7 +360,7 @@ private fun DeviceItem(
     onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
     onDeviceClick: (() -> Unit),
 ) {
-  val nodeId = device.nodeId
+  val nodeId = device.id
   val endpoint = device.primaryEndpoint
   val deviceTypeId = endpoint?.deviceTypeId ?: io.aether.android.matter.DeviceTypeId(0u)
   val name = device.name

@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.aether.android.data.DevicesRepository
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
 import io.aether.android.screens.device.cluster.OnOffClusterControl
 import io.aether.android.spacing
 
@@ -29,7 +30,7 @@ import io.aether.android.spacing
 @Composable
 internal fun OnOffDeviceControl(
     device: Device,
-    endpoint: Device.Endpoint,
+    endpoint: Endpoint,
     lastUpdatedDeviceState: DevicesRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
 ) {
@@ -38,8 +39,8 @@ internal fun OnOffDeviceControl(
 
   LaunchedEffect(device, endpoint, lastUpdatedDeviceState) {
     when {
-      lastUpdatedDeviceState?.nodeId == device.nodeId &&
-          lastUpdatedDeviceState.endpointId == endpoint.endpointId -> {
+      lastUpdatedDeviceState?.nodeId == device.id &&
+          lastUpdatedDeviceState.endpointId == endpoint.id -> {
         isOnline = lastUpdatedDeviceState.online
         isOn = lastUpdatedDeviceState.on
       }

@@ -286,9 +286,9 @@ private fun DeviceSettings(
         Text(
             vendorLabel(
                 uiState.basicInformation?.vendorId?.takeIf { it != VendorId(0u) }
-                    ?: device.vendorId,
+                    ?: device.vendor.id,
                 uiState.basicInformation?.vendorName?.takeIf { it.isNotBlank() }
-                    ?: device.vendorName.takeIf { it.isNotBlank() },
+                    ?: device.vendor.name.takeIf { it.isNotBlank() },
             ),
         )
       }
@@ -297,10 +297,10 @@ private fun DeviceSettings(
             stringResource(
                 R.string.device_settings_basic_product_value,
                 uiState.basicInformation?.productName?.takeIf { it.isNotBlank() }
-                    ?: device.productName.takeIf { it.isNotBlank() }
+                    ?: device.product.name.takeIf { it.isNotBlank() }
                     ?: unknown,
                 uiState.basicInformation?.productId?.takeIf { it != ProductId(0u) }?.toString()
-                    ?: device.productId.toString(),
+                    ?: device.product.id.toString(),
             ),
         )
       }
@@ -320,7 +320,7 @@ private fun DeviceSettings(
         )
       }
       SettingsInfoRow(stringResource(R.string.device_settings_basic_node_id)) {
-        Text(device.nodeId.toString())
+        Text(device.id.toString())
       }
     }
 

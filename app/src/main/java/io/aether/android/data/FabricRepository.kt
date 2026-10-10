@@ -9,6 +9,9 @@ import io.aether.android.MatterEndpoint
 import io.aether.android.MatterFabricState
 import io.aether.android.MatterNode
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
+import io.aether.android.data.models.Product
+import io.aether.android.data.models.Vendor
 import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
@@ -56,11 +59,11 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
   suspend fun getDevices(): List<Device> = devicesFlow.first()
 
   internal suspend fun getDevice(nodeId: NodeId): Device? =
-      detailedDevicesFlow.first().firstOrNull { it.nodeId == nodeId }
+      detailedDevicesFlow.first().firstOrNull { it.id == nodeId }
 
   internal suspend fun addOrUpdateDevice(device: Device) {
     dataStore.updateData { state ->
-      val index = state.nodesList.indexOfFirst { it.nodeId == device.nodeId.toLong() }
+      val index = state.nodesList.indexOfFirst { it.nodeId == device.id.toLong() }
       val node = toNode(device, state.nodesList.getOrNull(index))
       state.toBuilder().apply { if (index < 0) addNodes(node) else setNodes(index, node) }.build()
     }
@@ -73,10 +76,10 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
       vendorName: String,
       productId: ProductId,
       productName: String,
-      endpoint: Device.Endpoint,
+      endpoint: Endpoint,
   ) {
     val existing = getDevice(nodeId)
-    val existingEndpoint = existing?.endpoints?.firstOrNull { it.endpointId == endpoint.endpointId }
+    val existingEndpoint = existing?.endpoints?.firstOrNull { it.id == endpoint.id }
     val updatedEndpoint =
         endpoint.copy(
             isOn = existingEndpoint?.isOn ?: endpoint.isOn,
@@ -86,25 +89,31 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
     val device =
         (existing
                 ?: Device(
-                    nodeId = nodeId,
+                    id = nodeId,
                     name = nodeName,
-                    vendorId = vendorId,
-                    vendorName = vendorName,
-                    productId = productId,
-                    productName = productName,
+                    vendor = Vendor(id = vendorId, name = vendorName),
+                    product = Product(id = productId, name = productName),
                 ))
             .copy(
                 name = nodeName.ifBlank { existing?.name.orEmpty() },
-                vendorId =
-                    vendorId.takeUnless { it == VendorId(0u) } ?: existing?.vendorId ?: vendorId,
-                vendorName = vendorName.ifBlank { existing?.vendorName.orEmpty() },
-                productId =
-                    productId.takeUnless { it == ProductId(0u) }
-                        ?: existing?.productId
-                        ?: productId,
-                productName = productName.ifBlank { existing?.productName.orEmpty() },
+                vendor =
+                    Vendor(
+                        id =
+                            vendorId.takeUnless { it == VendorId(0u) }
+                                ?: existing?.vendor?.id
+                                ?: vendorId,
+                        name = vendorName.ifBlank { existing?.vendor?.name.orEmpty() },
+                    ),
+                product =
+                    Product(
+                        id =
+                            productId.takeUnless { it == ProductId(0u) }
+                                ?: existing?.product?.id
+                                ?: productId,
+                        name = productName.ifBlank { existing?.product?.name.orEmpty() },
+                    ),
                 endpoints =
-                    existing.orEmptyEndpoints().filterNot { it.endpointId == endpoint.endpointId } +
+                    existing.orEmptyEndpoints().filterNot { it.id == endpoint.id } +
                         updatedEndpoint,
             )
     addOrUpdateDevice(device)
@@ -121,10 +130,16 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
     val device = getDevice(nodeId) ?: return
     addOrUpdateDevice(
         device.copy(
-            vendorId = vendorId?.takeUnless { it == VendorId(0u) } ?: device.vendorId,
-            vendorName = vendorName?.takeIf { it.isNotBlank() } ?: device.vendorName,
-            productId = productId?.takeUnless { it == ProductId(0u) } ?: device.productId,
-            productName = productName?.takeIf { it.isNotBlank() } ?: device.productName,
+            vendor =
+                Vendor(
+                    id = vendorId?.takeUnless { it == VendorId(0u) } ?: device.vendor.id,
+                    name = vendorName?.takeIf { it.isNotBlank() } ?: device.vendor.name,
+                ),
+            product =
+                Product(
+                    id = productId?.takeUnless { it == ProductId(0u) } ?: device.product.id,
+                    name = productName?.takeIf { it.isNotBlank() } ?: device.product.name,
+                ),
             name = nodeLabel?.takeIf { it.isNotBlank() } ?: device.name,
         ),
     )
@@ -133,14 +148,14 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
   internal suspend fun updateDeviceType(nodeId: NodeId, deviceTypeId: DeviceTypeId) {
     val device = getDevice(nodeId) ?: return
     addOrUpdateDevice(
-        device.copy(endpoints = device.endpoints.map { it.copy(deviceTypeId = deviceTypeId) })
+        device.copy(endpoints = device.endpoints.map { it.copy(deviceTypeId = deviceTypeId) }),
     )
   }
 
   internal suspend fun removeEndpoints(nodeId: NodeId, endpointIds: Set<EndpointId>) {
     val device = getDevice(nodeId) ?: return
     addOrUpdateDevice(
-        device.copy(endpoints = device.endpoints.filterNot { it.endpointId in endpointIds }),
+        device.copy(endpoints = device.endpoints.filterNot { it.id in endpointIds }),
     )
   }
 
@@ -158,7 +173,7 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
             isOnline = isOnline,
             endpoints =
                 device.endpoints.map {
-                  if (it.endpointId == endpointId) {
+                  if (it.id == endpointId) {
                     it.copy(isOn = isOn, level = level, colorTemperature = colorTemperature)
                   } else {
                     it
@@ -185,11 +200,17 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
 
   private fun toBasicDevice(node: MatterNode): Device =
       Device(
-          nodeId = node.nodeId.toNodeId(),
-          vendorId = node.vendorId.toVendorId(),
-          vendorName = node.vendorName,
-          productId = node.productId.toProductId(),
-          productName = node.productName,
+          id = node.nodeId.toNodeId(),
+          vendor =
+              Vendor(
+                  id = node.vendorId.toVendorId(),
+                  name = node.vendorName,
+              ),
+          product =
+              Product(
+                  id = node.productId.toProductId(),
+                  name = node.productName,
+              ),
           name = node.name,
           dateCommissioned =
               node.dateCommissioned
@@ -201,9 +222,9 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
   private fun toDevice(node: MatterNode): Device =
       toBasicDevice(node).copy(endpoints = node.endpointsList.map(::toEndpoint))
 
-  private fun toEndpoint(endpoint: MatterEndpoint): Device.Endpoint =
-      Device.Endpoint(
-          endpointId = endpoint.endpointId.toEndpointId(),
+  private fun toEndpoint(endpoint: MatterEndpoint): Endpoint =
+      Endpoint(
+          id = endpoint.endpointId.toEndpointId(),
           label = endpoint.label,
           deviceTypeId =
               endpoint.deviceTypesList.firstOrNull()?.toLong()?.toDeviceTypeId()
@@ -220,11 +241,11 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
     return source
         .toBuilder()
         .apply {
-          nodeId = device.nodeId.toLong()
-          vendorId = device.vendorId.toInt()
-          vendorName = device.vendorName
-          productId = device.productId.toInt()
-          productName = device.productName
+          nodeId = device.id.toLong()
+          vendorId = device.vendor.id.toInt()
+          vendorName = device.vendor.name
+          productId = device.product.id.toInt()
+          productName = device.product.name
           name = device.name
           online = device.isOnline
           if (existing == null) {
@@ -236,17 +257,15 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
                     .build()
           }
           clearEndpoints()
-          device.endpoints
-              .sortedBy { it.endpointId.toInt() }
-              .forEach { addEndpoints(toEndpoint(it)) }
+          device.endpoints.sortedBy { it.id.toInt() }.forEach { addEndpoints(toEndpoint(it)) }
         }
         .build()
   }
 
-  private fun toEndpoint(endpoint: Device.Endpoint): MatterEndpoint =
+  private fun toEndpoint(endpoint: Endpoint): MatterEndpoint =
       MatterEndpoint.newBuilder()
           .apply {
-            endpointId = endpoint.endpointId.toInt()
+            endpointId = endpoint.id.toInt()
             label = endpoint.label
             supportsLevelControl = endpoint.supportsLevelControl
             supportsColorTemperature = endpoint.supportsColorTemperature
@@ -257,5 +276,5 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
           }
           .build()
 
-  private fun Device?.orEmptyEndpoints(): List<Device.Endpoint> = this?.endpoints.orEmpty()
+  private fun Device?.orEmptyEndpoints(): List<Endpoint> = this?.endpoints.orEmpty()
 }

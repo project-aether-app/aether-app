@@ -17,6 +17,7 @@ import io.aether.android.chip.SubscriptionHelper
 import io.aether.android.chip.isCommunicationTimeoutError
 import io.aether.android.data.DevicesRepository
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
 import io.aether.android.matter.Clusters
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
@@ -99,32 +100,32 @@ constructor(
                     .contains(
                         Clusters.ColorControl.Attributes.ColorTemperatureMireds.ID,
                     )
-        Device.Endpoint(
-            endpointId = info.endpointId,
+        Endpoint(
+            id = info.endpointId,
             label = current.name,
             deviceTypeId = info.types.firstOrNull() ?: io.aether.android.matter.DeviceTypeId(0u),
             supportsLevelControl = info.serverClusters.contains(Clusters.LevelControl.ID),
             supportsColorTemperature = supportsColorTemperature,
         )
       }
-      val endpointIds = endpoints.map { it.endpointId }.toSet()
+      val endpointIds = endpoints.map { it.id }.toSet()
       current.endpoints
-          .filter { it.endpointId !in endpointIds }
+          .filter { it.id !in endpointIds }
           .takeIf { it.isNotEmpty() }
           ?.let {
             devicesRepository.removeEndpointsFromNode(
                 nodeId,
-                it.map { ep -> ep.endpointId }.toSet(),
+                it.map { ep -> ep.id }.toSet(),
             )
           }
       endpoints.forEach {
         devicesRepository.addOrUpdateEndpoint(
             nodeId,
             current.name,
-            current.vendorId,
-            current.vendorName,
-            current.productId,
-            current.productName,
+            current.vendor.id,
+            current.vendor.name,
+            current.product.id,
+            current.product.name,
             it,
         )
       }
@@ -133,48 +134,48 @@ constructor(
         .onFailure { Timber.w(it, "Failed to sync endpoints nodeId=$nodeId") }
   }
 
-  fun updateDeviceStateOn(endpoint: Device.Endpoint, isOn: Boolean) =
+  fun updateDeviceStateOn(endpoint: Endpoint, isOn: Boolean) =
       updateEndpoint(
           endpoint,
           isOn = isOn,
           level = endpoint.level,
           colorTemperature = endpoint.colorTemperature,
       ) { nodeId ->
-        clustersHelper.setOnOffDeviceStateOnOffCluster(nodeId.toLong(), isOn, endpoint.endpointId)
+        clustersHelper.setOnOffDeviceStateOnOffCluster(nodeId.toLong(), isOn, endpoint.id)
       }
 
-  fun updateDeviceStateLevel(endpoint: Device.Endpoint, level: Int) {
+  fun updateDeviceStateLevel(endpoint: Endpoint, level: Int) {
     if (!supportsLevelControl(endpoint)) return
     updateEndpoint(endpoint, endpoint.isOn, level, endpoint.colorTemperature) { nodeId ->
-      clustersHelper.setLevelStateLevelControlCluster(nodeId.toLong(), level, endpoint.endpointId)
+      clustersHelper.setLevelStateLevelControlCluster(nodeId.toLong(), level, endpoint.id)
     }
   }
 
-  fun updateDeviceStateColorTemperature(endpoint: Device.Endpoint, colorTemperature: Int) {
+  fun updateDeviceStateColorTemperature(endpoint: Endpoint, colorTemperature: Int) {
     if (!supportsColorTemperature(endpoint)) return
     updateEndpoint(endpoint, endpoint.isOn, endpoint.level, colorTemperature) { nodeId ->
       clustersHelper.setColorTemperatureColorControlCluster(
           nodeId.toLong(),
           colorTemperature,
-          endpoint.endpointId,
+          endpoint.id,
       )
     }
   }
 
   private fun updateEndpoint(
-      endpoint: Device.Endpoint,
+      endpoint: Endpoint,
       isOn: Boolean,
       level: Int,
       colorTemperature: Int,
       action: suspend (NodeId) -> Unit,
   ) {
-    val nodeId = device.value?.nodeId ?: return
+    val nodeId = device.value?.id ?: return
     viewModelScope.launch {
       runCatching {
         action(nodeId)
         devicesRepository.upsertEndpointState(
             nodeId,
-            endpoint.endpointId,
+            endpoint.id,
             true,
             isOn,
             level,
@@ -199,7 +200,7 @@ constructor(
 
   fun stopMonitoringStateChanges() {
     devicePeriodicPingEnabled = false
-    val nodeId = device.value?.nodeId ?: return
+    val nodeId = device.value?.id ?: return
     if (STATE_CHANGES_MONITORING_MODE == StateChangesMonitoringMode.Subscription) {
       viewModelScope.launch {
         runCatching {
@@ -217,16 +218,16 @@ constructor(
     viewModelScope.launch {
       runCatching {
         subscriptionHelper.awaitSubscribeToPeriodicUpdates(
-            chipClient.getConnectedDevicePointer(current.nodeId),
-            object : SubscriptionHelper.SubscriptionEstablishedCallbackForDevice(current.nodeId) {
+            chipClient.getConnectedDevicePointer(current.id),
+            object : SubscriptionHelper.SubscriptionEstablishedCallbackForDevice(current.id) {
               override fun onSubscriptionEstablished(subscriptionId: Long) {
                 viewModelScope.launch {
-                  devicesRepository.updateNodeOnlineState(current.nodeId, true)
+                  devicesRepository.updateNodeOnlineState(current.id, true)
                 }
               }
             },
-            SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(current.nodeId),
-            object : SubscriptionHelper.ReportCallbackForDevice(current.nodeId) {
+            SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(current.id),
+            object : SubscriptionHelper.ReportCallbackForDevice(current.id) {
               override fun onError(
                   attributePath: chip.devicecontroller.model.ChipAttributePath?,
                   eventPath: chip.devicecontroller.model.ChipEventPath?,
@@ -234,7 +235,7 @@ constructor(
               ) {
                 if (ex.isCommunicationTimeoutError()) {
                   viewModelScope.launch {
-                    devicesRepository.updateNodeOnlineState(current.nodeId, false)
+                    devicesRepository.updateNodeOnlineState(current.id, false)
                   }
                 }
               }
@@ -247,15 +248,15 @@ constructor(
             },
         )
       }
-          .onFailure { Timber.w(it, "Failed to subscribe nodeId=${current.nodeId}") }
+          .onFailure { Timber.w(it, "Failed to subscribe nodeId=${current.id}") }
     }
   }
 
-  private fun updateFromReport(device: Device, endpoint: Device.Endpoint, nodeState: NodeState) {
+  private fun updateFromReport(device: Device, endpoint: Endpoint, nodeState: NodeState) {
     val on =
         subscriptionHelper.extractAttribute(
             nodeState,
-            endpoint.endpointId,
+            endpoint.id,
             Clusters.OnOff.ID,
             Clusters.OnOff.Attributes.OnOff.ID.toLong(),
         ) as Boolean? ?: return
@@ -263,7 +264,7 @@ constructor(
         if (supportsLevelControl(endpoint)) {
           subscriptionHelper.extractAttribute(
               nodeState,
-              endpoint.endpointId,
+              endpoint.id,
               Clusters.LevelControl.ID,
               Clusters.LevelControl.Attributes.CurrentLevel.ID.toLong(),
           ) as Int? ?: return
@@ -272,21 +273,21 @@ constructor(
         if (supportsColorTemperature(endpoint)) {
           subscriptionHelper.extractAttribute(
               nodeState,
-              endpoint.endpointId,
+              endpoint.id,
               Clusters.ColorControl.ID,
               Clusters.ColorControl.Attributes.ColorTemperatureMireds.ID.toLong(),
           ) as Int? ?: return
         } else 0
     viewModelScope.launch {
       devicesRepository.upsertEndpointState(
-          device.nodeId,
-          endpoint.endpointId,
+          device.id,
+          endpoint.id,
           true,
           on,
           level,
           colorTemperature,
       )
-      _device.value = devicesRepository.getDevice(device.nodeId)
+      _device.value = devicesRepository.getDevice(device.id)
     }
   }
 
@@ -298,26 +299,26 @@ constructor(
         current.endpoints.forEach { endpoint ->
           val on =
               clustersHelper.getDeviceStateOnOffCluster(
-                  current.nodeId.toLong(),
-                  endpoint.endpointId,
+                  current.id.toLong(),
+                  endpoint.id,
               )
           val level =
               if (supportsLevelControl(endpoint)) {
                 clustersHelper.getDeviceStateLevelControlCluster(
-                    current.nodeId.toLong(),
-                    endpoint.endpointId,
+                    current.id.toLong(),
+                    endpoint.id,
                 )
               } else 0
           val colorTemperature =
               if (supportsColorTemperature(endpoint)) {
                 clustersHelper.getColorTemperatureColorControlCluster(
-                    current.nodeId.toLong(),
-                    endpoint.endpointId,
+                    current.id.toLong(),
+                    endpoint.id,
                 )
               } else 0
           devicesRepository.upsertEndpointState(
-              current.nodeId,
-              endpoint.endpointId,
+              current.id,
+              endpoint.id,
               on != null,
               on ?: false,
               level ?: 0,

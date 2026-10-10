@@ -3,11 +3,11 @@
 
 package io.aether.android
 
-import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
 import io.aether.android.matter.Devices
 
 /** Returns true if the device exposes a Level Control (dimmable) cluster. */
-fun supportsLevelControl(endpoint: Device.Endpoint): Boolean {
+fun supportsLevelControl(endpoint: Endpoint): Boolean {
   val primaryType = endpoint.deviceTypeId.toLong()
   return endpoint.supportsLevelControl ||
       primaryType == Devices.DimmableLight.ID.toLong() ||
@@ -21,7 +21,7 @@ fun supportsLevelControl(endpoint: Device.Endpoint): Boolean {
  * AttributeList confirms that the color temperature attribute (id 7) is present. A device type
  * fallback is also kept for legacy commissioned devices.
  */
-fun supportsColorTemperature(endpoint: Device.Endpoint): Boolean {
+fun supportsColorTemperature(endpoint: Endpoint): Boolean {
   val primaryType = endpoint.deviceTypeId.toLong()
   return endpoint.supportsColorTemperature ||
       primaryType == Devices.ColorTemperatureLight.ID.toLong() ||
