@@ -73,18 +73,25 @@ fun DiagnosticsScreen(
         }
       },
   ) { innerPadding ->
-    if (uiState.isFirstTimeLoading) {
-      LoadingIndicator(
-          stringResource(R.string.device_diagnostics_loading),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-      )
-      return@Scaffold
+    when {
+      uiState.isFirstTimeLoading -> {
+        LoadingIndicator(
+            stringResource(R.string.device_diagnostics_loading),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
+        return@Scaffold
+      }
+      uiState.errorMessageRes != null -> {
+        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+        return@Scaffold
+      }
+      else ->
+          Diagnostics(
+              uiState = uiState,
+              onRefresh = onRefresh,
+              modifier = Modifier.fillMaxSize().padding(innerPadding),
+          )
     }
-    Diagnostics(
-        uiState = uiState,
-        onRefresh = onRefresh,
-        modifier = Modifier.fillMaxSize().padding(innerPadding),
-    )
   }
 }
 
@@ -99,7 +106,6 @@ private fun Diagnostics(
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
-    uiState.errorMessageRes?.let { EmptyStateErrorBanner(stringResource(it)) }
     Column(
         modifier =
             Modifier.fillMaxSize()

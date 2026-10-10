@@ -171,28 +171,35 @@ fun DeviceSettingsScreen(
         )
       },
   ) { innerPadding ->
-    if (uiState.isFirstTimeLoading) {
-      LoadingIndicator(
-          stringResource(R.string.loading_device_info),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-      )
-      return@Scaffold
+    when {
+      uiState.isFirstTimeLoading -> {
+        LoadingIndicator(
+            stringResource(R.string.loading_device_info),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
+        return@Scaffold
+      }
+      uiState.errorMessageRes != null -> {
+        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+        return@Scaffold
+      }
+      else ->
+          DeviceSettings(
+              uiState = uiState,
+              onDismissMsgDialog = onDismissMsgDialog,
+              onDeviceNameChange = onDeviceNameChange,
+              onDeviceTypeChange = onDeviceTypeChange,
+              onManageFabricsClick = onManageFabricsClick,
+              onDataModelExplorerClick = onDataModelExplorerClick,
+              onDiagnosticsClick = onDiagnosticsClick,
+              onShareDeviceClick = onShareDeviceClick,
+              onShareDeviceResult = onShareDeviceResult,
+              onRemoveDeviceClick = onRemoveDeviceClick,
+              onRemoveDeviceResult = onRemoveDeviceResult,
+              onForceRemoveDeviceResult = onForceRemoveDeviceResult,
+              modifier = Modifier.fillMaxSize().padding(innerPadding),
+          )
     }
-    DeviceSettings(
-        uiState = uiState,
-        onDismissMsgDialog = onDismissMsgDialog,
-        onDeviceNameChange = onDeviceNameChange,
-        onDeviceTypeChange = onDeviceTypeChange,
-        onManageFabricsClick = onManageFabricsClick,
-        onDataModelExplorerClick = onDataModelExplorerClick,
-        onDiagnosticsClick = onDiagnosticsClick,
-        onShareDeviceClick = onShareDeviceClick,
-        onShareDeviceResult = onShareDeviceResult,
-        onRemoveDeviceClick = onRemoveDeviceClick,
-        onRemoveDeviceResult = onRemoveDeviceResult,
-        onForceRemoveDeviceResult = onForceRemoveDeviceResult,
-        modifier = Modifier.fillMaxSize().padding(innerPadding),
-    )
   }
 }
 
@@ -224,9 +231,6 @@ private fun DeviceSettings(
 
   when {
     device == null -> return
-    uiState.errorMessageRes != null -> {
-      EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
-    }
     uiState.msgDialogInfo != null -> {
       MsgAlertDialog(uiState.msgDialogInfo, onDismissMsgDialog)
     }

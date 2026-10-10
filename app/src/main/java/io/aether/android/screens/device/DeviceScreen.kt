@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
 import io.aether.android.data.DevicesStateRepository
 import io.aether.android.matter.NodeId
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
 import io.aether.android.screens.common.OfflineLabel
@@ -147,14 +148,28 @@ fun DeviceScreen(
         )
       },
   ) { innerPadding ->
-    Device(
-        uiState = uiState,
-        onOnOffClick,
-        onBrightnessChange,
-        onColorTemperatureChange,
-        onDismissMsgDialog,
-        modifier = Modifier.fillMaxSize().padding(innerPadding),
-    )
+    when {
+      uiState.isFirstTimeLoading -> {
+        LoadingIndicator(
+            stringResource(R.string.loading_device_info),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
+        return@Scaffold
+      }
+      uiState.errorMessageRes != null -> {
+        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+        return@Scaffold
+      }
+      else ->
+          Device(
+              uiState = uiState,
+              onOnOffClick = onOnOffClick,
+              onBrightnessChange = onBrightnessChange,
+              onColorTemperatureChange = onColorTemperatureChange,
+              onDismissMsgDialog = onDismissMsgDialog,
+              modifier = Modifier.fillMaxSize().padding(innerPadding),
+          )
+    }
   }
 }
 
@@ -170,8 +185,7 @@ private fun Device(
 
   uiState.msgDialogInfo?.let { dialogInfo -> MsgAlertDialog(dialogInfo, onDismissMsgDialog) }
 
-  if (uiState.isFirstTimeLoading || uiState.device == null) {
-    LoadingIndicator(stringResource(R.string.loading_device_info), modifier = modifier)
+  if (uiState.device == null) {
     return
   }
 

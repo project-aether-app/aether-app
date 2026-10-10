@@ -87,19 +87,26 @@ fun FabricsScreen(
         )
       },
   ) { innerPadding ->
-    if (uiState.isFirstTimeLoading) {
-      LoadingIndicator(
-          stringResource(R.string.device_fabrics_loading),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-      )
-      return@Scaffold
+    when {
+      uiState.isFirstTimeLoading -> {
+        LoadingIndicator(
+            stringResource(R.string.device_fabrics_loading),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
+        return@Scaffold
+      }
+      uiState.errorMessageRes != null -> {
+        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+        return@Scaffold
+      }
+      else ->
+          Fabrics(
+              uiState = uiState,
+              onRefresh = onRefresh,
+              onRemoveController = onRemoveController,
+              modifier = Modifier.fillMaxSize().padding(innerPadding),
+          )
     }
-    Fabrics(
-        uiState = uiState,
-        onRefresh = onRefresh,
-        onRemoveController = onRemoveController,
-        modifier = Modifier.fillMaxSize().padding(innerPadding),
-    )
   }
 }
 
@@ -115,26 +122,19 @@ private fun Fabrics(
       onRefresh = onRefresh,
       modifier = modifier,
   ) {
-    when {
-      uiState.errorMessageRes != null -> {
-        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
-      }
-      else -> {
-        Column(
-            modifier =
-                Modifier.fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(MaterialTheme.spacing.paddingNormal),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
-        ) {
-          uiState.fabrics.forEach { fabric ->
-            FabricItem(
-                fabric = fabric,
-                onRemove = { onRemoveController(fabric.fabricIndex) },
-                canRemove = !fabric.isCurrentFabric,
-            )
-          }
-        }
+    Column(
+        modifier =
+            Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(MaterialTheme.spacing.paddingNormal),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+    ) {
+      uiState.fabrics.forEach { fabric ->
+        FabricItem(
+            fabric = fabric,
+            onRemove = { onRemoveController(fabric.fabricIndex) },
+            canRemove = !fabric.isCurrentFabric,
+        )
       }
     }
   }

@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
 import io.aether.android.matter.NodeId
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
 
@@ -90,21 +91,28 @@ fun ExplorerScreen(
         )
       }
   ) { innerPadding ->
-    if (uiState.isFirstTimeLoading) {
-      LoadingIndicator(
-          stringResource(R.string.device_explorer_loading_endpoints),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-      )
-      return@Scaffold
+    when {
+      uiState.isFirstTimeLoading -> {
+        LoadingIndicator(
+            stringResource(R.string.device_explorer_loading_endpoints),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
+        return@Scaffold
+      }
+      uiState.errorMessageRes != null -> {
+        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+        return@Scaffold
+      }
+      else ->
+          Explorer(
+              nodeId = nodeId,
+              uiState = uiState,
+              modifier = Modifier.fillMaxSize().padding(innerPadding),
+              showSearch = showSearch,
+              saveableStateHolder = saveableStateHolder,
+              viewModel = viewModel,
+          )
     }
-    Explorer(
-        nodeId = nodeId,
-        uiState = uiState,
-        modifier = Modifier.fillMaxSize().padding(innerPadding),
-        showSearch = showSearch,
-        saveableStateHolder = saveableStateHolder,
-        viewModel = viewModel,
-    )
   }
 }
 

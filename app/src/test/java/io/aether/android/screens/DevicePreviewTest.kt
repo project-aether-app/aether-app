@@ -2,8 +2,9 @@ package io.aether.android.screens
 
 import app.cash.paparazzi.Paparazzi
 import io.aether.android.Device
+import io.aether.android.MatterEndpoint
+import io.aether.android.MatterNode
 import io.aether.android.R
-import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.matter.Devices
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
@@ -32,12 +33,14 @@ class DevicePreviewTest {
           isOnline = true,
       )
 
-  private val testDeviceBasicInformation =
-      BasicInformationAttributes(
-          vendorId = VendorId(0x1135u),
-          productId = ProductId(0x1234u),
-          hardwareVersion = "2.4",
-          softwareVersion = "1.31.42",
+  private val testDeviceUiModel =
+      DeviceUiModel(
+          node = MatterNode.newBuilder().setNodeId(testDevice.nodeId.toLong()).build(),
+          endpoint = MatterEndpoint.newBuilder().setEndpointId(1).build(),
+          isOnline = true,
+          isOn = false,
+          level = 0,
+          colorTemperature = 0,
       )
 
   private fun snapshotDeviceScreen(uiState: DeviceUiState) {
@@ -62,11 +65,12 @@ class DevicePreviewTest {
   }
 
   @Test
-  fun previewDeviceSettings() {
+  fun previewDevice() {
     snapshotDeviceScreen(
         uiState =
             DeviceUiState(
                 isFirstTimeLoading = false,
+                device = testDeviceUiModel,
             ),
     )
   }
