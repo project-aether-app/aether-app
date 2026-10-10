@@ -316,9 +316,7 @@ private fun DeviceSettings(
       }
       SettingsInfoRow(stringResource(R.string.device_settings_basic_added_on)) {
         Text(
-            uiState.dateCommissioned
-                ?.takeUnless { it.seconds == 0L && it.nanos == 0 }
-                ?.let { formatTimestamp(LocalContext.current, it) } ?: unknown,
+            uiState.dateCommissioned?.let { formatTimestamp(LocalContext.current, it) } ?: unknown,
         )
       }
       SettingsInfoRow(stringResource(R.string.device_settings_basic_node_id)) {
