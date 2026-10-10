@@ -208,7 +208,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
       .getOrNull()
 
   private fun extractEthernetNetworkDiagnosticsData(
-      nodeState: NodeState
+      nodeState: NodeState,
   ): EthernetNetworkDiagnosticsData {
     val clusterState =
         nodeState
@@ -357,7 +357,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
       .getOrNull()
 
   private fun extractThreadNetworkDiagnosticsData(
-      nodeState: NodeState
+      nodeState: NodeState,
   ): ThreadNetworkDiagnosticsData {
     val clusterState =
         nodeState

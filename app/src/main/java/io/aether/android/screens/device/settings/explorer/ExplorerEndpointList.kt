@@ -92,7 +92,7 @@ internal fun EndpointListContent(
                                 deviceTypes.first().first.value,
                                 deviceTypes.first().second,
                             ),
-                        )
+                        ),
                     )
                     append("\n")
                   } else if (deviceTypes.isNotEmpty()) {
@@ -103,7 +103,7 @@ internal fun EndpointListContent(
                           stringResource(
                               R.string.device_explorer_device_types_item,
                               formatIdAndName(typeId.value, name),
-                          )
+                          ),
                       )
                       append("\n")
                     }
@@ -113,7 +113,7 @@ internal fun EndpointListContent(
                           R.string.device_explorer_endpoint_metadata,
                           info.serverClusters.size,
                           info.clientClusters.size,
-                      )
+                      ),
                   )
                 },
             onClick = { onSelectEndpoint(info.endpointId) },

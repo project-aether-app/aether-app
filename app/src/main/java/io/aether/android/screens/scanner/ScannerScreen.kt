@@ -91,7 +91,7 @@ fun MatterBeaconItem(beacon: MatterBeacon) {
             // information
             //  about the device, and allow actions on it such as "commissioning".
             Timber.d("beacon item clicked")
-          }
+          },
   ) {
     Image(
         painter = painterResource(icon),

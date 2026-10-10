@@ -50,7 +50,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
         DiagnosticDataProviderImpl(context),
     )
     ChipDeviceController(
-        ControllerParams.newBuilder().setUdpListenPort(0).setControllerVendorId(VENDOR_ID).build()
+        ControllerParams.newBuilder().setUdpListenPort(0).setControllerVendorId(VENDOR_ID).build(),
     )
   }
 
@@ -91,7 +91,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
           object : UnpairDeviceCallback {
             override fun onError(status: Int, id: Long) {
               continuation.resumeWithException(
-                  java.lang.IllegalStateException("Failed to unpair deviceId=$id status=$status")
+                  java.lang.IllegalStateException("Failed to unpair deviceId=$id status=$status"),
               )
             }
 
@@ -115,7 +115,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
       salt: ByteArray,
   ): PaseVerifierParams {
     Timber.d(
-        "Computing PASE verifier devicePtr=$devicePtr pinCode=$pinCode iterations=$iterations salt=$salt"
+        "Computing PASE verifier devicePtr=$devicePtr pinCode=$pinCode iterations=$iterations salt=$salt",
     )
     return chipDeviceController.computePaseVerifier(devicePtr, pinCode, iterations, salt)
   }
@@ -140,7 +140,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
               super.onPairingComplete(code)
               if (code != 0) {
                 continuation.resumeWithException(
-                    IllegalStateException("Pairing failed errorCode=$code")
+                    IllegalStateException("Pairing failed errorCode=$code"),
                 )
               } else {
                 continuation.resume(Unit)
@@ -166,7 +166,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
               super.onCommissioningStatusUpdate(id, stage, errorCode)
               continuation.resume(Unit)
             }
-          }
+          },
       )
 
       // Temporary workaround to remove interface indexes from ipAddress
@@ -190,7 +190,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
               super.onCommissioningComplete(id, errorCode)
               if (errorCode != 0) {
                 continuation.resumeWithException(
-                    IllegalStateException("Commissioning failed errorCode=$errorCode")
+                    IllegalStateException("Commissioning failed errorCode=$errorCode"),
                 )
               } else {
                 continuation.resume(Unit)
@@ -201,7 +201,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
               super.onError(error)
               continuation.resumeWithException(error)
             }
-          }
+          },
       )
       chipDeviceController.commissionDevice(deviceId, networkCredentials)
     }
@@ -221,7 +221,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
             override fun onError(status: Int, deviceId: Long) {
               Timber.e("Failed to open pairing window status=$status deviceId=$deviceId")
               continuation.resumeWithException(
-                  java.lang.IllegalStateException("Failed to open pairing window status=$status")
+                  java.lang.IllegalStateException("Failed to open pairing window status=$status"),
               )
             }
 
@@ -362,7 +362,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
                     IllegalStateException(
                         "readAttributes failed",
                         e ?: IllegalStateException("Unknown readAttributes error"),
-                    )
+                    ),
                 )
               }
             }

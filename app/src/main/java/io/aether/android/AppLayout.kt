@@ -76,7 +76,7 @@ fun AppLayout(navController: NavHostController) {
 
   val scanningPermissionsLauncher =
       rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.RequestMultiplePermissions()
+          contract = ActivityResultContracts.RequestMultiplePermissions(),
       ) { results ->
         if (results.values.any { !it }) {
           developerUtilitiesViewModel.showMsgDialog(
@@ -99,7 +99,7 @@ fun AppLayout(navController: NavHostController) {
       if (!developerUtilitiesViewModel.allScanningPermissionsGranted(ctx)) {
         Timber.d("All scanning permissions NOT granted. Asking for them.")
         scanningPermissionsLauncher.launch(
-            developerUtilitiesViewModel.getRequiredScanningPermissions()
+            developerUtilitiesViewModel.getRequiredScanningPermissions(),
         )
       } else {
         @Suppress("DEPRECATION") val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()

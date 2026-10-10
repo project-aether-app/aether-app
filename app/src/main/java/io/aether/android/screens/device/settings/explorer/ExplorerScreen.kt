@@ -89,7 +89,7 @@ fun ExplorerScreen(
               }
             },
         )
-      }
+      },
   ) { innerPadding ->
     when {
       uiState.isFirstTimeLoading -> {
@@ -165,7 +165,7 @@ private fun Explorer(
       is ExplorerLevel.ClusterDetail -> {
         val key = ExplorerClusterKey(level.endpointId, level.clusterId)
         saveableStateHolder.SaveableStateProvider(
-            "cluster-detail-${level.endpointId}-${level.clusterId}-${level.tab}"
+            "cluster-detail-${level.endpointId}-${level.clusterId}-${level.tab}",
         ) {
           ClusterDetailContent(
               tab = level.tab,

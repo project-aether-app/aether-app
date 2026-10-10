@@ -66,7 +66,7 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
           stringResource(
               R.string.device_diagnostics_network_rate,
               it.toFloat() / 1000000,
-          )
+          ),
       )
     }
   }
@@ -117,7 +117,7 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
     }
     if (linkProperties.isNotEmpty()) {
       DiagnosticsInfoRow(
-          stringResource(R.string.device_diagnostics_label_network_link_properties)
+          stringResource(R.string.device_diagnostics_label_network_link_properties),
       ) {
         Text(linkProperties)
       }

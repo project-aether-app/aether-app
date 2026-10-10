@@ -42,7 +42,7 @@ class ThreadNetworkUiState(
 
   fun processAction(actionRequest: ActionRequest) {
     Timber.d(
-        "Processing action type=${actionRequest.type} task=${actionRequest.task} serviceInfo=${actionRequest.serviceInfo}"
+        "Processing action type=${actionRequest.type} task=${actionRequest.task} serviceInfo=${actionRequest.serviceInfo}",
     )
 
     // Dispatch processing according to action type.
@@ -230,7 +230,7 @@ class ThreadNetworkUiState(
             val qrCodeDataset =
                 barcode.displayValue?.substringAfter(":")?.let { encodedDataset ->
                   ThreadNetworkCredentials.fromActiveOperationalDataset(
-                      BaseEncoding.base16().decode(encodedDataset)
+                      BaseEncoding.base16().decode(encodedDataset),
                   )
                 } ?: throw IllegalArgumentException("QR code does not contain dataset payload.")
             viewModel.setThreadCredentialsInfo(null, qrCodeDataset)

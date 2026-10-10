@@ -66,7 +66,7 @@ constructor(
           listOf(
               ScanFilter.Builder()
                   .setServiceData(MATTER_UUID, byteArrayOf(0), byteArrayOf(0))
-                  .build()
+                  .build(),
           ),
           ScanSettings.Builder()
               .setScanMode(ScanSettings.SCAN_MODE_BALANCED)

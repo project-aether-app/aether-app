@@ -277,7 +277,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
         val numericValues = value.mapNotNull { (it as? Number)?.toLong() }
         if (numericValues.size != value.size) {
           throw IllegalStateException(
-              "readLongList: received non-numeric items in global list attribute"
+              "readLongList: received non-numeric items in global list attribute",
           )
         }
         numericValues
@@ -360,7 +360,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -384,7 +384,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
           .readDeviceTypeListAttribute(
               object : ChipClusters.DescriptorCluster.DeviceTypeListAttributeCallback {
                 override fun onSuccess(
-                    values: List<ChipStructs.DescriptorClusterDeviceTypeStruct>
+                    values: List<ChipStructs.DescriptorClusterDeviceTypeStruct>,
                 ) {
                   continuation.resume(values)
                 }
@@ -392,7 +392,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -442,7 +442,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -463,7 +463,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -500,7 +500,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -534,7 +534,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -562,7 +562,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                 override fun onError(ex: Exception) {
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -720,7 +720,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                   Timber.e(ex, "readOnOffAttribute command failure")
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -753,7 +753,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                     Timber.e(ex, "Failure for setOnOffDeviceStateOnOffCluster")
                     continuation.resumeWithException(ex)
                   }
-                }
+                },
             )
       }
     } else {
@@ -771,7 +771,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                     Timber.e(ex, "Failure for getOnOffDeviceStateOnOffCluster")
                     continuation.resumeWithException(ex)
                   }
-                }
+                },
             )
       }
     }
@@ -799,7 +799,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                   Timber.e(ex, "readOnOffAttribute command failure")
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -867,7 +867,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                   Timber.e(ex, "readLevelControlAttribute command failure")
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -888,7 +888,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
       endpointId: EndpointId,
   ) {
     Timber.d(
-        "Setting color temperature deviceId=$deviceId colorTemperature=$colorTemperature endpointId=$endpointId"
+        "Setting color temperature deviceId=$deviceId colorTemperature=$colorTemperature endpointId=$endpointId",
     )
     val connectedDevicePtr =
         try {
@@ -941,7 +941,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                   Timber.e(ex, "readColorTemperatureMiredsAttribute command failure")
                   continuation.resumeWithException(ex)
                 }
-              }
+              },
           )
     }
   }
@@ -975,7 +975,7 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
                   Timber.e(ex, "readColorControlClusterAttributeList failure")
                   continuation.resume(emptyList())
                 }
-              }
+              },
           )
     }
   }
@@ -1213,14 +1213,14 @@ class ClustersHelper @Inject constructor(private val chipClient: ChipClient) {
     val hardwareVersion =
         clusterState
             .getAttributeState(
-                Clusters.BasicInformation.Attributes.HardwareVersionString.ID.toLong()
+                Clusters.BasicInformation.Attributes.HardwareVersionString.ID.toLong(),
             )
             ?.value
             .asString()
     val softwareVersion =
         clusterState
             .getAttributeState(
-                Clusters.BasicInformation.Attributes.SoftwareVersionString.ID.toLong()
+                Clusters.BasicInformation.Attributes.SoftwareVersionString.ID.toLong(),
             )
             ?.value
             .asString()

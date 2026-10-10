@@ -41,7 +41,7 @@ fun GeneralDiagnostics(data: GeneralDiagnosticsData) {
         .takeIf { it.isNotEmpty() }
         ?.let {
           DiagnosticsInfoRow(
-              stringResource(R.string.device_diagnostics_label_active_hardware_faults)
+              stringResource(R.string.device_diagnostics_label_active_hardware_faults),
           ) {
             Text(it)
           }
@@ -50,7 +50,7 @@ fun GeneralDiagnostics(data: GeneralDiagnosticsData) {
         .takeIf { it.isNotEmpty() }
         ?.let {
           DiagnosticsInfoRow(
-              stringResource(R.string.device_diagnostics_label_active_radio_faults)
+              stringResource(R.string.device_diagnostics_label_active_radio_faults),
           ) {
             Text(it)
           }
@@ -59,7 +59,7 @@ fun GeneralDiagnostics(data: GeneralDiagnosticsData) {
         .takeIf { it.isNotEmpty() }
         ?.let {
           DiagnosticsInfoRow(
-              stringResource(R.string.device_diagnostics_label_active_network_faults)
+              stringResource(R.string.device_diagnostics_label_active_network_faults),
           ) {
             Text(it)
           }

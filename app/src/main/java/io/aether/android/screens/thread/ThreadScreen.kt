@@ -145,7 +145,7 @@ internal fun ThreadRoute(
   // access Thread network credentials.
   val threadClientLauncher =
       rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartIntentSenderForResult()
+          contract = ActivityResultContracts.StartIntentSenderForResult(),
       ) { result ->
         if (result.resultCode == RESULT_OK) {
           val threadNetworkCredentials =
@@ -213,7 +213,7 @@ private fun ThreadScreen(
 
   Box(modifier = modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.paddingSurfaceContent)
+        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.paddingSurfaceContent),
     ) {
       // TODO: Hack to handle issue with Fragment's top appbar.
       Spacer(Modifier.padding(30.dp))
@@ -221,7 +221,7 @@ private fun ThreadScreen(
       // The Actions section is the main section with all possible Thread network actions
       // exposed as clickable cards.
       Box(
-          modifier = Modifier.border(BorderStroke(1.dp, Color.Red), shape = RoundedCornerShape(4))
+          modifier = Modifier.border(BorderStroke(1.dp, Color.Red), shape = RoundedCornerShape(4)),
       ) {
         ActionsSection(onThreadNetworkAction)
       }
@@ -273,7 +273,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.doGpsPreferredCredentialsExist, ActionTask.Process)
+                ActionRequest(ActionType.doGpsPreferredCredentialsExist, ActionTask.Process),
             )
           },
       )
@@ -284,7 +284,7 @@ private fun ActionsSection(
           rpiOtbrColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.getOtbrActiveThreadCredentials, ActionTask.Init)
+                ActionRequest(ActionType.getOtbrActiveThreadCredentials, ActionTask.Init),
             )
           },
       )
@@ -295,7 +295,7 @@ private fun ActionsSection(
           qrCodeColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.readQrCodeCredentials, ActionTask.Process)
+                ActionRequest(ActionType.readQrCodeCredentials, ActionTask.Process),
             )
           },
       )
@@ -306,7 +306,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.getGpsPreferredCredentials, ActionTask.Process)
+                ActionRequest(ActionType.getGpsPreferredCredentials, ActionTask.Process),
             )
           },
       )
@@ -317,7 +317,7 @@ private fun ActionsSection(
           rpiOtbrColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.setOtbrPendingThreadCredentials, ActionTask.Init)
+                ActionRequest(ActionType.setOtbrPendingThreadCredentials, ActionTask.Init),
             )
           },
       )
@@ -328,7 +328,7 @@ private fun ActionsSection(
           qrCodeColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.showQrCodeCredentials, ActionTask.Process)
+                ActionRequest(ActionType.showQrCodeCredentials, ActionTask.Process),
             )
           },
       )
@@ -339,7 +339,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.setGpsPreferredCredentials, ActionTask.Process)
+                ActionRequest(ActionType.setGpsPreferredCredentials, ActionTask.Process),
             )
           },
       )
@@ -352,7 +352,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.clearGpsPreferredCredentials, ActionTask.Process)
+                ActionRequest(ActionType.clearGpsPreferredCredentials, ActionTask.Process),
             )
           },
       )
@@ -478,7 +478,7 @@ private fun SimpleActionDialog(
           TextButton(
               onClick = {
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
-              }
+              },
           ) {
             Text("OK")
           }
@@ -573,7 +573,7 @@ private fun OtbrActionDialog(
           TextButton(
               onClick = {
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
-              }
+              },
           ) {
             Text("OK")
           }
@@ -582,9 +582,9 @@ private fun OtbrActionDialog(
               onClick = {
                 // Trigger the processing of the OTBR.
                 onThreadNetworkAction(
-                    ActionRequest(currentActionInfo.type, ActionTask.Process, serviceInfo = otbr)
+                    ActionRequest(currentActionInfo.type, ActionTask.Process, serviceInfo = otbr),
                 )
-              }
+              },
           ) {
             Text("OK")
           }
@@ -598,7 +598,7 @@ private fun OtbrActionDialog(
           TextButton(
               onClick = {
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
-              }
+              },
           ) {
             Text("Cancel")
           }

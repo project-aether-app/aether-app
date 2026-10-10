@@ -75,7 +75,7 @@ fun DeviceSettingsRoute(
   // GPS share activity launcher.
   val shareDeviceLauncher =
       rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartIntentSenderForResult()
+          contract = ActivityResultContracts.StartIntentSenderForResult(),
       ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
           viewModel.shareDeviceSucceeded()

@@ -73,7 +73,7 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
             "IP address=${metadata.networkLocation.ipAddress} " +
             "hostAddress=${metadata.networkLocation.ipAddress.hostAddress} " +
             "port=${metadata.networkLocation.port}\n" +
-            "\tpassCode=${metadata.passcode}"
+            "\tpassCode=${metadata.passcode}",
     )
 
     // Perform commissioning on custom fabric for the sample app.
@@ -97,7 +97,7 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
             .sendCommissioningError(CommissioningError.OTHER)
             .addOnSuccessListener {
               Timber.d(
-                  "Commissioning: commissioningServiceDelegate.sendCommissioningError() succeeded"
+                  "Commissioning: commissioningServiceDelegate.sendCommissioningError() succeeded",
               )
             }
             .addOnFailureListener { e2 ->
@@ -112,11 +112,11 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
       Timber.d("Sending commissioning complete")
       commissioningServiceDelegate
           .sendCommissioningComplete(
-              CommissioningCompleteMetadata.builder().setToken(deviceId.toString()).build()
+              CommissioningCompleteMetadata.builder().setToken(deviceId.toString()).build(),
           )
           .addOnSuccessListener {
             Timber.d(
-                "Commissioning: commissioningServiceDelegate.sendCommissioningComplete() succeeded"
+                "Commissioning: commissioningServiceDelegate.sendCommissioningComplete() succeeded",
             )
           }
           .addOnFailureListener { e ->

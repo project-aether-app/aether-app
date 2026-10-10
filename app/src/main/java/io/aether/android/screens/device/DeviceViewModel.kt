@@ -550,7 +550,7 @@ constructor(
         deviceUiModel.value
             ?: run {
               Timber.w(
-                  "subscribeToPeriodicUpdates(): deviceUiModel not yet loaded, skipping subscription"
+                  "subscribeToPeriodicUpdates(): deviceUiModel not yet loaded, skipping subscription",
               )
               return
             }
@@ -603,13 +603,13 @@ constructor(
                 Timber.d("Device power state onOffState=$onOffState endpointId=$endpoint")
                 if (onOffState == null) {
                   Timber.e(
-                      "onReport(): WARNING -> onOffState is NULL for endpoint $endpoint. Ignoring."
+                      "onReport(): WARNING -> onOffState is NULL for endpoint $endpoint. Ignoring.",
                   )
                   return@forEach
                 }
                 if (supportsLevelControl(endpointModel.endpoint) && levelState == null) {
                   Timber.e(
-                      "onReport(): WARNING -> levelState is NULL for endpoint $endpoint. Ignoring."
+                      "onReport(): WARNING -> levelState is NULL for endpoint $endpoint. Ignoring.",
                   )
                   return@forEach
                 }
@@ -618,7 +618,7 @@ constructor(
                         colorTemperatureState == null
                 ) {
                   Timber.e(
-                      "onReport(): WARNING -> colorTemperatureState is NULL for endpoint $endpoint. Ignoring."
+                      "onReport(): WARNING -> colorTemperatureState is NULL for endpoint $endpoint. Ignoring.",
                   )
                   return@forEach
                 }
@@ -658,7 +658,7 @@ constructor(
       } catch (e: IllegalStateException) {
         Timber.e(
             "Can't get connectedDevicePointer for nodeId=${primaryDevice.nodeId} " +
-                "(endpoint=${primaryDevice.endpoint.endpointId})."
+                "(endpoint=${primaryDevice.endpoint.endpointId}).",
         )
         if (e.isCommunicationTimeoutError()) {
           devicesStateRepository.updateNodeOnlineState(primaryDevice.nodeId, isOnline = false)
@@ -674,7 +674,7 @@ constructor(
         deviceUiModel.value
             ?: run {
               Timber.d(
-                  "unsubscribeToPeriodicUpdates(): nothing to unsubscribe, deviceUiModel is null"
+                  "unsubscribeToPeriodicUpdates(): nothing to unsubscribe, deviceUiModel is null",
               )
               return
             }
@@ -686,7 +686,7 @@ constructor(
       } catch (e: IllegalStateException) {
         Timber.e(
             "Can't get connectedDevicePointer for nodeId=${primaryDevice.nodeId} " +
-                "(endpoint=${primaryDevice.endpoint.endpointId})."
+                "(endpoint=${primaryDevice.endpoint.endpointId}).",
         )
         if (e.isCommunicationTimeoutError()) {
           devicesStateRepository.updateNodeOnlineState(primaryDevice.nodeId, isOnline = false)
@@ -703,7 +703,7 @@ constructor(
 
   private fun startDevicePeriodicPing() {
     Timber.d(
-        "${LocalDateTime.now()} startDevicePeriodicPing every $PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS seconds"
+        "${LocalDateTime.now()} startDevicePeriodicPing every $PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS seconds",
     )
     devicePeriodicPingEnabled = true
     runDevicePeriodicUpdate()

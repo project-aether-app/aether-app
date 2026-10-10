@@ -151,7 +151,7 @@ constructor(
                             deviceMatterInfoList = list,
                             isFirstTimeLoading = false,
                             isBackgroundRefreshing = false,
-                        )
+                        ),
                     )
                   }
                   .onFailure {
@@ -161,7 +161,7 @@ constructor(
                             isFirstTimeLoading = false,
                             isBackgroundRefreshing = false,
                             errorMessageRes = R.string.device_explorer_error_action_failed,
-                        )
+                        ),
                     )
                   }
             }

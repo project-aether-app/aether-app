@@ -133,7 +133,7 @@ constructor(
                                 basicInformation = cachedBasicInfo,
                                 isFirstTimeLoading = false,
                                 isBackgroundRefreshing = true,
-                            )
+                            ),
                         )
                         deviceDeferred.await()
                       }
@@ -146,7 +146,7 @@ constructor(
                         basicInformation = cachedBasicInfo,
                         isFirstTimeLoading = false,
                         isBackgroundRefreshing = true,
-                    )
+                    ),
                 )
                 // Await network result and update with live basic information.
                 val basicInfo = networkDeferred.await()
@@ -158,7 +158,7 @@ constructor(
                           basicInformation = basicInfo,
                           isFirstTimeLoading = false,
                           isBackgroundRefreshing = false,
-                      )
+                      ),
                   )
                 } else {
                   emit(
@@ -167,7 +167,7 @@ constructor(
                           basicInformation = cachedBasicInfo,
                           isFirstTimeLoading = false,
                           isBackgroundRefreshing = false,
-                      )
+                      ),
                   )
                 }
               }
@@ -379,7 +379,7 @@ constructor(
   private suspend fun openCommissioningWindowUsingOpenPairingWindowWithPin(nodeId: NodeId) {
     Timber.d(
         "Opening pairing window durationSeconds=$OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS " +
-            "iteration=$ITERATION discriminator=$DISCRIMINATOR"
+            "iteration=$ITERATION discriminator=$DISCRIMINATOR",
     )
     val connectedDevicePointer = chipClient.awaitGetConnectedDevicePointer(nodeId)
     chipClient.awaitOpenPairingWindowWithPIN(

@@ -131,7 +131,7 @@ class SubscriptionHelper @Inject constructor(private val chipClient: ChipClient)
       ResubscriptionAttemptCallback {
     override fun onResubscriptionAttempt(terminationCause: Int, nextResubscribeIntervalMsec: Int) {
       Timber.d(
-          "Resubscription attempt nodeId=$nodeId terminationCause=$terminationCause nextIntervalMsec=$nextResubscribeIntervalMsec"
+          "Resubscription attempt nodeId=$nodeId terminationCause=$terminationCause nextIntervalMsec=$nextResubscribeIntervalMsec",
       )
     }
   }
@@ -148,7 +148,7 @@ fun nodeStateToDebugString(nodeState: NodeState): String {
     // Map<Long, ClusterState>
     endpointState.clusterStates.forEach { (clusterId, clusterState) ->
       stringBuilder.append(
-          "\tCluster [${clusterId}] [${ChipIdLookup.clusterIdToName(clusterId)}] {\n"
+          "\tCluster [${clusterId}] [${ChipIdLookup.clusterIdToName(clusterId)}] {\n",
       )
       clusterState.attributeStates.forEach { (attributeId, attributeState) ->
         val attributeName = ChipIdLookup.attributeIdToName(clusterId, attributeId)

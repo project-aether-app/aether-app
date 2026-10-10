@@ -74,7 +74,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
                   type = actionType,
                   state = actionState,
                   borderRoutersList = borderRoutersList,
-              )
+              ),
       )
     }
   }
@@ -91,7 +91,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
                   type = actionType,
                   state = actionState,
                   qrCodeBitmap = qrCodeBitmap,
-              )
+              ),
       )
     }
   }
@@ -104,7 +104,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
                   type = actionType,
                   state = ActionState.Error,
                   data = error,
-              )
+              ),
       )
     }
   }
@@ -117,7 +117,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
                   type = actionType,
                   state = ActionState.Completed,
                   data = message,
-              )
+              ),
       )
     }
   }
@@ -129,7 +129,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
     _uiState.update {
       it.copy(
           threadCredentialsInfo =
-              ThreadCredentialsInfo(selectedThreadBorderRouterId, threadNetworkCredentials)
+              ThreadCredentialsInfo(selectedThreadBorderRouterId, threadNetworkCredentials),
       )
     }
   }
@@ -189,7 +189,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
 
   /** Gets the credentials of a sample RPi running a Thread Border Router. */
   private suspend fun getOtbrActiveThreadCredentialsProcess(
-      serviceInfo: NsdServiceInfo
+      serviceInfo: NsdServiceInfo,
   ): ThreadNetworkCredentials? {
     val ipAddress = serviceInfoHostAddress(serviceInfo)
     val response =
@@ -200,7 +200,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
         )
     return if (response.first.responseCode in OtbrHttpClient.okResponses) {
       ThreadNetworkCredentials.fromActiveOperationalDataset(
-          BaseEncoding.base16().decode(response.second.uppercase())
+          BaseEncoding.base16().decode(response.second.uppercase()),
       )
     } else {
       null

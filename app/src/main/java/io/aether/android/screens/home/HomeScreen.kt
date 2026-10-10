@@ -147,7 +147,7 @@ internal fun HomeRoute(
   // Step 5 is when the GPS activity completes and the result is handled here.
   val commissionDeviceLauncher =
       rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartIntentSenderForResult()
+          contract = ActivityResultContracts.StartIntentSenderForResult(),
       ) { result ->
         // Commission Device Step 5.
         // The Commission Device activity in GPS (step 4) has completed.
@@ -262,7 +262,7 @@ internal fun HomeRoute(
 
 fun getPlayServicesVersion(context: Context): Long {
   return PackageInfoCompat.getLongVersionCode(
-      context.packageManager.getPackageInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0)
+      context.packageManager.getPackageInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0),
   )
 }
 
@@ -552,13 +552,13 @@ fun multiAdminCommissionDevice(
       "commissionDevice: TargetCommissioner for MultiAdmin. " +
           "uptimeMillis=$currentUptimeMillis " +
           "commissioningWindowExpirationMillis=$commissioningWindowExpirationMillis " +
-          "-> expires in $timeLeftSeconds seconds"
+          "-> expires in $timeLeftSeconds seconds",
   )
 
   if (commissioningWindowExpirationMillis == -1L) {
     Timber.e(
         "EXTRA_COMMISSIONING_WINDOW_EXPIRATION not specified in multi-admin call. " +
-            "Still going ahead with the multi-admin though."
+            "Still going ahead with the multi-admin though.",
     )
   } else if (timeLeftSeconds < MIN_COMMISSIONING_WINDOW_EXPIRATION_SECONDS) {
     homeViewModel.showMsgDialog(
@@ -588,7 +588,7 @@ fun multiAdminCommissionDevice(
       "multiadmin: commissioningRequest " +
           "onboardingPayload=${commissioningRequest.onboardingPayload} " +
           "vendorId=${commissioningRequest.deviceInfo!!.vendorId} " +
-          "productId=${commissioningRequest.deviceInfo!!.productId}"
+          "productId=${commissioningRequest.deviceInfo!!.productId}",
   )
 
   Matter.getCommissioningClient(context)

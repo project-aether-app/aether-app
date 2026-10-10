@@ -238,7 +238,7 @@ constructor(
                 endpoint = MatterEndpoint.getDefaultInstance(),
                 isOnline = node.online,
                 isOn = false,
-            )
+            ),
         )
       } else {
         Timber.d("    nodeId setting its own value for state")
@@ -250,7 +250,7 @@ constructor(
                 endpointState.on,
                 endpointState.level,
                 endpointState.colorTemperature,
-            )
+            ),
         )
       }
     }
@@ -291,13 +291,13 @@ constructor(
         "commissionDevice: TargetCommissioner for MultiAdmin. " +
             "uptimeMillis=$currentUptimeMillis " +
             "commissioningWindowExpirationMillis=$commissioningWindowExpirationMillis " +
-            "-> expires in $timeLeftSeconds seconds"
+            "-> expires in $timeLeftSeconds seconds",
     )
 
     if (commissioningWindowExpirationMillis == -1L) {
       Timber.e(
           "EXTRA_COMMISSIONING_WINDOW_EXPIRATION not specified in multi-admin call. " +
-              "Still going ahead with the multi-admin though."
+              "Still going ahead with the multi-admin though.",
       )
     } else if (timeLeftSeconds < MIN_COMMISSIONING_WINDOW_EXPIRATION_SECONDS) {
       showMsgDialog(
@@ -328,7 +328,7 @@ constructor(
         "multiadmin: commissioningRequest " +
             "onboardingPayload=${commissioningRequest.onboardingPayload} " +
             "vendorId=${commissioningRequest.deviceInfo!!.vendorId} " +
-            "productId=${commissioningRequest.deviceInfo!!.productId}"
+            "productId=${commissioningRequest.deviceInfo!!.productId}",
     )
   }
 
@@ -343,7 +343,7 @@ constructor(
         "Device commissioned successfully! DeviceDescriptor of device:\n" +
             "productId=${gpsCommissioningResult!!.commissionedDeviceDescriptor.productId}\n" +
             "vendorId=${gpsCommissioningResult!!.commissionedDeviceDescriptor.vendorId}\n" +
-            "hashCode=${gpsCommissioningResult!!.commissionedDeviceDescriptor.hashCode()}"
+            "hashCode=${gpsCommissioningResult!!.commissionedDeviceDescriptor.hashCode()}",
     )
 
     // Now we need to capture the device name.
@@ -733,7 +733,7 @@ constructor(
       return
     }
     Timber.d(
-        "${LocalDateTime.now()} startDevicesPeriodicPing every $PERIODIC_READ_INTERVAL_HOME_SCREEN_SECONDS seconds"
+        "${LocalDateTime.now()} startDevicesPeriodicPing every $PERIODIC_READ_INTERVAL_HOME_SCREEN_SECONDS seconds",
     )
     devicesPeriodicPingEnabled = true
     runDevicesPeriodicPing()
@@ -816,7 +816,7 @@ constructor(
   // Device Attestation
 
   fun setDeviceAttestationDelegate(
-      failureTimeoutSeconds: Int = DEVICE_ATTESTATION_FAILED_TIMEOUT_SECONDS
+      failureTimeoutSeconds: Int = DEVICE_ATTESTATION_FAILED_TIMEOUT_SECONDS,
   ) {
     Timber.d("setDeviceAttestationDelegate")
     chipClient.chipDeviceController.setDeviceAttestationDelegate(failureTimeoutSeconds) {
@@ -826,7 +826,7 @@ constructor(
       Timber.d(
           "Device attestation errorCode: $errorCode, " +
               "Look at 'src/credentials/attestation_verifier/DeviceAttestationVerifier.h' " +
-              "AttestationVerificationResult enum to understand the errors"
+              "AttestationVerificationResult enum to understand the errors",
       )
 
       if (errorCode == STATUS_PAIRING_SUCCESS) {
