@@ -4,6 +4,7 @@
 package io.aether.android.screens.device.settings.diagnostics
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -73,27 +75,35 @@ fun DiagnosticsScreen(
         }
       },
   ) { innerPadding ->
-    when {
-      uiState.isFirstTimeLoading -> {
-        LoadingIndicator(
-            stringResource(R.string.device_diagnostics_loading),
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
-      }
-      uiState.errorMessageRes != null -> {
-        EmptyStateErrorBanner(
-            stringResource(uiState.errorMessageRes),
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
-      }
-      else ->
+    if (uiState.isFirstTimeLoading) {
+      LoadingIndicator(
+          stringResource(R.string.device_diagnostics_loading),
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+      )
+    } else {
+      PullToRefreshBox(
+          isRefreshing = uiState.isBackgroundRefreshing,
+          onRefresh = onRefresh,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+      ) {
+        if (uiState.errorMessageRes != null) {
+          // Satisfy the requirement of having a scrollable container.
+          Box(
+              modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+              contentAlignment = Alignment.Center,
+          ) {
+            EmptyStateErrorBanner(
+                stringResource(uiState.errorMessageRes),
+                modifier = Modifier.fillMaxSize(),
+            )
+          }
+        } else {
           Diagnostics(
               uiState = uiState,
-              onRefresh = onRefresh,
-              modifier = Modifier.fillMaxSize().padding(innerPadding),
+              modifier = Modifier.fillMaxSize(),
           )
+        }
+      }
     }
   }
 }
@@ -101,26 +111,20 @@ fun DiagnosticsScreen(
 @Composable
 private fun Diagnostics(
     uiState: DiagnosticsUiState,
-    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-  PullToRefreshBox(
-      isRefreshing = uiState.isBackgroundRefreshing,
-      onRefresh = onRefresh,
-      modifier = modifier,
+  Column(
+      modifier =
+          modifier
+              .fillMaxSize()
+              .verticalScroll(rememberScrollState())
+              .padding(MaterialTheme.spacing.paddingNormal),
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
-    Column(
-        modifier =
-            Modifier.fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(MaterialTheme.spacing.paddingNormal),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
-    ) {
-      uiState.generalDiagnostics?.let { GeneralDiagnostics(it) }
-      uiState.ethernetNetworkDiagnostics?.let { EthernetNetworkDiagnostics(it) }
-      uiState.wifiNetworkDiagnostics?.let { WiFiNetworkDiagnostics(it) }
-      uiState.threadNetworkDiagnostics?.let { ThreadNetworkDiagnostics(it) }
-      uiState.softwareDiagnostics?.let { SoftwareDiagnostics(it) }
-    }
+    uiState.generalDiagnostics?.let { GeneralDiagnostics(it) }
+    uiState.ethernetNetworkDiagnostics?.let { EthernetNetworkDiagnostics(it) }
+    uiState.wifiNetworkDiagnostics?.let { WiFiNetworkDiagnostics(it) }
+    uiState.threadNetworkDiagnostics?.let { ThreadNetworkDiagnostics(it) }
+    uiState.softwareDiagnostics?.let { SoftwareDiagnostics(it) }
   }
 }
