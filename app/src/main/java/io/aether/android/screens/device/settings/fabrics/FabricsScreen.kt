@@ -220,9 +220,7 @@ private fun FabricItem(
             text =
                 stringResource(
                     R.string.device_fabrics_fabric_root_pub_key,
-                    fabric.rootPublicKey.take(8).joinToString(separator = "") {
-                      "%02X".format(it)
-                    },
+                    fabric.rootPublicKey.take(8).joinToString(separator = "") { "%02X".format(it) },
                 ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

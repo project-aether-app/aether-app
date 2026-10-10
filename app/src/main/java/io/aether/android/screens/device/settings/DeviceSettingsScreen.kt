@@ -248,7 +248,7 @@ private fun DeviceSettings(
         )
     showTypeDialog ->
         ChangeDeviceTypeDialog(
-            currentType = device.deviceTypeId,
+            currentType = device.primaryEndpoint?.deviceTypeId ?: DeviceTypeId(0u),
             onConfirm = { type ->
               onDeviceTypeChange(type)
               showTypeDialog = false
@@ -339,7 +339,10 @@ private fun DeviceSettings(
       )
       SettingsClickableRow(
           label = stringResource(R.string.device_settings_general_type),
-          value = getDeviceTypeDisplayStringId(device.deviceTypeId),
+          value =
+              getDeviceTypeDisplayStringId(
+                  device.primaryEndpoint?.deviceTypeId ?: DeviceTypeId(0u),
+              ),
           onClick = { showTypeDialog = true },
       )
     }

@@ -12,10 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.aether.android.data.DevicesStateRepository
-import io.aether.android.endpointIdTyped
+import io.aether.android.data.DevicesRepository
+import io.aether.android.data.models.Device
 import io.aether.android.screens.device.cluster.OnOffClusterControl
-import io.aether.android.screens.home.DeviceUiModel
 import io.aether.android.spacing
 
 /**
@@ -29,23 +28,24 @@ import io.aether.android.spacing
  */
 @Composable
 internal fun OnOffDeviceControl(
-    endpointModel: DeviceUiModel,
-    lastUpdatedDeviceState: DevicesStateRepository.EndpointStateSnapshot?,
+    device: Device,
+    endpoint: Device.Endpoint,
+    lastUpdatedDeviceState: DevicesRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
 ) {
-  var isOnline by remember(endpointModel) { mutableStateOf(endpointModel.isOnline) }
-  var isOn by remember(endpointModel) { mutableStateOf(endpointModel.isOn) }
+  var isOnline by remember(device, endpoint) { mutableStateOf(device.isOnline) }
+  var isOn by remember(device, endpoint) { mutableStateOf(endpoint.isOn) }
 
-  LaunchedEffect(endpointModel, lastUpdatedDeviceState) {
+  LaunchedEffect(device, endpoint, lastUpdatedDeviceState) {
     when {
-      lastUpdatedDeviceState?.nodeId == endpointModel.nodeId &&
-          lastUpdatedDeviceState.endpointId == endpointModel.endpoint.endpointIdTyped() -> {
+      lastUpdatedDeviceState?.nodeId == device.nodeId &&
+          lastUpdatedDeviceState.endpointId == endpoint.endpointId -> {
         isOnline = lastUpdatedDeviceState.online
         isOn = lastUpdatedDeviceState.on
       }
       lastUpdatedDeviceState == null -> {
-        isOnline = endpointModel.isOnline
-        isOn = endpointModel.isOn
+        isOnline = device.isOnline
+        isOn = endpoint.isOn
       }
     }
   }

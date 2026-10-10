@@ -6,12 +6,9 @@ package io.aether.android.screens.device.settings
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.protobuf.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.DISCRIMINATOR
-import io.aether.android.Device
 import io.aether.android.ITERATION
-import io.aether.android.MatterFabricState
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_API
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS
 import io.aether.android.OpenCommissioningWindowApi
@@ -21,7 +18,8 @@ import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.chip.ChipClient
 import io.aether.android.chip.ClustersHelper
 import io.aether.android.data.DevicesRepository
-import io.aether.android.data.DevicesStateRepository
+import io.aether.android.data.FabricRepository
+import io.aether.android.data.models.Device
 import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
@@ -29,6 +27,7 @@ import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.shared.SetDeviceNameResult
 import io.aether.android.screens.shared.SetDeviceNameUseCase
 import javax.inject.Inject
+import java.time.Instant
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -57,7 +56,7 @@ data class DeviceSettingsUiState(
     // Core Screen Data
     val device: Device? = null,
     val basicInformation: BasicInformationAttributes? = null,
-    val dateCommissioned: Timestamp? = null,
+    val dateCommissioned: Instant? = null,
 
     // UI Overlay / Dialog States
     val msgDialogInfo: DialogInfo? = null,
@@ -81,7 +80,7 @@ class DeviceSettingsViewModel
 @Inject
 constructor(
     private val devicesRepository: DevicesRepository,
-    private val devicesStateRepository: DevicesStateRepository,
+    private val fabricRepository: FabricRepository,
     private val chipClient: ChipClient,
     private val clustersHelper: ClustersHelper,
     private val setDeviceNameUseCase: SetDeviceNameUseCase,
@@ -112,7 +111,7 @@ constructor(
                 }
                 // Fetch fresh data from storage (fast local read). getDevice() throws if the
                 // device isn't found, so fall back to a stub device instead of propagating.
-                val fallbackDevice = Device.newBuilder().setNodeId(nodeId).build()
+                val fallbackDevice = Device(nodeId = nodeId)
                 val deviceDeferred = async {
                   runCatching { devicesRepository.getDevice(nodeId) }
                       .onFailure { Timber.w(it, "Storage read failed") }
@@ -200,10 +199,6 @@ constructor(
         .onFailure { Timber.e(it, "syncBasicInfoToStorage failed") }
   }
 
-  private fun isDefaultTimestamp(timestamp: Timestamp): Boolean {
-    return timestamp.seconds == 0L && timestamp.nanos == 0
-  }
-
   // Controls whether the "Message" AlertDialog should be shown in the UI.
   private var _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
 
@@ -221,7 +216,7 @@ constructor(
   val uiState: StateFlow<DeviceSettingsUiState> =
       combine(
               deviceCoreDataState,
-              devicesStateRepository.devicesStateFlow,
+              fabricRepository.devicesFlow,
               _msgDialogInfo.asStateFlow(),
               _showShareDeviceAlertDialog.asStateFlow(),
               _showRemoveDeviceAlertDialog.asStateFlow(),
@@ -230,7 +225,7 @@ constructor(
               _pairingWindowOpenForDeviceSharing.asStateFlow(),
           ) { array ->
             val coreData = array[0] as DeviceSettingsCoreData
-            val nodesState = array[1] as MatterFabricState
+            val devices = array[1] as List<*>
             val msgDialogInfo = array[2] as DialogInfo?
             val showShareDeviceAlertDialog = array[3] as Boolean
             val showRemoveDeviceAlertDialog = array[4] as Boolean
@@ -240,10 +235,10 @@ constructor(
 
             val node =
                 coreData.device?.let { dev ->
-                  nodesState.nodesList.firstOrNull { it.nodeId == dev.nodeId.toLong() }
+                  devices.filterIsInstance<Device>().firstOrNull { it.nodeId == dev.nodeId }
                 }
-            val isOnline = node?.online ?: false
-            val dateCommissioned = node?.dateCommissioned?.takeUnless { isDefaultTimestamp(it) }
+            val isOnline = node?.isOnline ?: false
+            val dateCommissioned = node?.dateCommissioned
             // TODO: Fix isOnline handling.
             // coreData.device?.isOnline = isOnline
 

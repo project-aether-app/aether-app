@@ -88,6 +88,7 @@ import io.aether.android.MIN_COMMISSIONING_WINDOW_EXPIRATION_SECONDS
 import io.aether.android.R
 import io.aether.android.TaskStatus
 import io.aether.android.commissioning.AppCommissioningService
+import io.aether.android.data.models.Device
 import io.aether.android.isMultiAdminCommissioning
 import io.aether.android.isOnDisplayString
 import io.aether.android.matter.NodeId
@@ -130,9 +131,7 @@ internal fun HomeRoute(
   val onDismissMsgDialog: () -> Unit = remember { { homeViewModel.dismissMsgDialog() } }
 
   // Functions invoked when UI controls are clicked on a specific device in the list.
-  val onDeviceClick: (deviceUiModel: DeviceUiModel) -> Unit = remember {
-    { navigateToDevice(it.nodeId) }
-  }
+  val onDeviceClick: (device: Device) -> Unit = remember { { navigateToDevice(it.nodeId) } }
   val onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit = remember {
     { nodeId, value -> homeViewModel.updateDeviceStateOn(nodeId, value) }
   }
@@ -272,7 +271,7 @@ private fun HomeScreen(
     onConsumeMsgDialog: () -> Unit,
     onCommissionedDeviceNameCaptured: (name: String) -> Unit,
     onCommissionDevice: () -> Unit,
-    onDeviceClick: (deviceUiModel: DeviceUiModel) -> Unit,
+    onDeviceClick: (device: Device) -> Unit,
     onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -357,15 +356,16 @@ fun openPlayServicesInStore(context: Context) {
 
 @Composable
 private fun DeviceItem(
-    device: DeviceUiModel,
+    device: Device,
     onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
     onDeviceClick: (() -> Unit),
 ) {
   val nodeId = device.nodeId
-  val deviceTypeId = device.deviceTypeId
+  val endpoint = device.primaryEndpoint
+  val deviceTypeId = endpoint?.deviceTypeId ?: io.aether.android.matter.DeviceTypeId(0u)
   val name = device.name
   val isOnline = device.isOnline
-  val isOn = device.isOn
+  val isOn = endpoint?.isOn ?: false
   val bgColor =
       if (isOnline && isOn) MaterialTheme.colorScheme.surfaceVariant
       else MaterialTheme.colorScheme.surface

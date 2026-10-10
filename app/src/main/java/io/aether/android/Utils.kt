@@ -102,7 +102,11 @@ fun getTimestampForNow(): Timestamp {
  * settings are respected.
  */
 fun formatTimestamp(context: Context, timestamp: Timestamp): String {
-  val instant = Instant.ofEpochSecond(timestamp.seconds)
+  return formatTimestamp(context, Instant.ofEpochSecond(timestamp.seconds, timestamp.nanos.toLong()))
+}
+
+/** Formats an [Instant] using Android date/time formatters. */
+fun formatTimestamp(context: Context, instant: Instant): String {
   val date = java.util.Date.from(instant)
   val dateFormatter = android.text.format.DateFormat.getMediumDateFormat(context)
   val timeFormatter = android.text.format.DateFormat.getTimeFormat(context)
