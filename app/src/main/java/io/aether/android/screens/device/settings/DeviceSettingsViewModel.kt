@@ -251,7 +251,7 @@ constructor(
                 isFirstTimeLoading = coreData.isFirstTimeLoading,
                 isBackgroundRefreshing = coreData.isBackgroundRefreshing,
                 errorMessageRes = coreData.errorMessageRes,
-                device = coreData.device,
+                device = coreData.device?.copy(isOnline = isOnline),
                 basicInformation = coreData.basicInformation,
                 dateCommissioned = dateCommissioned,
                 msgDialogInfo = msgDialogInfo,

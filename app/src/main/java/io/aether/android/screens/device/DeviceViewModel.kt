@@ -118,7 +118,7 @@ constructor(
                 isFirstTimeLoading = deviceUiModel == null,
                 isBackgroundRefreshing = false,
                 errorMessageRes = null,
-                device = deviceUiModel,
+                device = deviceUiModel?.copy(isOnline = isOnline),
                 allEndpointUiModels = allEndpointUiModels,
                 lastUpdatedEndpointState = lastUpdatedEndpointState,
                 msgDialogInfo = msgDialogInfo,
