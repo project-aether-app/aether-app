@@ -157,7 +157,10 @@ fun DeviceScreen(
         return@Scaffold
       }
       uiState.errorMessageRes != null -> {
-        EmptyStateErrorBanner(stringResource(uiState.errorMessageRes))
+        EmptyStateErrorBanner(
+            stringResource(uiState.errorMessageRes),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
         return@Scaffold
       }
       else ->
