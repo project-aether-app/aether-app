@@ -12,7 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.models.Device
 import io.aether.android.data.models.Endpoint
 import io.aether.android.screens.device.cluster.OnOffClusterControl
@@ -31,7 +31,7 @@ import io.aether.android.spacing
 internal fun OnOffDeviceControl(
     device: Device,
     endpoint: Endpoint,
-    lastUpdatedDeviceState: DevicesRepository.EndpointStateSnapshot?,
+    lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
 ) {
   var isOnline by remember(device, endpoint) { mutableStateOf(device.isOnline) }

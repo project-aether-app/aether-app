@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.AppErrorNotifier
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.FabricRepository
 import io.aether.android.data.UserPreferencesRepository
 import io.aether.android.screens.common.DialogInfo
@@ -28,7 +28,7 @@ import timber.log.Timber
 class DeveloperUtilitiesViewModel
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
+    private val devicesRepository: DeviceRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val fabricRepository: FabricRepository,
     private val appErrorNotifier: AppErrorNotifier,

@@ -35,7 +35,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.models.Device
 import io.aether.android.data.models.Endpoint
 import io.aether.android.matter.NodeId
@@ -231,7 +231,7 @@ private fun Device(
 private fun EndpointDeviceControl(
     device: Device,
     endpoint: Endpoint,
-    lastUpdatedEndpointState: DevicesRepository.EndpointStateSnapshot?,
+    lastUpdatedEndpointState: DeviceRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
     onBrightnessChange: (Int) -> Unit,
     onColorTemperatureChange: (Int) -> Unit,

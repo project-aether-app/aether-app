@@ -7,8 +7,8 @@ import app.cash.paparazzi.Paparazzi
 import io.aether.android.R
 import io.aether.android.data.models.Device
 import io.aether.android.data.models.Endpoint
-import io.aether.android.data.models.Vendor
 import io.aether.android.data.models.Product
+import io.aether.android.data.models.Vendor
 import io.aether.android.matter.Devices
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
@@ -28,17 +28,22 @@ class DevicePreviewTest {
 
   private val testDevice =
       Device(
-        id = NodeId(0x1234u),
-        vendor = Vendor(id = VendorId(0x1135u)),
-        product = Product(id = ProductId(0x1234u)),
-          name = "Test Plug-in Device",
-          isOnline = true,
+          id = NodeId(0x1234u),
+          vendor = Vendor(id = VendorId(0x1135u)),
+          product = Product(id = ProductId(0x1234u)),
+          name = "Test Device",
+          isOnline = false,
           endpoints =
               listOf(
-                Endpoint(
-                  id = io.aether.android.matter.EndpointId(1u),
-                  deviceTypeId = Devices.OnOffPluginUnit.ID,
-                ),
+                  Endpoint(
+                      id = io.aether.android.matter.EndpointId(1u),
+                      deviceTypeId = Devices.OnOffPluginUnit.ID,
+                  ),
+                  Endpoint(
+                      id = io.aether.android.matter.EndpointId(2u),
+                      deviceTypeId = Devices.DimmableLight.ID,
+                      level = 50,
+                  ),
               ),
       )
 
@@ -48,9 +53,9 @@ class DevicePreviewTest {
           uiState = uiState,
           onBackClick = {},
           onSettingsClick = {},
-        onOnOffClick = { _: Endpoint, _: Boolean -> },
-        onBrightnessChange = { _: Endpoint, _: Int -> },
-        onColorTemperatureChange = { _: Endpoint, _: Int -> },
+          onOnOffClick = { _: Endpoint, _: Boolean -> },
+          onBrightnessChange = { _: Endpoint, _: Int -> },
+          onColorTemperatureChange = { _: Endpoint, _: Int -> },
           onDismissMsgDialog = {},
       )
     }

@@ -18,7 +18,7 @@ import io.aether.android.chip.ChipClient
 import io.aether.android.chip.ClustersHelper
 import io.aether.android.chip.SubscriptionHelper
 import io.aether.android.chip.isCommunicationTimeoutError
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.FabricRepository
 import io.aether.android.data.UserPreferencesRepository
 import io.aether.android.data.models.Device
@@ -59,7 +59,7 @@ class HomeViewModel
 @Inject
 constructor(
     private val fabricRepository: FabricRepository,
-    private val devicesRepository: DevicesRepository,
+    private val devicesRepository: DeviceRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val clustersHelper: ClustersHelper,
     private val chipClient: ChipClient,

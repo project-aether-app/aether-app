@@ -380,7 +380,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
                   isOperational = it.isOperational,
                   offPremiseServicesReachableIPv4 = it.offPremiseServicesReachableIPv4,
                   offPremiseServicesReachableIPv6 = it.offPremiseServicesReachableIPv6,
-                  hardwareAddress = it.hardwareAddress,
+                  hardwareAddress = it.hardwareAddress?.toList() ?: emptyList(),
                   ipv4Addresses = it.IPv4Addresses.map { addr -> InetAddress.getByAddress(addr) },
                   ipv6Addresses =
                       it.IPv6Addresses.map { addr ->
@@ -445,9 +445,9 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
         else -> emptyList()
       }
 
-  private fun Any?.toBSSID(): ByteArray? =
+  private fun Any?.toBSSID(): List<Byte>? =
       when (this) {
-        is ByteArray -> this
+        is ByteArray -> this.toList()
         else -> null
       }
 

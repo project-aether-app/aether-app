@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 
 /** Provides detailed information and state updates for one commissioned Matter node. */
 @Singleton
-class DevicesRepository @Inject constructor(private val fabricRepository: FabricRepository) {
+class DeviceRepository @Inject constructor(private val fabricRepository: FabricRepository) {
   data class EndpointStateSnapshot(
       val nodeId: NodeId,
       val endpointId: EndpointId,

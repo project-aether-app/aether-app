@@ -7,7 +7,7 @@ import io.aether.android.AppErrorNotifier
 import io.aether.android.R
 import io.aether.android.chip.ClustersHelper
 import io.aether.android.chip.isCommunicationTimeoutError
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
 import javax.inject.Inject
@@ -44,7 +44,7 @@ sealed class SetDeviceNameResult {
 class SetDeviceNameUseCase
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
+    private val devicesRepository: DeviceRepository,
     private val clustersHelper: ClustersHelper,
     private val appErrorNotifier: AppErrorNotifier,
 ) {

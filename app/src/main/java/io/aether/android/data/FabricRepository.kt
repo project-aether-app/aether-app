@@ -47,7 +47,7 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
         }
       }
 
-  /** All commissioned nodes. Endpoint details deliberately stay in [DevicesRepository]. */
+  /** All commissioned nodes. Endpoint details deliberately stay in [DeviceRepository]. */
   val devicesFlow: Flow<List<Device>> = stateFlow.map { state ->
     state.nodesList.map(::toBasicDevice)
   }

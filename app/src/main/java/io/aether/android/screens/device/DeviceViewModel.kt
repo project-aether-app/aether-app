@@ -15,7 +15,7 @@ import io.aether.android.chip.ChipClient
 import io.aether.android.chip.ClustersHelper
 import io.aether.android.chip.SubscriptionHelper
 import io.aether.android.chip.isCommunicationTimeoutError
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.models.Device
 import io.aether.android.data.models.Endpoint
 import io.aether.android.matter.Clusters
@@ -41,7 +41,7 @@ data class DeviceUiState(
     val isBackgroundRefreshing: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
     val device: Device? = null,
-    val lastUpdatedEndpointState: DevicesRepository.EndpointStateSnapshot? = null,
+    val lastUpdatedEndpointState: DeviceRepository.EndpointStateSnapshot? = null,
     val msgDialogInfo: DialogInfo? = null,
 )
 
@@ -49,7 +49,7 @@ data class DeviceUiState(
 class DeviceViewModel
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
+    private val devicesRepository: DeviceRepository,
     private val chipClient: ChipClient,
     private val clustersHelper: ClustersHelper,
     private val subscriptionHelper: SubscriptionHelper,

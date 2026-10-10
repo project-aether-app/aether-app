@@ -8,8 +8,8 @@ import io.aether.android.R
 import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.data.models.Device
 import io.aether.android.data.models.Endpoint
-import io.aether.android.data.models.Vendor
 import io.aether.android.data.models.Product
+import io.aether.android.data.models.Vendor
 import io.aether.android.matter.Devices
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
@@ -30,17 +30,17 @@ class DeviceSettingsPreviewTest {
 
   private val testDevice =
       Device(
-        id = NodeId(0x1234u),
-        vendor = Vendor(id = VendorId(0x1135u)),
-        product = Product(id = ProductId(0x1234u)),
+          id = NodeId(0x1234u),
+          vendor = Vendor(id = VendorId(0x1135u)),
+          product = Product(id = ProductId(0x1234u)),
           name = "Test Plug-in Device",
           isOnline = true,
           endpoints =
               listOf(
-                Endpoint(
-                  id = io.aether.android.matter.EndpointId(1u),
-                  deviceTypeId = Devices.OnOffPluginUnit.ID,
-                ),
+                  Endpoint(
+                      id = io.aether.android.matter.EndpointId(1u),
+                      deviceTypeId = Devices.OnOffPluginUnit.ID,
+                  ),
               ),
       )
 

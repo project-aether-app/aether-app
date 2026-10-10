@@ -35,14 +35,14 @@ class DeviceSettingsDiagnosticsPreviewTest {
                   NetworkInterface(
                       type = Enums.DiagnosticsGeneralClusterInterfaceType.Ethernet,
                       name = "et0",
-                      hardwareAddress = ByteArray(6) { it.toByte() },
+                      hardwareAddress = List(6) { it.toByte() },
                       ipv4Addresses = listOf(InetAddress.getByName("127.0.0.1")),
                       ipv6Addresses = listOf(Inet6Address.getByName("::1") as Inet6Address),
                   ),
                   NetworkInterface(
                       type = Enums.DiagnosticsGeneralClusterInterfaceType.WiFi,
                       name = "wl0",
-                      hardwareAddress = ByteArray(6) { it.toByte() },
+                      hardwareAddress = List(6) { it.toByte() },
                       ipv6Addresses =
                           listOf(
                               Inet6Address.getByName("fe80::1") as Inet6Address,
@@ -99,7 +99,7 @@ class DeviceSettingsDiagnosticsPreviewTest {
 
   private val testWifiNetworkDiagnostics =
       WiFiNetworkDiagnosticsData(
-          bssid = ByteArray(6) { it.toByte() },
+          bssid = List(6) { it.toByte() },
           securityType = Enums.DiagnosticsWiFiClusterSecurityType.WPA3,
           wifiVersion = Enums.DiagnosticsWiFiClusterWiFiVersion.N,
           channelNumber = 36u,

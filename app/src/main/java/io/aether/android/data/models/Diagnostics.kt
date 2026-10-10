@@ -9,7 +9,7 @@ import java.net.InetAddress
 
 data class NetworkInterface(
     val type: Enums.DiagnosticsGeneralClusterInterfaceType,
-    val hardwareAddress: ByteArray,
+    val hardwareAddress: List<Byte>,
     val name: String,
     val offPremiseServicesReachableIPv4: Boolean? = null,
     val offPremiseServicesReachableIPv6: Boolean? = null,
@@ -59,7 +59,7 @@ data class EthernetNetworkDiagnosticsData(
 )
 
 data class WiFiNetworkDiagnosticsData(
-    val bssid: ByteArray? = null,
+    val bssid: List<Byte>? = null,
     val securityType: Enums.DiagnosticsWiFiClusterSecurityType? = null,
     val wifiVersion: Enums.DiagnosticsWiFiClusterWiFiVersion? = null,
     val channelNumber: UShort? = null,
@@ -135,7 +135,7 @@ data class ThreadNetworkDiagnosticsData(
     val pendingTimestamp: ULong? = null,
     val delay: UInt? = null,
     val securityPolicy: String? = null, // TODO: type SecurityPolicyStruct
-    val channelPage0Mask: ByteArray? = null,
+    val channelPage0Mask: List<Byte>? = null,
     val operationalDatasetComponents: String? = null, // TODO: OperationalDatasetComponents
     val activeNetworkFaultsList: List<Enums.DiagnosticsThreadClusterNetworkFault> = emptyList(),
     val extAddress: ULong? = null,

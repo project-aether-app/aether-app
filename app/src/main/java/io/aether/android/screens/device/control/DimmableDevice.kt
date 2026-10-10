@@ -15,7 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import io.aether.android.R
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.models.Device
 import io.aether.android.data.models.Endpoint
 import io.aether.android.screens.device.cluster.LEVEL_MAX
@@ -38,7 +38,7 @@ import io.aether.android.spacing
 internal fun DimmableDeviceControl(
     device: Device,
     endpoint: Endpoint,
-    lastUpdatedDeviceState: DevicesRepository.EndpointStateSnapshot?,
+    lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
     onBrightnessChange: (Int) -> Unit,
 ) {

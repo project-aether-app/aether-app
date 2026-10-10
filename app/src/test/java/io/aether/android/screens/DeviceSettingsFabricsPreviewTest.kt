@@ -22,7 +22,7 @@ class DeviceSettingsFabricsPreviewTest {
           theme = "android:Theme.Material.Light.NoActionBar",
       )
 
-  private val testRootFabricKey = ByteArray(64) { it.toByte() }
+  private val testRootFabricKey = List(64) { it.toByte() }
 
   private fun snapshotFabricsScreen(uiState: FabricsUiState) {
     paparazzi.snapshot {

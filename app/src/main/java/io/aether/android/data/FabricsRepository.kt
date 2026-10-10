@@ -79,7 +79,7 @@ class FabricsRepository @Inject constructor(private val chipClient: ChipClient) 
         ?.map { struct ->
           ManagedFabric(
               fabricIndex = struct.fabricIndex,
-              rootPublicKey = struct.rootPublicKey,
+              rootPublicKey = struct.rootPublicKey.toList(),
               vendorId = struct.vendorID.toVendorId(),
               fabricId = struct.fabricID.toFabricId(),
               nodeId = struct.nodeID.toNodeId(),

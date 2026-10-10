@@ -17,7 +17,7 @@ import io.aether.android.SETUP_PIN_CODE
 import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.chip.ChipClient
 import io.aether.android.chip.ClustersHelper
-import io.aether.android.data.DevicesRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.data.FabricRepository
 import io.aether.android.data.models.Device
 import io.aether.android.matter.DeviceTypeId
@@ -79,7 +79,7 @@ private data class DeviceSettingsCoreData(
 class DeviceSettingsViewModel
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
+    private val devicesRepository: DeviceRepository,
     private val fabricRepository: FabricRepository,
     private val chipClient: ChipClient,
     private val clustersHelper: ClustersHelper,

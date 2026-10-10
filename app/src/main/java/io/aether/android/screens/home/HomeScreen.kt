@@ -105,7 +105,7 @@ import timber.log.Timber
  * The Home screen features three sections:
  * 1. The list of devices currently commissioned into the app's fabric. When the user clicks on a
  *    device, app flow moves to the Device screen where one can get additional details on the device
- *    and perform actions on it. Devices are persisted in the DevicesRepository, a Proto Datastore.
+ *    and perform actions on it. Devices are persisted in the DeviceRepository, a Proto Datastore.
  *    It's possible to hide the devices that are currently offline via a setting in the Settings
  *    screen.
  * 2. Top App Bar. Settings icon to navigate to the Settings screen.
