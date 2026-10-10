@@ -62,7 +62,7 @@ fun EthernetNetworkDiagnostics(data: EthernetNetworkDiagnosticsData) {
     }
     if (linkProperties.isNotEmpty()) {
       DiagnosticsInfoRow(
-          stringResource(R.string.device_diagnostics_label_network_link_properties)
+          stringResource(R.string.device_diagnostics_label_network_link_properties),
       ) {
         Text(linkProperties)
       }

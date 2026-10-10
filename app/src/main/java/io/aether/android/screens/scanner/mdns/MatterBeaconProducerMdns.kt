@@ -61,7 +61,7 @@ constructor(
           Timber.d("mDNS service found service=$service")
           if (service.serviceType != SERVICE_TYPE_ANDROID) {
             Timber.d(
-                "Discarded serviceType=${service.serviceType} serviceName=${service.serviceName}"
+                "Discarded serviceType=${service.serviceType} serviceName=${service.serviceName}",
             )
           } else {
             // Resolve the service.

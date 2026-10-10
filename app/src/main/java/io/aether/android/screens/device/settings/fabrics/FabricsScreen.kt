@@ -4,6 +4,7 @@
 package io.aether.android.screens.device.settings.fabrics
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,13 +42,11 @@ import io.aether.android.R
 import io.aether.android.data.models.ManagedFabric
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.vendorLabel
-import io.aether.android.screens.common.EmptyState
-import io.aether.android.screens.common.ErrorMessage
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.GroupBox
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FabricsRoute(
     nodeId: NodeId,
@@ -58,6 +57,22 @@ fun FabricsRoute(
 
   LaunchedEffect(nodeId) { viewModel.loadFabrics(nodeId) }
 
+  FabricsScreen(
+      uiState = uiState,
+      onBackClick = onBackClick,
+      onRefresh = { viewModel.loadFabrics(nodeId) },
+      onRemoveController = { index -> viewModel.removeFabric(nodeId, index) },
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FabricsScreen(
+    uiState: FabricsUiState,
+    onBackClick: () -> Unit,
+    onRefresh: () -> Unit,
+    onRemoveController: (Int) -> Unit,
+) {
   Scaffold(
       topBar = {
         TopAppBar(
@@ -73,60 +88,60 @@ fun FabricsRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-    if (uiState.isInitialLoading) {
+    if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
           stringResource(R.string.device_fabrics_loading),
-          modifier = modifierWithInnerPadding,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
-      return@Scaffold
+    } else {
+      PullToRefreshBox(
+          isRefreshing = uiState.isBackgroundRefreshing,
+          onRefresh = onRefresh,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+      ) {
+        if (uiState.errorMessageRes != null) {
+          // Satisfy the requirement of having a scrollable container.
+          Box(
+              modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+              contentAlignment = Alignment.Center,
+          ) {
+            EmptyStateErrorBanner(
+                stringResource(uiState.errorMessageRes),
+                modifier = Modifier.fillMaxSize(),
+            )
+          }
+        } else {
+          Fabrics(
+              uiState = uiState,
+              onRemoveController = onRemoveController,
+              modifier = Modifier.fillMaxSize(),
+          )
+        }
+      }
     }
-    FabricsScreen(
-        uiState = uiState,
-        onRefresh = { viewModel.loadFabrics(nodeId) },
-        onRemoveController = { index -> viewModel.removeFabric(nodeId, index) },
-        modifier = modifierWithInnerPadding,
-    )
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FabricsScreen(
+private fun Fabrics(
     uiState: FabricsUiState,
-    onRefresh: () -> Unit,
     onRemoveController: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-  PullToRefreshBox(
-      isRefreshing = uiState.isRefreshing,
-      onRefresh = onRefresh,
-      modifier = modifier,
+  Column(
+      modifier =
+          modifier
+              .fillMaxSize()
+              .verticalScroll(rememberScrollState())
+              .padding(MaterialTheme.spacing.paddingNormal),
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
-    when {
-      uiState.errorRes != null -> {
-        ErrorMessage(stringResource(uiState.errorRes))
-      }
-      uiState.fabrics.isEmpty() -> {
-        EmptyState(stringResource(R.string.device_fabrics_empty))
-      }
-      else -> {
-        Column(
-            modifier =
-                Modifier.fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(MaterialTheme.spacing.paddingNormal),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
-        ) {
-          uiState.fabrics.forEach { fabric ->
-            FabricItem(
-                fabric = fabric,
-                onRemove = { onRemoveController(fabric.fabricIndex) },
-                canRemove = !fabric.isCurrentFabric,
-            )
-          }
-        }
-      }
+    uiState.fabrics.forEach { fabric ->
+      FabricItem(
+          fabric = fabric,
+          onRemove = { onRemoveController(fabric.fabricIndex) },
+          canRemove = !fabric.isCurrentFabric,
+      )
     }
   }
 }
@@ -176,7 +191,10 @@ private fun FabricItem(
       Column(modifier = Modifier.weight(1f)) {
         Text(
             text =
-                stringResource(R.string.device_fabrics_fabric_vendor, vendorLabel(fabric.vendorId)),
+                stringResource(
+                    R.string.device_fabrics_fabric_vendor,
+                    vendorLabel(fabric.vendorId),
+                ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -190,7 +208,11 @@ private fun FabricItem(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text = stringResource(R.string.device_fabrics_fabric_node_id, fabric.nodeId.toString()),
+            text =
+                stringResource(
+                    R.string.device_fabrics_fabric_node_id,
+                    fabric.nodeId.toString(),
+                ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -198,7 +220,9 @@ private fun FabricItem(
             text =
                 stringResource(
                     R.string.device_fabrics_fabric_root_pub_key,
-                    fabric.rootPublicKey.take(8).joinToString(separator = "") { "%02X".format(it) },
+                    fabric.rootPublicKey.take(8).joinToString(separator = "") {
+                      "%02X".format(it)
+                    },
                 ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

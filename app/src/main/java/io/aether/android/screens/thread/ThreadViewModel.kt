@@ -8,8 +8,7 @@ import android.content.IntentSender
 import android.graphics.Bitmap
 import android.net.nsd.NsdServiceInfo
 import android.os.Build
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.threadnetwork.ThreadNetworkCredentials
@@ -23,27 +22,30 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+
+data class ThreadUiState(
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = false,
+    val isBackgroundRefreshing: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
+    val threadCredentialsInfo: ThreadCredentialsInfo = ThreadCredentialsInfo(),
+    val threadClientIntentSender: IntentSender? = null,
+
+    // UI Overlay / Dialog States
+    val currentActionInfo: ActionDialogInfo = ActionDialogInfo(),
+)
 
 /** The ViewModel for the Thread Fragment. See [ThreadFragment] for additional information. */
 @HiltViewModel
 class ThreadViewModel @Inject constructor() : ViewModel() {
 
-  // The current information for the Action Dialog.
-  private val _currentActionDialogInfoMutableStateFlow = MutableStateFlow(ActionDialogInfo())
-  val currentActionDialogInfoStateFlow: StateFlow<ActionDialogInfo> =
-      _currentActionDialogInfoMutableStateFlow.asStateFlow()
-
-  // The current Thread credentials information for the working dataset.
-  private val _threadCredentialsInfoMutableStateFlow = MutableStateFlow(ThreadCredentialsInfo())
-  val threadCredentialsInfoStateFlow: StateFlow<ThreadCredentialsInfo> =
-      _threadCredentialsInfoMutableStateFlow.asStateFlow()
-
-  // IntentSender LiveData triggered by getting thread client information.
-  private val _threadClientIntentSender = MutableLiveData<IntentSender?>()
-  val threadClientIntentSender: LiveData<IntentSender?>
-    get() = _threadClientIntentSender
+  private val _uiState = MutableStateFlow(ThreadUiState())
+  val uiState: StateFlow<ThreadUiState> = _uiState.asStateFlow()
 
   // OpenThread BorderRouter constants.
   private val otbrPort = "80"
@@ -55,8 +57,9 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
   // Setter methods for the state that drives the UI.
 
   fun setActionDialogInfo(actionType: ActionType, actionState: ActionState) {
-    _currentActionDialogInfoMutableStateFlow.value =
-        _currentActionDialogInfoMutableStateFlow.value.copy(type = actionType, state = actionState)
+    _uiState.update {
+      it.copy(currentActionInfo = it.currentActionInfo.copy(type = actionType, state = actionState))
+    }
   }
 
   private fun setActionDialogInfoWithBorderRoutersList(
@@ -64,12 +67,16 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
       actionState: ActionState,
       borderRoutersList: List<NsdServiceInfo>,
   ) {
-    _currentActionDialogInfoMutableStateFlow.value =
-        _currentActionDialogInfoMutableStateFlow.value.copy(
-            type = actionType,
-            state = actionState,
-            borderRoutersList = borderRoutersList,
-        )
+    _uiState.update {
+      it.copy(
+          currentActionInfo =
+              it.currentActionInfo.copy(
+                  type = actionType,
+                  state = actionState,
+                  borderRoutersList = borderRoutersList,
+              ),
+      )
+    }
   }
 
   private fun setActionDialogInfoWithQrCodeBitmap(
@@ -77,38 +84,54 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
       actionState: ActionState,
       qrCodeBitmap: Bitmap,
   ) {
-    _currentActionDialogInfoMutableStateFlow.value =
-        _currentActionDialogInfoMutableStateFlow.value.copy(
-            type = actionType,
-            state = actionState,
-            qrCodeBitmap = qrCodeBitmap,
-        )
+    _uiState.update {
+      it.copy(
+          currentActionInfo =
+              it.currentActionInfo.copy(
+                  type = actionType,
+                  state = actionState,
+                  qrCodeBitmap = qrCodeBitmap,
+              ),
+      )
+    }
   }
 
   fun setActionDialogInfoWithError(actionType: ActionType, error: String) {
-    _currentActionDialogInfoMutableStateFlow.value =
-        _currentActionDialogInfoMutableStateFlow.value.copy(
-            type = actionType,
-            state = ActionState.Error,
-            data = error,
-        )
+    _uiState.update {
+      it.copy(
+          currentActionInfo =
+              it.currentActionInfo.copy(
+                  type = actionType,
+                  state = ActionState.Error,
+                  data = error,
+              ),
+      )
+    }
   }
 
   fun setActionDialogInfoWithMessage(actionType: ActionType, message: String) {
-    _currentActionDialogInfoMutableStateFlow.value =
-        _currentActionDialogInfoMutableStateFlow.value.copy(
-            type = actionType,
-            state = ActionState.Completed,
-            data = message,
-        )
+    _uiState.update {
+      it.copy(
+          currentActionInfo =
+              it.currentActionInfo.copy(
+                  type = actionType,
+                  state = ActionState.Completed,
+                  data = message,
+              ),
+      )
+    }
   }
 
   fun setThreadCredentialsInfo(
       selectedThreadBorderRouterId: ByteArray?,
       threadNetworkCredentials: ThreadNetworkCredentials?,
   ) {
-    _threadCredentialsInfoMutableStateFlow.value =
-        ThreadCredentialsInfo(selectedThreadBorderRouterId, threadNetworkCredentials)
+    _uiState.update {
+      it.copy(
+          threadCredentialsInfo =
+              ThreadCredentialsInfo(selectedThreadBorderRouterId, threadNetworkCredentials),
+      )
+    }
   }
 
   /**
@@ -117,7 +140,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
    * is re-posted).
    */
   fun setThreadClientIntentSender(intentSender: IntentSender?) {
-    _threadClientIntentSender.postValue(intentSender)
+    _uiState.update { it.copy(threadClientIntentSender = intentSender) }
   }
 
   // -----------------------------------------------------------------------------------------------
@@ -166,7 +189,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
 
   /** Gets the credentials of a sample RPi running a Thread Border Router. */
   private suspend fun getOtbrActiveThreadCredentialsProcess(
-      serviceInfo: NsdServiceInfo
+      serviceInfo: NsdServiceInfo,
   ): ThreadNetworkCredentials? {
     val ipAddress = serviceInfoHostAddress(serviceInfo)
     val response =
@@ -177,7 +200,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
         )
     return if (response.first.responseCode in OtbrHttpClient.okResponses) {
       ThreadNetworkCredentials.fromActiveOperationalDataset(
-          BaseEncoding.base16().decode(response.second.uppercase())
+          BaseEncoding.base16().decode(response.second.uppercase()),
       )
     } else {
       null
@@ -192,7 +215,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
       actionRequest: ActionRequest,
       borderRoutersList: List<NsdServiceInfo>,
   ) {
-    val threadCredentialsInfo = threadCredentialsInfoStateFlow.value
+    val threadCredentialsInfo = uiState.value.threadCredentialsInfo
     if (threadCredentialsInfo.credentials == null) {
       setActionDialogInfoWithError(actionRequest.type, "You must set the working dataset.")
       return
@@ -240,7 +263,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
     val mWriter = MultiFormatWriter()
     try {
       // BitMatrix class to encode entered text and set Width & Height
-      val threadCredentialsInfo = threadCredentialsInfoStateFlow.value
+      val threadCredentialsInfo = uiState.value.threadCredentialsInfo
       if (threadCredentialsInfo.credentials != null) {
         val qrCodeContent =
             threadCredentialsQRCodePrefix +
@@ -263,24 +286,24 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
   // Utility methods
 
   fun threadCredentialsExist(): Boolean {
-    return threadCredentialsInfoStateFlow.value.credentials != null
+    return uiState.value.threadCredentialsInfo.credentials != null
   }
 
   fun selectedThreadBorderRouterExists(): Boolean {
-    return threadCredentialsInfoStateFlow.value.selectedThreadBorderRouterId != null
+    return uiState.value.threadCredentialsInfo.selectedThreadBorderRouterId != null
   }
 
   fun getSelectedBorderRouterId(): ByteArray? {
-    return threadCredentialsInfoStateFlow.value.selectedThreadBorderRouterId
+    return uiState.value.threadCredentialsInfo.selectedThreadBorderRouterId
   }
 
   fun getThreadNetworkCredentials(): ThreadNetworkCredentials? {
-    return threadCredentialsInfoStateFlow.value.credentials
+    return uiState.value.threadCredentialsInfo.credentials
   }
 
   fun getBase16ThreadCredentials(): String {
     val credentials =
-        threadCredentialsInfoStateFlow.value.credentials
+        uiState.value.threadCredentialsInfo.credentials
             ?: throw IllegalStateException("Credentials are null")
     return BaseEncoding.base16().encode(credentials.activeOperationalDataset)
   }

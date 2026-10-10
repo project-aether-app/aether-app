@@ -61,7 +61,7 @@ internal fun shareDevice(
                   .setPasscode(SETUP_PIN_CODE)
                   .setWindowOpenMillis(SystemClock.elapsedRealtime())
                   .setDurationSeconds(OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS.toLong())
-                  .build()
+                  .build(),
           )
           .build()
   Timber.d("Sharing device discriminator=${shareDeviceRequest.commissioningWindow.discriminator}")

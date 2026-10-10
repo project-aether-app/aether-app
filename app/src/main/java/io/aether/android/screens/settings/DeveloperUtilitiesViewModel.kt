@@ -57,15 +57,15 @@ constructor(
       val divider = "-".repeat(20)
       val userPreferences = userPreferencesRepository.getData()
       Timber.d(
-          "UserPreferences Repository\n${divider} [UserPreferences Repository] ${divider}\n${userPreferences}\n${divider} End of [UserPreferences Repository] $divider"
+          "UserPreferences Repository\n${divider} [UserPreferences Repository] ${divider}\n${userPreferences}\n${divider} End of [UserPreferences Repository] $divider",
       )
       val devices = devicesRepository.getAllDevices()
       Timber.d(
-          "Devices Repository\n${divider} [Devices Repository] ${divider}\n${devices}\n${divider} End of [Devices Repository] $divider"
+          "Devices Repository\n${divider} [Devices Repository] ${divider}\n${devices}\n${divider} End of [Devices Repository] $divider",
       )
       val devicesState = devicesStateRepository.getAllDevicesState()
       Timber.d(
-          "DevicesState Repository\n${divider} [DevicesState Repository] ${divider}\n${devicesState}\n${divider} End of [DevicesState Repository] $divider"
+          "DevicesState Repository\n${divider} [DevicesState Repository] ${divider}\n${devicesState}\n${divider} End of [DevicesState Repository] $divider",
       )
     }
   }
@@ -82,7 +82,7 @@ constructor(
             context,
             permission,
           ) == PackageManager.PERMISSION_GRANTED
-        }]"
+        }]",
       )
     }
   }

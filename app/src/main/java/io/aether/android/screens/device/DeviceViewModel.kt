@@ -6,6 +6,7 @@ package io.aether.android.screens.device
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import chip.devicecontroller.model.NodeState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,11 +39,30 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+
+data class DeviceUiState(
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
+    val device: DeviceUiModel? = null,
+    val allEndpointUiModels: List<DeviceUiModel> = emptyList(),
+    val lastUpdatedEndpointState: DevicesStateRepository.EndpointStateSnapshot? = null,
+
+    // UI Overlay / Dialog States
+    val msgDialogInfo: DialogInfo? = null,
+)
 
 /** The ViewModel for the Device Screen. */
 @HiltViewModel
@@ -59,19 +79,52 @@ constructor(
 
   // The UI model for device shown on the Device screen.
   private var _deviceUiModel = MutableStateFlow<DeviceUiModel?>(null)
-  val deviceUiModel: StateFlow<DeviceUiModel?> = _deviceUiModel.asStateFlow()
+  private val deviceUiModel: StateFlow<DeviceUiModel?> = _deviceUiModel.asStateFlow()
 
   // All endpoint UI models for the same physical node shown on the Device screen.
   // Sorted by ascending endpoint number.
   private var _allEndpointUiModels = MutableStateFlow<List<DeviceUiModel>>(emptyList())
-  val allEndpointUiModels: StateFlow<List<DeviceUiModel>> = _allEndpointUiModels.asStateFlow()
+  private val allEndpointUiModels: StateFlow<List<DeviceUiModel>> =
+      _allEndpointUiModels.asStateFlow()
 
   // Controls whether a periodic ping to the device is enabled or not.
   private var devicePeriodicPingEnabled: Boolean = true
 
   // Controls whether the "Message" AlertDialog should be shown in the UI.
   private var _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
-  val msgDialogInfo: StateFlow<DialogInfo?> = _msgDialogInfo.asStateFlow()
+  private val msgDialogInfo: StateFlow<DialogInfo?> = _msgDialogInfo.asStateFlow()
+
+  val uiState: StateFlow<DeviceUiState> =
+      combine(
+              deviceUiModel,
+              allEndpointUiModels,
+              msgDialogInfo,
+              devicesStateRepository.devicesStateFlow,
+              devicesStateRepository.lastUpdatedEndpointState.asFlow().onStart {
+                emit(devicesStateRepository.lastUpdatedEndpointState.value)
+              },
+          ) {
+              deviceUiModel,
+              allEndpointUiModels,
+              msgDialogInfo,
+              devicesState,
+              lastUpdatedEndpointState,
+            ->
+            val isOnline =
+                devicesState.nodesList
+                    .firstOrNull { it.nodeId == deviceUiModel?.nodeId?.toLong() }
+                    ?.online ?: deviceUiModel?.isOnline ?: true
+            DeviceUiState(
+                isFirstTimeLoading = deviceUiModel == null,
+                isBackgroundRefreshing = false,
+                errorMessageRes = null,
+                device = deviceUiModel?.copy(isOnline = isOnline),
+                allEndpointUiModels = allEndpointUiModels,
+                lastUpdatedEndpointState = lastUpdatedEndpointState,
+                msgDialogInfo = msgDialogInfo,
+            )
+          }
+          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceUiState())
 
   // -----------------------------------------------------------------------------------------------
   // Load device
@@ -497,7 +550,7 @@ constructor(
         deviceUiModel.value
             ?: run {
               Timber.w(
-                  "subscribeToPeriodicUpdates(): deviceUiModel not yet loaded, skipping subscription"
+                  "subscribeToPeriodicUpdates(): deviceUiModel not yet loaded, skipping subscription",
               )
               return
             }
@@ -550,13 +603,13 @@ constructor(
                 Timber.d("Device power state onOffState=$onOffState endpointId=$endpoint")
                 if (onOffState == null) {
                   Timber.e(
-                      "onReport(): WARNING -> onOffState is NULL for endpoint $endpoint. Ignoring."
+                      "onReport(): WARNING -> onOffState is NULL for endpoint $endpoint. Ignoring.",
                   )
                   return@forEach
                 }
                 if (supportsLevelControl(endpointModel.endpoint) && levelState == null) {
                   Timber.e(
-                      "onReport(): WARNING -> levelState is NULL for endpoint $endpoint. Ignoring."
+                      "onReport(): WARNING -> levelState is NULL for endpoint $endpoint. Ignoring.",
                   )
                   return@forEach
                 }
@@ -565,7 +618,7 @@ constructor(
                         colorTemperatureState == null
                 ) {
                   Timber.e(
-                      "onReport(): WARNING -> colorTemperatureState is NULL for endpoint $endpoint. Ignoring."
+                      "onReport(): WARNING -> colorTemperatureState is NULL for endpoint $endpoint. Ignoring.",
                   )
                   return@forEach
                 }
@@ -605,7 +658,7 @@ constructor(
       } catch (e: IllegalStateException) {
         Timber.e(
             "Can't get connectedDevicePointer for nodeId=${primaryDevice.nodeId} " +
-                "(endpoint=${primaryDevice.endpoint.endpointId})."
+                "(endpoint=${primaryDevice.endpoint.endpointId}).",
         )
         if (e.isCommunicationTimeoutError()) {
           devicesStateRepository.updateNodeOnlineState(primaryDevice.nodeId, isOnline = false)
@@ -621,7 +674,7 @@ constructor(
         deviceUiModel.value
             ?: run {
               Timber.d(
-                  "unsubscribeToPeriodicUpdates(): nothing to unsubscribe, deviceUiModel is null"
+                  "unsubscribeToPeriodicUpdates(): nothing to unsubscribe, deviceUiModel is null",
               )
               return
             }
@@ -633,7 +686,7 @@ constructor(
       } catch (e: IllegalStateException) {
         Timber.e(
             "Can't get connectedDevicePointer for nodeId=${primaryDevice.nodeId} " +
-                "(endpoint=${primaryDevice.endpoint.endpointId})."
+                "(endpoint=${primaryDevice.endpoint.endpointId}).",
         )
         if (e.isCommunicationTimeoutError()) {
           devicesStateRepository.updateNodeOnlineState(primaryDevice.nodeId, isOnline = false)
@@ -650,7 +703,7 @@ constructor(
 
   private fun startDevicePeriodicPing() {
     Timber.d(
-        "${LocalDateTime.now()} startDevicePeriodicPing every $PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS seconds"
+        "${LocalDateTime.now()} startDevicePeriodicPing every $PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS seconds",
     )
     devicePeriodicPingEnabled = true
     runDevicePeriodicUpdate()

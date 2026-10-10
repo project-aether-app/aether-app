@@ -52,7 +52,7 @@ internal fun CommandInvokeContent(
                       R.string.device_explorer_label_with_type,
                       argument.name,
                       argument.type.label,
-                  )
+                  ),
               )
             },
             modifier = Modifier.fillMaxWidth(),

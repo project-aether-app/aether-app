@@ -10,7 +10,6 @@ import android.os.SystemClock
 import androidx.activity.result.ActivityResult
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import chip.devicecontroller.AttestationInfo
@@ -56,9 +55,11 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -104,6 +105,23 @@ data class DevicesListUiModel(
     val showOfflineDevices: Boolean,
 )
 
+data class HomeUiState(
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = false,
+    val isBackgroundRefreshing: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
+    val devices: List<DeviceUiModel> = emptyList(),
+    val showOfflineDevices: Boolean = true,
+    val multiadminCommissionDeviceTaskStatus: TaskStatus = TaskStatus.NotStarted,
+    val deviceAttestationFailureIgnored: Boolean = true,
+
+    // UI Overlay / Dialog States
+    val msgDialogInfo: DialogInfo? = null,
+    val showNewDeviceNameAlertDialog: Boolean = false,
+)
+
 // -----------------------------------------------------------------------------
 // ViewModel
 
@@ -122,23 +140,17 @@ constructor(
 
   // Controls whether the "Message" AlertDialog should be shown in the UI.
   private var _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
-  val msgDialogInfo: StateFlow<DialogInfo?> = _msgDialogInfo.asStateFlow()
 
   // Controls whether the "New Device" AlertDialog should be shown in the UI.
   private var _showNewDeviceNameAlertDialog = MutableStateFlow(false)
-  val showNewDeviceNameAlertDialog: StateFlow<Boolean> = _showNewDeviceNameAlertDialog.asStateFlow()
 
   /** The current status of multiadmin commissioning. */
   private val _multiadminCommissionDeviceTaskStatus =
       MutableStateFlow<TaskStatus>(TaskStatus.NotStarted)
-  val multiadminCommissionDeviceTaskStatus: StateFlow<TaskStatus> =
-      _multiadminCommissionDeviceTaskStatus.asStateFlow()
 
   // Controls whether a Device Attestation failure is ignored or not.
   // FIXME: set to true for now until issues with attestation resolved.
   private var _deviceAttestationFailureIgnored = MutableStateFlow(true)
-  val deviceAttestationFailureIgnored: StateFlow<Boolean> =
-      _deviceAttestationFailureIgnored.asStateFlow()
 
   // Controls whether a periodic ping to the devices is enabled or not.
   private var devicesPeriodicPingEnabled: Boolean = true
@@ -174,7 +186,33 @@ constructor(
         )
       }
 
-  val devicesUiModelLiveData = devicesListUiModelFlow.asLiveData()
+  val uiState: StateFlow<HomeUiState> =
+      combine(
+              devicesListUiModelFlow,
+              _msgDialogInfo.asStateFlow(),
+              _showNewDeviceNameAlertDialog.asStateFlow(),
+              _multiadminCommissionDeviceTaskStatus.asStateFlow(),
+              _deviceAttestationFailureIgnored.asStateFlow(),
+          ) {
+              devicesUiModel,
+              msgDialogInfo,
+              showNewDeviceNameAlertDialog,
+              multiadminCommissionDeviceTaskStatus,
+              deviceAttestationFailureIgnored,
+            ->
+            HomeUiState(
+                isFirstTimeLoading = false,
+                isBackgroundRefreshing = false,
+                errorMessageRes = null,
+                devices = devicesUiModel.devices,
+                showOfflineDevices = devicesUiModel.showOfflineDevices,
+                multiadminCommissionDeviceTaskStatus = multiadminCommissionDeviceTaskStatus,
+                deviceAttestationFailureIgnored = deviceAttestationFailureIgnored,
+                msgDialogInfo = msgDialogInfo,
+                showNewDeviceNameAlertDialog = showNewDeviceNameAlertDialog,
+            )
+          }
+          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
 
   private fun processDevices(
       devicesStates: MatterFabricState,
@@ -200,7 +238,7 @@ constructor(
                 endpoint = MatterEndpoint.getDefaultInstance(),
                 isOnline = node.online,
                 isOn = false,
-            )
+            ),
         )
       } else {
         Timber.d("    nodeId setting its own value for state")
@@ -212,7 +250,7 @@ constructor(
                 endpointState.on,
                 endpointState.level,
                 endpointState.colorTemperature,
-            )
+            ),
         )
       }
     }
@@ -253,13 +291,13 @@ constructor(
         "commissionDevice: TargetCommissioner for MultiAdmin. " +
             "uptimeMillis=$currentUptimeMillis " +
             "commissioningWindowExpirationMillis=$commissioningWindowExpirationMillis " +
-            "-> expires in $timeLeftSeconds seconds"
+            "-> expires in $timeLeftSeconds seconds",
     )
 
     if (commissioningWindowExpirationMillis == -1L) {
       Timber.e(
           "EXTRA_COMMISSIONING_WINDOW_EXPIRATION not specified in multi-admin call. " +
-              "Still going ahead with the multi-admin though."
+              "Still going ahead with the multi-admin though.",
       )
     } else if (timeLeftSeconds < MIN_COMMISSIONING_WINDOW_EXPIRATION_SECONDS) {
       showMsgDialog(
@@ -290,7 +328,7 @@ constructor(
         "multiadmin: commissioningRequest " +
             "onboardingPayload=${commissioningRequest.onboardingPayload} " +
             "vendorId=${commissioningRequest.deviceInfo!!.vendorId} " +
-            "productId=${commissioningRequest.deviceInfo!!.productId}"
+            "productId=${commissioningRequest.deviceInfo!!.productId}",
     )
   }
 
@@ -305,7 +343,7 @@ constructor(
         "Device commissioned successfully! DeviceDescriptor of device:\n" +
             "productId=${gpsCommissioningResult!!.commissionedDeviceDescriptor.productId}\n" +
             "vendorId=${gpsCommissioningResult!!.commissionedDeviceDescriptor.vendorId}\n" +
-            "hashCode=${gpsCommissioningResult!!.commissionedDeviceDescriptor.hashCode()}"
+            "hashCode=${gpsCommissioningResult!!.commissionedDeviceDescriptor.hashCode()}",
     )
 
     // Now we need to capture the device name.
@@ -695,7 +733,7 @@ constructor(
       return
     }
     Timber.d(
-        "${LocalDateTime.now()} startDevicesPeriodicPing every $PERIODIC_READ_INTERVAL_HOME_SCREEN_SECONDS seconds"
+        "${LocalDateTime.now()} startDevicesPeriodicPing every $PERIODIC_READ_INTERVAL_HOME_SCREEN_SECONDS seconds",
     )
     devicesPeriodicPingEnabled = true
     runDevicesPeriodicPing()
@@ -778,7 +816,7 @@ constructor(
   // Device Attestation
 
   fun setDeviceAttestationDelegate(
-      failureTimeoutSeconds: Int = DEVICE_ATTESTATION_FAILED_TIMEOUT_SECONDS
+      failureTimeoutSeconds: Int = DEVICE_ATTESTATION_FAILED_TIMEOUT_SECONDS,
   ) {
     Timber.d("setDeviceAttestationDelegate")
     chipClient.chipDeviceController.setDeviceAttestationDelegate(failureTimeoutSeconds) {
@@ -788,7 +826,7 @@ constructor(
       Timber.d(
           "Device attestation errorCode: $errorCode, " +
               "Look at 'src/credentials/attestation_verifier/DeviceAttestationVerifier.h' " +
-              "AttestationVerificationResult enum to understand the errors"
+              "AttestationVerificationResult enum to understand the errors",
       )
 
       if (errorCode == STATUS_PAIRING_SUCCESS) {

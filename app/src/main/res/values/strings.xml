@@ -101,7 +101,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <!-- Device Fabrics Screen -->
     <string name="device_fabrics_loading">Loading fabrics…</string>
-    <string name="device_fabrics_empty">No fabrics found.</string>
+    <string name="device_fabrics_error">Failed to load fabrics.</string>
     <string name="device_fabrics_fabric_label">Fabric %1$d</string>
     <string name="device_fabrics_fabric_vendor">Vendor: %1$s</string>
     <string name="device_fabrics_fabric_fabric_id">Fabric ID: %1$s</string>
@@ -209,7 +209,7 @@ SPDX-License-Identifier: Apache-2.0
     <string name="device_diagnostics_network_tx">⬆ Tx: %1$s</string>
     <string name="device_diagnostics_network_tx_errors">TX errors: %1$s</string>
     <string name="device_diagnostics_network_beacon_rx">Beacon RX: %1$s</string>
-    <string name="device_diagnostics_network_beacon_lost">Beacon lost: %1$s</string>
+    <string name="device_diagnostics_network_beacon_lost">Beacon losses: %1$s</string>
     <string name="device_diagnostics_network_collisions">Collisions: %1$s</string>
     <string name="device_diagnostics_network_drops">Drops: %1$s</string>
     <string name="device_diagnostics_network_full_duplex">Full-Duplex</string>

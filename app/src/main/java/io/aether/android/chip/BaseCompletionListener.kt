@@ -54,7 +54,7 @@ abstract class BaseCompletionListener : ChipDeviceController.CompletionListener 
       threadEndpointId: Int,
   ) {
     Timber.d(
-        "Commissioning info vendorId=$vendorId productId=$productId wifiEndpointId=$wifiEndpointId threadEndpointId=$threadEndpointId"
+        "Commissioning info vendorId=$vendorId productId=$productId wifiEndpointId=$wifiEndpointId threadEndpointId=$threadEndpointId",
     )
   }
 

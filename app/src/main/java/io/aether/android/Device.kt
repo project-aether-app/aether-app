@@ -10,14 +10,18 @@ import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
 import io.aether.android.matter.toNodeId
 
-/** App-level device model used by UI/viewmodels, backed by node+endpoint proto state. */
+/** App-level device model used by UI, backed by node+endpoint proto state. */
 data class Device(
+    // Basic device metadata.
     val nodeId: NodeId = NodeId(0u),
     val vendorId: VendorId = VendorId(0u),
     val vendorName: String = "",
     val productId: ProductId = ProductId(0u),
     val productName: String = "",
     val deviceTypeId: DeviceTypeId = DeviceTypeId(0u),
+
+    // Device state information.
+    val isOnline: Boolean = false,
     val endpointId: EndpointId = EndpointId(0u),
     val name: String = "",
     val supportsLevelControl: Boolean = false,

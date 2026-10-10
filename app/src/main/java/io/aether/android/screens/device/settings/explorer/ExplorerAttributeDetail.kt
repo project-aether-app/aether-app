@@ -62,7 +62,7 @@ internal fun AttributeDetailContent(
                   R.string.device_explorer_label_with_type,
                   stringResource(R.string.device_explorer_value),
                   attribute.type.label,
-              )
+              ),
           )
         },
         modifier = Modifier.fillMaxWidth(),

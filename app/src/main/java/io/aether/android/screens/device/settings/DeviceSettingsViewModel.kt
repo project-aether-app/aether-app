@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.DISCRIMINATOR
 import io.aether.android.Device
 import io.aether.android.ITERATION
+import io.aether.android.MatterFabricState
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_API
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS
 import io.aether.android.OpenCommissioningWindowApi
@@ -47,6 +48,34 @@ import kotlinx.coroutines.selects.onTimeout
 import kotlinx.coroutines.selects.select
 import timber.log.Timber
 
+data class DeviceSettingsUiState(
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
+    val device: Device? = null,
+    val basicInformation: BasicInformationAttributes? = null,
+    val dateCommissioned: Timestamp? = null,
+
+    // UI Overlay / Dialog States
+    val msgDialogInfo: DialogInfo? = null,
+    val showShareDeviceAlertDialog: Boolean = false,
+    val showRemoveDeviceAlertDialog: Boolean = false,
+    val showLocalRemoveDeviceAlertDialog: Boolean = false,
+    val deviceRemovalCompleted: Boolean = false,
+    val pairingWindowOpenForDeviceSharing: Boolean = false,
+)
+
+private data class DeviceSettingsCoreData(
+    val device: Device? = null,
+    val basicInformation: BasicInformationAttributes? = null,
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    val errorMessageRes: Int? = null,
+)
+
 @HiltViewModel
 class DeviceSettingsViewModel
 @Inject
@@ -58,33 +87,20 @@ constructor(
     private val setDeviceNameUseCase: SetDeviceNameUseCase,
 ) : ViewModel() {
 
-  sealed interface UiState {
-    data object Loading : UiState
-
-    data class Loaded(
-        val device: Device,
-        val basicInformation: BasicInformationAttributes?,
-        val isOnline: Boolean,
-        val dateCommissioned: Timestamp?,
-    ) : UiState
-
-    data class Error(@field:StringRes val messageRes: Int) : UiState
-  }
-
   private val refreshTrigger = MutableSharedFlow<NodeId>(replay = 1)
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  val uiState: StateFlow<UiState> =
+  private val deviceCoreDataState: StateFlow<DeviceSettingsCoreData> =
       refreshTrigger
           .flatMapLatest { nodeId ->
             flow {
               // Use existing state as a local cache: emit stale data immediately so the UI
               // never flashes "Loading" or shows unknown values while refreshing.
-              val cached = uiState.value
-              if (cached is UiState.Loaded && cached.device.nodeId == nodeId) {
-                emit(cached)
+              val cached = deviceCoreDataState.value
+              if (cached.device != null && cached.device.nodeId == nodeId) {
+                emit(cached.copy(isBackgroundRefreshing = true))
               } else {
-                emit(UiState.Loading)
+                emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
               }
               coroutineScope {
                 // Kick off the network read immediately (async) so total wait time is
@@ -103,9 +119,7 @@ constructor(
                       .getOrDefault(fallbackDevice)
                 }
                 val cachedBasicInfo =
-                    (cached as? UiState.Loaded)
-                        ?.takeIf { it.device.nodeId == nodeId }
-                        ?.basicInformation
+                    cached.takeIf { it.device?.nodeId == nodeId }?.basicInformation
                 // Race the local storage fetch against the timeout.
                 val device =
                     select<Device> {
@@ -113,32 +127,57 @@ constructor(
                       onTimeout(500.milliseconds) {
                         Timber.d("Storage read took too long. Emitting fallback first.")
                         // Emit fallback right away so the UI doesn't freeze, then keep waiting.
-                        emit(UiState.Loaded(fallbackDevice, cachedBasicInfo, false, null))
+                        emit(
+                            DeviceSettingsCoreData(
+                                device = fallbackDevice,
+                                basicInformation = cachedBasicInfo,
+                                isFirstTimeLoading = false,
+                                isBackgroundRefreshing = true,
+                            ),
+                        )
                         deviceDeferred.await()
                       }
                     }
                 // Emit storage-fresh device with cached basicInfo so e.g. a rename is
                 // reflected immediately without waiting for the network round-trip.
-                emit(UiState.Loaded(device, cachedBasicInfo, false, null))
+                emit(
+                    DeviceSettingsCoreData(
+                        device = device,
+                        basicInformation = cachedBasicInfo,
+                        isFirstTimeLoading = false,
+                        isBackgroundRefreshing = true,
+                    ),
+                )
                 // Await network result and update with live basic information.
                 val basicInfo = networkDeferred.await()
                 if (basicInfo != null) {
                   syncBasicInfoToStorage(nodeId, basicInfo)
-                  emit(UiState.Loaded(device, basicInfo, false, null))
+                  emit(
+                      DeviceSettingsCoreData(
+                          device = device,
+                          basicInformation = basicInfo,
+                          isFirstTimeLoading = false,
+                          isBackgroundRefreshing = false,
+                      ),
+                  )
+                } else {
+                  emit(
+                      DeviceSettingsCoreData(
+                          device = device,
+                          basicInformation = cachedBasicInfo,
+                          isFirstTimeLoading = false,
+                          isBackgroundRefreshing = false,
+                      ),
+                  )
                 }
               }
             }
           }
-          .combine(devicesStateRepository.devicesStateFlow) { deviceState, nodesState ->
-            if (deviceState !is UiState.Loaded) return@combine deviceState
-            val node =
-                nodesState.nodesList.firstOrNull { it.nodeId == deviceState.device.nodeId.toLong() }
-            deviceState.copy(
-                isOnline = node?.online ?: false,
-                dateCommissioned = node?.dateCommissioned?.takeUnless { isDefaultTimestamp(it) },
-            )
-          }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UiState.Loading)
+          .stateIn(
+              viewModelScope,
+              SharingStarted.WhileSubscribed(5000),
+              DeviceSettingsCoreData(),
+          )
 
   fun loadDevice(nodeId: NodeId) {
     refreshTrigger.tryEmit(nodeId)
@@ -167,26 +206,63 @@ constructor(
 
   // Controls whether the "Message" AlertDialog should be shown in the UI.
   private var _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
-  val msgDialogInfo: StateFlow<DialogInfo?> = _msgDialogInfo.asStateFlow()
 
   private var _showShareDeviceAlertDialog = MutableStateFlow(false)
-  val showShareDeviceAlertDialog: StateFlow<Boolean> = _showShareDeviceAlertDialog.asStateFlow()
 
   private var _showRemoveDeviceAlertDialog = MutableStateFlow(false)
-  val showRemoveDeviceAlertDialog: StateFlow<Boolean> = _showRemoveDeviceAlertDialog.asStateFlow()
 
-  private var _showRemoveDeviceConfirmAlertDialog = MutableStateFlow(false)
-  val showRemoveDeviceConfirmAlertDialog: StateFlow<Boolean> =
-      _showRemoveDeviceConfirmAlertDialog.asStateFlow()
+  private var _showLocalRemoveDeviceAlertDialog = MutableStateFlow(false)
 
   // Communicates to the UI that removal of the device has completed successfully.
   private var _deviceRemovalCompleted = MutableStateFlow(false)
-  val deviceRemovalCompleted: StateFlow<Boolean> = _deviceRemovalCompleted.asStateFlow()
 
   // Communicates to the UI that the pairing window is open for device sharing.
   private var _pairingWindowOpenForDeviceSharing = MutableStateFlow(false)
-  val pairingWindowOpenForDeviceSharing: StateFlow<Boolean> =
-      _pairingWindowOpenForDeviceSharing.asStateFlow()
+  val uiState: StateFlow<DeviceSettingsUiState> =
+      combine(
+              deviceCoreDataState,
+              devicesStateRepository.devicesStateFlow,
+              _msgDialogInfo.asStateFlow(),
+              _showShareDeviceAlertDialog.asStateFlow(),
+              _showRemoveDeviceAlertDialog.asStateFlow(),
+              _showLocalRemoveDeviceAlertDialog.asStateFlow(),
+              _deviceRemovalCompleted.asStateFlow(),
+              _pairingWindowOpenForDeviceSharing.asStateFlow(),
+          ) { array ->
+            val coreData = array[0] as DeviceSettingsCoreData
+            val nodesState = array[1] as MatterFabricState
+            val msgDialogInfo = array[2] as DialogInfo?
+            val showShareDeviceAlertDialog = array[3] as Boolean
+            val showRemoveDeviceAlertDialog = array[4] as Boolean
+            val showLocalRemoveDeviceAlertDialog = array[5] as Boolean
+            val deviceRemovalCompleted = array[6] as Boolean
+            val pairingWindowOpenForDeviceSharing = array[7] as Boolean
+
+            val node =
+                coreData.device?.let { dev ->
+                  nodesState.nodesList.firstOrNull { it.nodeId == dev.nodeId.toLong() }
+                }
+            val isOnline = node?.online ?: false
+            val dateCommissioned = node?.dateCommissioned?.takeUnless { isDefaultTimestamp(it) }
+            // TODO: Fix isOnline handling.
+            // coreData.device?.isOnline = isOnline
+
+            DeviceSettingsUiState(
+                isFirstTimeLoading = coreData.isFirstTimeLoading,
+                isBackgroundRefreshing = coreData.isBackgroundRefreshing,
+                errorMessageRes = coreData.errorMessageRes,
+                device = coreData.device?.copy(isOnline = isOnline),
+                basicInformation = coreData.basicInformation,
+                dateCommissioned = dateCommissioned,
+                msgDialogInfo = msgDialogInfo,
+                showShareDeviceAlertDialog = showShareDeviceAlertDialog,
+                showRemoveDeviceAlertDialog = showRemoveDeviceAlertDialog,
+                showLocalRemoveDeviceAlertDialog = showLocalRemoveDeviceAlertDialog,
+                deviceRemovalCompleted = deviceRemovalCompleted,
+                pairingWindowOpenForDeviceSharing = pairingWindowOpenForDeviceSharing,
+            )
+          }
+          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceSettingsUiState())
 
   // -----------------------------------------------------------------------------------------------
   // Rename device
@@ -239,12 +315,12 @@ constructor(
     _showRemoveDeviceAlertDialog.value = false
   }
 
-  fun showRemoveDeviceConfirmAlertDialog() {
-    _showRemoveDeviceConfirmAlertDialog.value = true
+  fun showLocalRemoveDeviceAlertDialog() {
+    _showLocalRemoveDeviceAlertDialog.value = true
   }
 
   fun dismissRemoveDeviceConfirmAlertDialog() {
-    _showRemoveDeviceConfirmAlertDialog.value = false
+    _showLocalRemoveDeviceAlertDialog.value = false
   }
 
   fun resetDeviceRemovalCompleted() {
@@ -303,7 +379,7 @@ constructor(
   private suspend fun openCommissioningWindowUsingOpenPairingWindowWithPin(nodeId: NodeId) {
     Timber.d(
         "Opening pairing window durationSeconds=$OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS " +
-            "iteration=$ITERATION discriminator=$DISCRIMINATOR"
+            "iteration=$ITERATION discriminator=$DISCRIMINATOR",
     )
     val connectedDevicePointer = chipClient.awaitGetConnectedDevicePointer(nodeId)
     chipClient.awaitOpenPairingWindowWithPIN(
@@ -345,7 +421,7 @@ constructor(
       } catch (e: Exception) {
         Timber.e(e, "Unlinking the device failed.")
         dismissMsgDialog()
-        showRemoveDeviceConfirmAlertDialog()
+        showLocalRemoveDeviceAlertDialog()
         return@launch
       }
       Timber.d("Device removal succeeded nodeId=$nodeId")

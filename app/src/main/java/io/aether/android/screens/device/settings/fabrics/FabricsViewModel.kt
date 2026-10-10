@@ -20,10 +20,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class FabricsUiState(
-    val isInitialLoading: Boolean = true,
-    val isRefreshing: Boolean = false,
+    // Lifecycle Flags
+    val isFirstTimeLoading: Boolean = true,
+    val isBackgroundRefreshing: Boolean = false,
+    @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
     val fabrics: List<ManagedFabric> = emptyList(),
-    @field:StringRes val errorRes: Int? = null,
 )
 
 @HiltViewModel
@@ -40,9 +43,9 @@ constructor(
     viewModelScope.launch {
       _uiState.update {
         it.copy(
-            isInitialLoading = _uiState.value.isInitialLoading,
-            isRefreshing = !_uiState.value.isInitialLoading,
-            errorRes = null,
+            isFirstTimeLoading = _uiState.value.isFirstTimeLoading,
+            isBackgroundRefreshing = !_uiState.value.isFirstTimeLoading,
+            errorMessageRes = null,
         )
       }
       runCatching {
@@ -50,8 +53,9 @@ constructor(
         _uiState.update {
           it.copy(
               fabrics = fabrics,
-              isInitialLoading = false,
-              isRefreshing = false,
+              isFirstTimeLoading = false,
+              isBackgroundRefreshing = false,
+              errorMessageRes = if (fabrics.isEmpty()) R.string.device_fabrics_error else null,
           )
         }
       }
@@ -59,9 +63,9 @@ constructor(
             Timber.e(e, "Error loading fabrics")
             _uiState.update {
               it.copy(
-                  isInitialLoading = false,
-                  isRefreshing = false,
-                  errorRes = R.string.controllers_offline,
+                  isFirstTimeLoading = false,
+                  isBackgroundRefreshing = false,
+                  errorMessageRes = R.string.device_fabrics_error,
               )
             }
           }

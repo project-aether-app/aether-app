@@ -175,7 +175,7 @@ class DevicesRepository @Inject constructor(@ApplicationContext context: Context
     val nodeIndex = findNodeIndex(nodeId)
     if (nodeIndex == -1) {
       Timber.e(
-          "Unable to get device information to update its type: nodeId [${nodeId}] deviceTypeId [${deviceTypeId}]"
+          "Unable to get device information to update its type: nodeId [${nodeId}] deviceTypeId [${deviceTypeId}]",
       )
       return
     }

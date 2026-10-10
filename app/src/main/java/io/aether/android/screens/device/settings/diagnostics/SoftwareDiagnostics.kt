@@ -37,26 +37,26 @@ fun SoftwareDiagnostics(data: SoftwareDiagnosticsData) {
               stringResource(
                   R.string.device_diagnostics_current_heap_used,
                   (used / 1024u).toString(),
-              )
+              ),
           )
           Text(
               stringResource(
                   R.string.device_diagnostics_current_heap_free,
                   (free / 1024u).toString(),
-              )
+              ),
           )
         }
       }
     }
     data.currentHeapHighWatermark?.let {
       DiagnosticsInfoRow(
-          stringResource(R.string.device_diagnostics_label_current_heap_high_watermark)
+          stringResource(R.string.device_diagnostics_label_current_heap_high_watermark),
       ) {
         Text(
             stringResource(
                 R.string.device_diagnostics_current_heap_high_watermark,
                 (it / 1024u).toString(),
-            )
+            ),
         )
       }
     }
@@ -78,7 +78,7 @@ private fun SoftwareDiagnosticsThread(thread: ThreadMetrics, maxStackSizeAcrossT
           R.string.device_diagnostics_thread_label,
           thread.name ?: stringResource(R.string.device_diagnostics_thread_unnamed),
           thread.id.toString(),
-      )
+      ),
   ) {
     if (thread.stackSize != null && thread.stackFreeCurrent != null) {
       val used = (thread.stackSize - thread.stackFreeCurrent).coerceAtLeast(0u)
@@ -92,13 +92,16 @@ private fun SoftwareDiagnosticsThread(thread: ThreadMetrics, maxStackSizeAcrossT
       )
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(
-            stringResource(R.string.device_diagnostics_thread_stack_used, (used / 1024u).toString())
+            stringResource(
+                R.string.device_diagnostics_thread_stack_used,
+                (used / 1024u).toString(),
+            ),
         )
         Text(
             stringResource(
                 R.string.device_diagnostics_thread_stack_free,
                 (thread.stackFreeCurrent / 1024u).toString(),
-            )
+            ),
         )
       }
     }

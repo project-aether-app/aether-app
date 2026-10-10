@@ -13,6 +13,6 @@ data class ManagedFabric(
     val vendorId: VendorId,
     val fabricId: FabricId,
     val nodeId: NodeId,
-    val label: String,
+    val label: String = "",
     val isCurrentFabric: Boolean = false,
 )

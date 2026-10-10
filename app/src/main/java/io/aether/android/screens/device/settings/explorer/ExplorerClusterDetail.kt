@@ -115,14 +115,14 @@ internal fun ClusterDetailContent(
                                           R.string.device_explorer_attribute_privileges,
                                           attribute.readPrivilege.toLabel(),
                                           attribute.writePrivilege.toLabel(),
-                                      )
+                                      ),
                                   )
                                   append("\n")
                                   append(
                                       stringResource(
                                           R.string.device_explorer_attribute_type,
                                           attribute.type.label,
-                                      )
+                                      ),
                                   )
                                 },
                             isSupported = attribute.isSupported,

@@ -164,7 +164,7 @@ class ResolveListener(
           BaseEncoding.base16().encode(serviceId)
         }\n" +
               "                   NN: ${serviceInfo.attributes["nn"]?.let { String(it) }}\n" +
-              "                   IP: ${serviceInfoHostAddress(serviceInfo)}\n"
+              "                   IP: ${serviceInfoHostAddress(serviceInfo)}\n",
       )
       resolvedDevices.add(serviceInfo)
     } else {

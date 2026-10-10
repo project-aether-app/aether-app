@@ -17,6 +17,7 @@ plugins {
   alias(libs.plugins.hilt)
   alias(libs.plugins.ktfmt.plugin)
   alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.paparazzi)
 }
 
 /**

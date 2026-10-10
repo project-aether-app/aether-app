@@ -39,7 +39,7 @@ class FabricsRepository @Inject constructor(private val chipClient: ChipClient) 
                   ROOT_ENDPOINT_ID.toLong(),
                   Clusters.OperationalCredentials.ID.toLong(),
                   Clusters.OperationalCredentials.Attributes.Fabrics.ID.toLong(),
-              )
+              ),
           )
       chipClient.chipDeviceController.readPath(
           object : ReportCallback {
@@ -109,7 +109,7 @@ class FabricsRepository @Inject constructor(private val chipClient: ChipClient) 
               } else {
                 val msg = debugText.orElse("Unknown error")
                 continuation.resumeWithException(
-                    IllegalStateException("removeFabric status $statusCode: $msg")
+                    IllegalStateException("removeFabric status $statusCode: $msg"),
                 )
               }
             }
@@ -145,7 +145,7 @@ class FabricsRepository @Inject constructor(private val chipClient: ChipClient) 
                   ROOT_ENDPOINT_ID.toLong(),
                   Clusters.OperationalCredentials.ID.toLong(),
                   Clusters.OperationalCredentials.Attributes.CurrentFabricIndex.ID.toLong(),
-              )
+              ),
           )
       chipClient.chipDeviceController.readPath(
           object : ReportCallback {
@@ -178,7 +178,7 @@ class FabricsRepository @Inject constructor(private val chipClient: ChipClient) 
         .getEndpointState(ROOT_ENDPOINT_ID.toInt())
         ?.getClusterState(Clusters.OperationalCredentials.ID.toLong())
         ?.getAttributeState(
-            Clusters.OperationalCredentials.Attributes.CurrentFabricIndex.ID.toLong()
+            Clusters.OperationalCredentials.Attributes.CurrentFabricIndex.ID.toLong(),
         )
         ?.value
         .let { it as? Number }

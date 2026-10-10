@@ -47,7 +47,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -139,28 +138,14 @@ internal fun ThreadRoute(
       remember(threadNetworkUiState) {
         { actionRequest: ActionRequest -> threadNetworkUiState.processAction(actionRequest) }
       }
-
-  // The processing performed in ThreadNetworkUiState/ThreadViewModel impacts the Action Dialog
-  // to be shown in the UI.
-  // ThreadViewModel hoists the ActionDialogInfo StateFlow as the source of truth
-  // for the state of the Action Dialog shown in the UI.
-  val currentActionInfo by
-      threadViewModel.currentActionDialogInfoStateFlow.collectAsStateWithLifecycle()
-
-  // The processing performed in ThreadNetworkUiState/ThreadViewModel impacts the
-  // Thread Network Credentials Information to be shown in the UI
-  // (Thread Credentials Working Dataset).
-  // ThreadViewModel hoists the threadCredentialsInfo StateFlow as the source of truth
-  // for the state of the Working Dataset for the Thread Credentials.
-  val threadCredentialsInfo by
-      threadViewModel.threadCredentialsInfoStateFlow.collectAsStateWithLifecycle()
+  val uiState by threadViewModel.uiState.collectAsStateWithLifecycle()
 
   // Registers for activity result from Google Play Services.
   // This defines a launcher for the IntentSender of an Activity to
   // access Thread network credentials.
   val threadClientLauncher =
       rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartIntentSenderForResult()
+          contract = ActivityResultContracts.StartIntentSenderForResult(),
       ) { result ->
         if (result.resultCode == RESULT_OK) {
           val threadNetworkCredentials =
@@ -174,10 +159,9 @@ internal fun ThreadRoute(
       }
 
   // The IntentSender used to trigger the ThreadClient GPS activity.
-  val threadClientIntentSender by threadViewModel.threadClientIntentSender.observeAsState()
-  if (threadClientIntentSender != null) {
+  uiState.threadClientIntentSender?.let { threadClientIntentSender ->
     Timber.d("Launching GPS activity for Thread client")
-    threadClientLauncher.launch(IntentSenderRequest.Builder(threadClientIntentSender!!).build())
+    threadClientLauncher.launch(IntentSenderRequest.Builder(threadClientIntentSender).build())
     // Reset IntentSender so we don't redo the launch on configuration change where data
     // is reset in the fragment.
     threadViewModel.setThreadClientIntentSender(null)
@@ -209,30 +193,27 @@ internal fun ThreadRoute(
         )
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
     ThreadScreen(
-        currentActionInfo,
-        threadCredentialsInfo,
+        uiState = uiState,
         onThreadNetworkAction,
-        modifier = modifierWithInnerPadding,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
     )
   }
 }
 
 @Composable
 private fun ThreadScreen(
-    currentActionInfo: ActionDialogInfo,
-    threadCredentialsInfo: ThreadCredentialsInfo,
+    uiState: ThreadUiState,
     onThreadNetworkAction: (ActionRequest) -> Unit,
     modifier: Modifier = Modifier,
 ) {
   // The action dialogs.
-  SimpleActionDialog(currentActionInfo, onThreadNetworkAction)
-  OtbrActionDialog(currentActionInfo, onThreadNetworkAction)
+  SimpleActionDialog(uiState.currentActionInfo, onThreadNetworkAction)
+  OtbrActionDialog(uiState.currentActionInfo, onThreadNetworkAction)
 
   Box(modifier = modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.paddingSurfaceContent)
+        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.paddingSurfaceContent),
     ) {
       // TODO: Hack to handle issue with Fragment's top appbar.
       Spacer(Modifier.padding(30.dp))
@@ -240,7 +221,7 @@ private fun ThreadScreen(
       // The Actions section is the main section with all possible Thread network actions
       // exposed as clickable cards.
       Box(
-          modifier = Modifier.border(BorderStroke(1.dp, Color.Red), shape = RoundedCornerShape(4))
+          modifier = Modifier.border(BorderStroke(1.dp, Color.Red), shape = RoundedCornerShape(4)),
       ) {
         ActionsSection(onThreadNetworkAction)
       }
@@ -248,7 +229,7 @@ private fun ThreadScreen(
       Spacer(Modifier.padding(10.dp))
 
       // Section that shows the current Thread network credentials working dataset.
-      WorkingDatasetSection(threadCredentialsInfo)
+      WorkingDatasetSection(uiState.threadCredentialsInfo)
     }
   }
 }
@@ -292,7 +273,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.doGpsPreferredCredentialsExist, ActionTask.Process)
+                ActionRequest(ActionType.doGpsPreferredCredentialsExist, ActionTask.Process),
             )
           },
       )
@@ -303,7 +284,7 @@ private fun ActionsSection(
           rpiOtbrColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.getOtbrActiveThreadCredentials, ActionTask.Init)
+                ActionRequest(ActionType.getOtbrActiveThreadCredentials, ActionTask.Init),
             )
           },
       )
@@ -314,7 +295,7 @@ private fun ActionsSection(
           qrCodeColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.readQrCodeCredentials, ActionTask.Process)
+                ActionRequest(ActionType.readQrCodeCredentials, ActionTask.Process),
             )
           },
       )
@@ -325,7 +306,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.getGpsPreferredCredentials, ActionTask.Process)
+                ActionRequest(ActionType.getGpsPreferredCredentials, ActionTask.Process),
             )
           },
       )
@@ -336,7 +317,7 @@ private fun ActionsSection(
           rpiOtbrColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.setOtbrPendingThreadCredentials, ActionTask.Init)
+                ActionRequest(ActionType.setOtbrPendingThreadCredentials, ActionTask.Init),
             )
           },
       )
@@ -347,7 +328,7 @@ private fun ActionsSection(
           qrCodeColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.showQrCodeCredentials, ActionTask.Process)
+                ActionRequest(ActionType.showQrCodeCredentials, ActionTask.Process),
             )
           },
       )
@@ -358,7 +339,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.setGpsPreferredCredentials, ActionTask.Process)
+                ActionRequest(ActionType.setGpsPreferredCredentials, ActionTask.Process),
             )
           },
       )
@@ -371,7 +352,7 @@ private fun ActionsSection(
           gpsPrefColors,
           onClick = {
             onThreadNetworkAction(
-                ActionRequest(ActionType.clearGpsPreferredCredentials, ActionTask.Process)
+                ActionRequest(ActionType.clearGpsPreferredCredentials, ActionTask.Process),
             )
           },
       )
@@ -497,7 +478,7 @@ private fun SimpleActionDialog(
           TextButton(
               onClick = {
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
-              }
+              },
           ) {
             Text("OK")
           }
@@ -592,7 +573,7 @@ private fun OtbrActionDialog(
           TextButton(
               onClick = {
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
-              }
+              },
           ) {
             Text("OK")
           }
@@ -601,9 +582,9 @@ private fun OtbrActionDialog(
               onClick = {
                 // Trigger the processing of the OTBR.
                 onThreadNetworkAction(
-                    ActionRequest(currentActionInfo.type, ActionTask.Process, serviceInfo = otbr)
+                    ActionRequest(currentActionInfo.type, ActionTask.Process, serviceInfo = otbr),
                 )
-              }
+              },
           ) {
             Text("OK")
           }
@@ -617,7 +598,7 @@ private fun OtbrActionDialog(
           TextButton(
               onClick = {
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
-              }
+              },
           ) {
             Text("Cancel")
           }

@@ -36,10 +36,10 @@ fun GroupBox(
   Box(
       modifier =
           modifier.padding(top = MaterialTheme.spacing.paddingSmall).semantics(
-              mergeDescendants = true
+              mergeDescendants = true,
           ) {
             contentDescription = title
-          }
+          },
   ) {
     Column(
         modifier =

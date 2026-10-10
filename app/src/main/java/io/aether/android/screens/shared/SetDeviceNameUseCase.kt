@@ -100,7 +100,7 @@ constructor(
             DialogInfo(
                 titleRes = R.string.set_device_name_failed,
                 message = e.message ?: e.toString(),
-            )
+            ),
         )
       }
     }

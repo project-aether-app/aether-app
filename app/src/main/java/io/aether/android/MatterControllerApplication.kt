@@ -17,7 +17,7 @@ class MatterControllerApplication : Application() {
           override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
             super.log(priority, "${APP_NAME}-$tag", message, t)
           }
-        }
+        },
     )
   }
 }

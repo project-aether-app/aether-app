@@ -208,7 +208,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
       .getOrNull()
 
   private fun extractEthernetNetworkDiagnosticsData(
-      nodeState: NodeState
+      nodeState: NodeState,
   ): EthernetNetworkDiagnosticsData {
     val clusterState =
         nodeState
@@ -274,9 +274,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
           }
         }
       }
-      .onFailure { e ->
-        Timber.e(e, "Failed to read WiFi Network Diagnostics for nodeId=$nodeId")
-      }
+      .onFailure { e -> Timber.e(e, "Failed to read WiFi Network Diagnostics for nodeId=$nodeId") }
       .getOrNull()
 
   private fun extractWiFiNetworkDiagnosticsData(nodeState: NodeState): WiFiNetworkDiagnosticsData {
@@ -359,7 +357,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
       .getOrNull()
 
   private fun extractThreadNetworkDiagnosticsData(
-      nodeState: NodeState
+      nodeState: NodeState,
   ): ThreadNetworkDiagnosticsData {
     val clusterState =
         nodeState

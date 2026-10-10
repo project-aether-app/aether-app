@@ -4,6 +4,7 @@
 package io.aether.android.screens.device.settings.diagnostics
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -28,10 +30,10 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
 import io.aether.android.matter.NodeId
+import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiagnosticsRoute(
     onBackClick: () -> Unit,
@@ -45,6 +47,20 @@ fun DiagnosticsRoute(
     onPauseOrDispose {}
   }
 
+  DiagnosticsScreen(
+      uiState = uiState,
+      onBackClick = onBackClick,
+      onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DiagnosticsScreen(
+    uiState: DiagnosticsUiState,
+    onBackClick: () -> Unit,
+    onRefresh: () -> Unit,
+) {
   Scaffold(
       topBar = {
         Column {
@@ -59,49 +75,56 @@ fun DiagnosticsRoute(
         }
       },
   ) { innerPadding ->
-    val modifierWithInnerPadding = Modifier.fillMaxSize().padding(innerPadding)
-    if (uiState.isInitialLoading) {
+    if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
           stringResource(R.string.device_diagnostics_loading),
-          modifier = modifierWithInnerPadding,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
-      return@Scaffold
+    } else {
+      PullToRefreshBox(
+          isRefreshing = uiState.isBackgroundRefreshing,
+          onRefresh = onRefresh,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+      ) {
+        if (uiState.errorMessageRes != null) {
+          // Satisfy the requirement of having a scrollable container.
+          Box(
+              modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+              contentAlignment = Alignment.Center,
+          ) {
+            EmptyStateErrorBanner(
+                stringResource(uiState.errorMessageRes),
+                modifier = Modifier.fillMaxSize(),
+            )
+          }
+        } else {
+          Diagnostics(
+              uiState = uiState,
+              modifier = Modifier.fillMaxSize(),
+          )
+        }
+      }
     }
-    DiagnosticsScreen(
-        uiState = uiState,
-        onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
-        modifier = modifierWithInnerPadding,
-    )
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DiagnosticsScreen(
+private fun Diagnostics(
     uiState: DiagnosticsUiState,
-    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-  PullToRefreshBox(
-      isRefreshing = uiState.isRefreshing,
-      onRefresh = onRefresh,
-      modifier = modifier,
+  Column(
+      modifier =
+          modifier
+              .fillMaxSize()
+              .verticalScroll(rememberScrollState())
+              .padding(MaterialTheme.spacing.paddingNormal),
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
-    if (uiState.errorRes != null) {
-      Text(stringResource(uiState.errorRes), color = MaterialTheme.colorScheme.error)
-    }
-    Column(
-        modifier =
-            Modifier.fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(MaterialTheme.spacing.paddingNormal),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
-    ) {
-      uiState.generalDiagnostics?.let { GeneralDiagnostics(it) }
-      uiState.ethernetNetworkDiagnostics?.let { EthernetNetworkDiagnostics(it) }
-      uiState.wifiNetworkDiagnostics?.let { WiFiNetworkDiagnostics(it) }
-      uiState.threadNetworkDiagnostics?.let { ThreadNetworkDiagnostics(it) }
-      uiState.softwareDiagnostics?.let { SoftwareDiagnostics(it) }
-    }
+    uiState.generalDiagnostics?.let { GeneralDiagnostics(it) }
+    uiState.ethernetNetworkDiagnostics?.let { EthernetNetworkDiagnostics(it) }
+    uiState.wifiNetworkDiagnostics?.let { WiFiNetworkDiagnostics(it) }
+    uiState.threadNetworkDiagnostics?.let { ThreadNetworkDiagnostics(it) }
+    uiState.softwareDiagnostics?.let { SoftwareDiagnostics(it) }
   }
 }
