@@ -179,7 +179,12 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
   }
 
   internal suspend fun updateOnlineState(nodeId: NodeId, isOnline: Boolean) {
-    getDevice(nodeId)?.let { addOrUpdateDevice(it.copy(isOnline = isOnline)) }
+    dataStore.updateData { state ->
+      val index = state.nodesList.indexOfFirst { it.nodeId == nodeId.toLong() }
+      if (index < 0) return@updateData state
+      val node = state.getNodes(index).toBuilder().setOnline(isOnline).build()
+      state.toBuilder().setNodes(index, node).build()
+    }
   }
 
   internal suspend fun removeDevice(nodeId: NodeId) {

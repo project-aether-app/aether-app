@@ -25,6 +25,7 @@ import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.shared.SetDeviceNameUseCase
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -77,7 +78,13 @@ constructor(
           }
           .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceUiState())
 
+  private var deviceObserverJob: Job? = null
+
   fun loadDevice(nodeId: NodeId) {
+    deviceObserverJob?.cancel()
+    deviceObserverJob = viewModelScope.launch {
+      devicesRepository.deviceFlow(nodeId).collect { _device.value = it }
+    }
     viewModelScope.launch {
       _device.value = runCatching { devicesRepository.getDevice(nodeId) }.getOrNull()
       syncEndpointsFromDevice(nodeId)
@@ -228,7 +235,20 @@ constructor(
                 }
               }
             },
-            SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(current.id),
+            object : SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(current.id) {
+              override fun onResubscriptionAttempt(
+                  terminationCause: Int,
+                  nextResubscribeIntervalMsec: Int,
+              ) {
+                super.onResubscriptionAttempt(
+                    terminationCause,
+                    nextResubscribeIntervalMsec,
+                )
+                viewModelScope.launch {
+                  devicesRepository.updateNodeOnlineState(current.id, false)
+                }
+              }
+            },
             object : SubscriptionHelper.ReportCallbackForDevice(current.id) {
               override fun onError(
                   attributePath: chip.devicecontroller.model.ChipAttributePath?,
@@ -243,7 +263,8 @@ constructor(
               }
 
               override fun onReport(nodeState: NodeState) {
-                current.endpoints.forEach { endpoint ->
+                val latest = device.value ?: return
+                latest.endpoints.forEach { endpoint ->
                   updateFromReport(current, endpoint, nodeState)
                 }
               }

@@ -141,7 +141,10 @@ constructor(
                   messageArgs = listOf(it.secondsLeft),
               )
             } else {
-              showMsgDialog(R.string.home_device_add_intent_sender_failed_title, it.toString())
+              showMsgDialog(
+                  R.string.home_device_add_intent_sender_failed_title,
+                  it.toString(),
+              )
             }
           }
     }
@@ -267,7 +270,20 @@ constructor(
                   }
                 }
               },
-              SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(device.id),
+              object : SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(device.id) {
+                override fun onResubscriptionAttempt(
+                    terminationCause: Int,
+                    nextResubscribeIntervalMsec: Int,
+                ) {
+                  super.onResubscriptionAttempt(
+                      terminationCause,
+                      nextResubscribeIntervalMsec,
+                  )
+                  viewModelScope.launch {
+                    devicesRepository.updateNodeOnlineState(device.id, false)
+                  }
+                }
+              },
               object : SubscriptionHelper.ReportCallbackForDevice(device.id) {
                 override fun onError(
                     attributePath: chip.devicecontroller.model.ChipAttributePath?,
@@ -282,7 +298,7 @@ constructor(
                 }
 
                 override fun onReport(nodeState: NodeState) {
-                  updateEndpointFromReport(device, device.primaryEndpoint, nodeState)
+                  updateEndpointFromReport(device.id, nodeState)
                 }
               },
           )
@@ -305,21 +321,20 @@ constructor(
     }
   }
 
-  private fun updateEndpointFromReport(
-      device: Device,
-      endpoint: Endpoint,
-      nodeState: NodeState,
-  ) {
-    val on =
-        subscriptionHelper.extractAttribute(
-            nodeState,
-            endpoint.id,
-            Clusters.OnOff.ID,
-            Clusters.OnOff.Attributes.OnOff.ID.toLong(),
-        ) as Boolean? ?: return
+  private fun updateEndpointFromReport(nodeId: NodeId, nodeState: NodeState) {
     viewModelScope.launch {
+      val endpoint =
+          runCatching { devicesRepository.getDevice(nodeId).primaryEndpoint }.getOrNull()
+              ?: return@launch
+      val on =
+          subscriptionHelper.extractAttribute(
+              nodeState,
+              endpoint.id,
+              Clusters.OnOff.ID,
+              Clusters.OnOff.Attributes.OnOff.ID.toLong(),
+          ) as Boolean? ?: return@launch
       devicesRepository.upsertEndpointState(
-          device.id,
+          nodeId,
           endpoint.id,
           true,
           on,
