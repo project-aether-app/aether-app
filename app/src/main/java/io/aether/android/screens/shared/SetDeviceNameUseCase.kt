@@ -7,8 +7,7 @@ import io.aether.android.AppErrorNotifier
 import io.aether.android.R
 import io.aether.android.chip.ClustersHelper
 import io.aether.android.chip.isCommunicationTimeoutError
-import io.aether.android.data.DevicesRepository
-import io.aether.android.data.DevicesStateRepository
+import io.aether.android.data.DeviceRepository
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
 import javax.inject.Inject
@@ -45,8 +44,7 @@ sealed class SetDeviceNameResult {
 class SetDeviceNameUseCase
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
-    private val devicesStateRepository: DevicesStateRepository,
+    private val devicesRepository: DeviceRepository,
     private val clustersHelper: ClustersHelper,
     private val appErrorNotifier: AppErrorNotifier,
 ) {
@@ -77,7 +75,7 @@ constructor(
     Timber.d("Setting device name nodeId=$nodeId nameLength=${name.length}")
     try {
       val device = devicesRepository.getDevice(nodeId)
-      devicesRepository.updateDevice(device.toBuilder().setName(name).build())
+      devicesRepository.addOrUpdateDevice(device.copy(name = name))
     } catch (e: CancellationException) {
       throw e
     } catch (e: Exception) {
@@ -88,12 +86,12 @@ constructor(
     scope.launch {
       try {
         clustersHelper.writeBasicClusterNodeLabelAttribute(nodeId.toLong(), name)
-        devicesStateRepository.updateNodeOnlineState(nodeId, isOnline = true)
+        devicesRepository.updateNodeOnlineState(nodeId, isOnline = true)
       } catch (e: CancellationException) {
         throw e
       } catch (e: Exception) {
         if (e.isCommunicationTimeoutError()) {
-          devicesStateRepository.updateNodeOnlineState(nodeId, isOnline = false)
+          devicesRepository.updateNodeOnlineState(nodeId, isOnline = false)
         }
         Timber.e(e, "Failed to write node label")
         appErrorNotifier.notify(

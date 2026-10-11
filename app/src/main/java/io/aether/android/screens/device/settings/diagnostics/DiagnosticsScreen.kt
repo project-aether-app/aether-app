@@ -35,7 +35,7 @@ import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
 @Composable
-fun DiagnosticsRoute(
+internal fun DiagnosticsRoute(
     onBackClick: () -> Unit,
     nodeId: NodeId,
     viewModel: DiagnosticsViewModel = hiltViewModel(),

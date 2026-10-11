@@ -15,12 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import io.aether.android.R
-import io.aether.android.data.DevicesStateRepository
-import io.aether.android.endpointIdTyped
+import io.aether.android.data.DeviceRepository
+import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
 import io.aether.android.screens.device.cluster.LEVEL_MAX
 import io.aether.android.screens.device.cluster.LevelClusterControl
 import io.aether.android.screens.device.cluster.OnOffClusterControl
-import io.aether.android.screens.home.DeviceUiModel
 import io.aether.android.spacing
 
 /**
@@ -36,27 +36,28 @@ import io.aether.android.spacing
  */
 @Composable
 internal fun DimmableDeviceControl(
-    endpointModel: DeviceUiModel,
-    lastUpdatedDeviceState: DevicesStateRepository.EndpointStateSnapshot?,
+    device: Device,
+    endpoint: Endpoint,
+    lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
     onBrightnessChange: (Int) -> Unit,
 ) {
-  var isOnline by remember(endpointModel) { mutableStateOf(endpointModel.isOnline) }
-  var isOn by remember(endpointModel) { mutableStateOf(endpointModel.isOn) }
-  var brightness by remember(endpointModel) { mutableFloatStateOf(endpointModel.level / LEVEL_MAX) }
+  var isOnline by remember(device, endpoint) { mutableStateOf(device.isOnline) }
+  var isOn by remember(device, endpoint) { mutableStateOf(endpoint.isOn) }
+  var brightness by remember(device, endpoint) { mutableFloatStateOf(endpoint.level / LEVEL_MAX) }
 
-  LaunchedEffect(endpointModel, lastUpdatedDeviceState) {
+  LaunchedEffect(device, endpoint, lastUpdatedDeviceState) {
     when {
-      lastUpdatedDeviceState?.nodeId == endpointModel.nodeId &&
-          lastUpdatedDeviceState.endpointId == endpointModel.endpoint.endpointIdTyped() -> {
+      lastUpdatedDeviceState?.nodeId == device.id &&
+          lastUpdatedDeviceState.endpointId == endpoint.id -> {
         isOnline = lastUpdatedDeviceState.online
         isOn = lastUpdatedDeviceState.on
         brightness = lastUpdatedDeviceState.level / LEVEL_MAX
       }
       lastUpdatedDeviceState == null -> {
-        isOnline = endpointModel.isOnline
-        isOn = endpointModel.isOn
-        brightness = endpointModel.level / LEVEL_MAX
+        isOnline = device.isOnline
+        isOn = endpoint.isOn
+        brightness = endpoint.level / LEVEL_MAX
       }
     }
   }

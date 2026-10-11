@@ -35,7 +35,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
-import io.aether.android.data.DevicesStateRepository
+import io.aether.android.data.DeviceRepository
+import io.aether.android.data.models.Device
+import io.aether.android.data.models.Endpoint
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.EmptyStateErrorBanner
 import io.aether.android.screens.common.LoadingIndicator
@@ -44,24 +46,9 @@ import io.aether.android.screens.common.OfflineLabel
 import io.aether.android.screens.device.control.ColorTemperatureDeviceControl
 import io.aether.android.screens.device.control.DimmableDeviceControl
 import io.aether.android.screens.device.control.OnOffDeviceControl
-import io.aether.android.screens.home.DeviceUiModel
 import io.aether.android.spacing
-import io.aether.android.supportsColorTemperature
-import io.aether.android.supportsLevelControl
 import timber.log.Timber
 
-/**
- * The Device Screen shows all the information about the device that was selected in the Home
- * screen. It supports the following actions:
- * ```
- * - toggle the on/off state of the device
- * - navigate to device settings (gear icon in the title bar)
- * ```
- *
- * When the screen is shown, state monitoring is activated to get the device's latest state. This
- * makes it possible to update the device's online status dynamically.
- */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DeviceRoute(
     navigateToDeviceSettings: (nodeId: NodeId) -> Unit,
@@ -73,20 +60,18 @@ internal fun DeviceRoute(
 
   // Observes values needed by the DeviceScreen.
   val uiState by deviceViewModel.uiState.collectAsStateWithLifecycle()
-  Timber.d("Loaded device nodeId=${uiState.device?.nodeId}")
+  Timber.d("Loaded device nodeId=${uiState.device?.id}")
   val onDismissMsgDialog: () -> Unit = remember { { deviceViewModel.dismissMsgDialog() } }
 
   // Per-endpoint callbacks.
-  val onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit = remember {
-    { endpointModel, value -> deviceViewModel.updateDeviceStateOn(endpointModel, value) }
+  val onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit = remember {
+    { endpoint, value -> deviceViewModel.updateDeviceStateOn(endpoint, value) }
   }
-  val onBrightnessChange: (endpointModel: DeviceUiModel, value: Int) -> Unit = remember {
-    { endpointModel, value -> deviceViewModel.updateDeviceStateLevel(endpointModel, value) }
+  val onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit = remember {
+    { endpoint, value -> deviceViewModel.updateDeviceStateLevel(endpoint, value) }
   }
-  val onColorTemperatureChange: (endpointModel: DeviceUiModel, value: Int) -> Unit = remember {
-    { endpointModel, value ->
-      deviceViewModel.updateDeviceStateColorTemperature(endpointModel, value)
-    }
+  val onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit = remember {
+    { endpoint, value -> deviceViewModel.updateDeviceStateColorTemperature(endpoint, value) }
   }
 
   // When app is sent to the background, and pulled back, this kicks in.
@@ -95,7 +80,7 @@ internal fun DeviceRoute(
     onPauseOrDispose { deviceViewModel.stopMonitoringStateChanges() }
   }
 
-  LaunchedEffect(uiState.device?.nodeId) {
+  LaunchedEffect(uiState.device?.id) {
     if (uiState.device != null) {
       deviceViewModel.startMonitoringStateChanges()
     }
@@ -118,9 +103,9 @@ fun DeviceScreen(
     uiState: DeviceUiState,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit,
-    onBrightnessChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
-    onColorTemperatureChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
+    onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
+    onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
+    onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
     onDismissMsgDialog: () -> Unit,
 ) {
   Scaffold(
@@ -179,9 +164,9 @@ fun DeviceScreen(
 @Composable
 private fun Device(
     uiState: DeviceUiState,
-    onOnOffClick: (endpointModel: DeviceUiModel, value: Boolean) -> Unit,
-    onBrightnessChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
-    onColorTemperatureChange: (endpointModel: DeviceUiModel, value: Int) -> Unit,
+    onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
+    onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
+    onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
     onDismissMsgDialog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -192,7 +177,7 @@ private fun Device(
     return
   }
 
-  val endpointsToShow = uiState.allEndpointUiModels.ifEmpty { listOf(uiState.device) }
+  val endpointsToShow = uiState.device.endpoints
 
   Column(
       modifier =
@@ -204,7 +189,7 @@ private fun Device(
     if (!uiState.device.isOnline) {
       OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
-    endpointsToShow.forEach { endpointModel ->
+    endpointsToShow.forEach { endpoint ->
       Surface(
           modifier = Modifier.fillMaxWidth(),
           border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
@@ -212,13 +197,12 @@ private fun Device(
       ) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent)) {
           EndpointDeviceControl(
-              endpointModel = endpointModel,
+              device = uiState.device,
+              endpoint = endpoint,
               lastUpdatedEndpointState = uiState.lastUpdatedEndpointState,
-              onOnOffClick = { value -> onOnOffClick(endpointModel, value) },
-              onBrightnessChange = { value -> onBrightnessChange(endpointModel, value) },
-              onColorTemperatureChange = { value ->
-                onColorTemperatureChange(endpointModel, value)
-              },
+              onOnOffClick = { value -> onOnOffClick(endpoint, value) },
+              onBrightnessChange = { value -> onBrightnessChange(endpoint, value) },
+              onColorTemperatureChange = { value -> onColorTemperatureChange(endpoint, value) },
           )
         }
       }
@@ -231,29 +215,31 @@ private fun Device(
 
 @Composable
 private fun EndpointDeviceControl(
-    endpointModel: DeviceUiModel,
-    lastUpdatedEndpointState: DevicesStateRepository.EndpointStateSnapshot?,
+    device: Device,
+    endpoint: Endpoint,
+    lastUpdatedEndpointState: DeviceRepository.EndpointStateSnapshot?,
     onOnOffClick: (Boolean) -> Unit,
     onBrightnessChange: (Int) -> Unit,
     onColorTemperatureChange: (Int) -> Unit,
 ) {
-  val endpoint = endpointModel.endpoint
   when {
-    supportsColorTemperature(endpoint) ->
+    endpoint.hasColorTemperatureSupport ->
         ColorTemperatureDeviceControl(
-            endpointModel,
+            device,
+            endpoint,
             lastUpdatedEndpointState,
             onOnOffClick,
             onBrightnessChange,
             onColorTemperatureChange,
         )
-    supportsLevelControl(endpoint) ->
+    endpoint.hasLevelControlSupport ->
         DimmableDeviceControl(
-            endpointModel,
+            device,
+            endpoint,
             lastUpdatedEndpointState,
             onOnOffClick,
             onBrightnessChange,
         )
-    else -> OnOffDeviceControl(endpointModel, lastUpdatedEndpointState, onOnOffClick)
+    else -> OnOffDeviceControl(device, endpoint, lastUpdatedEndpointState, onOnOffClick)
   }
 }

@@ -4,16 +4,20 @@
 package io.aether.android.screens
 
 import app.cash.paparazzi.Paparazzi
-import io.aether.android.Device
 import io.aether.android.R
 import io.aether.android.chip.BasicInformationAttributes
+import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
+import io.aether.android.data.models.Endpoint
+import io.aether.android.data.models.Product
+import io.aether.android.data.models.Vendor
 import io.aether.android.matter.Devices
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
 import io.aether.android.screens.device.settings.DeviceSettingsScreen
 import io.aether.android.screens.device.settings.DeviceSettingsUiState
-import io.aether.android.toTimestamp
+import java.time.Instant
 import org.junit.Rule
 import org.junit.Test
 
@@ -27,12 +31,18 @@ class DeviceSettingsPreviewTest {
 
   private val testDevice =
       Device(
-          nodeId = NodeId(0x1234u),
-          vendorId = VendorId(0x1135u),
-          productId = ProductId(0x1234u),
-          deviceTypeId = Devices.OnOffPluginUnit.ID,
+          id = NodeId(0x1234u),
+          vendor = Vendor(id = VendorId(0x1135u)),
+          product = Product(id = ProductId(0x1234u)),
           name = "Test Plug-in Device",
           isOnline = true,
+          endpoints =
+              listOf(
+                  Endpoint(
+                      id = io.aether.android.matter.EndpointId(1u),
+                      deviceTypes = listOf(Devices.OnOffPluginUnit.ID).map { DeviceType(id = it) },
+                  ),
+              ),
       )
 
   private val testDeviceBasicInformation =
@@ -78,7 +88,7 @@ class DeviceSettingsPreviewTest {
                 isFirstTimeLoading = false,
                 device = testDevice,
                 basicInformation = testDeviceBasicInformation,
-                dateCommissioned = 1680000000L.toTimestamp(),
+                dateCommissioned = Instant.ofEpochSecond(1680000000L),
             ),
     )
   }
@@ -90,7 +100,7 @@ class DeviceSettingsPreviewTest {
             DeviceSettingsUiState(
                 isFirstTimeLoading = false,
                 device = testDevice,
-                dateCommissioned = 1680000000L.toTimestamp(),
+                dateCommissioned = Instant.ofEpochSecond(1680000000L),
                 showShareDeviceAlertDialog = true,
             ),
     )
@@ -103,7 +113,7 @@ class DeviceSettingsPreviewTest {
             DeviceSettingsUiState(
                 isFirstTimeLoading = false,
                 device = testDevice,
-                dateCommissioned = 1680000000L.toTimestamp(),
+                dateCommissioned = Instant.ofEpochSecond(1680000000L),
                 showRemoveDeviceAlertDialog = true,
             ),
     )
@@ -116,7 +126,7 @@ class DeviceSettingsPreviewTest {
             DeviceSettingsUiState(
                 isFirstTimeLoading = false,
                 device = testDevice,
-                dateCommissioned = 1680000000L.toTimestamp(),
+                dateCommissioned = Instant.ofEpochSecond(1680000000L),
                 showLocalRemoveDeviceAlertDialog = true,
             ),
     )

@@ -9,7 +9,7 @@ import io.aether.android.matter.VendorId
 
 data class ManagedFabric(
     val fabricIndex: Int,
-    val rootPublicKey: ByteArray,
+    val rootPublicKey: List<Byte>,
     val vendorId: VendorId,
     val fabricId: FabricId,
     val nodeId: NodeId,

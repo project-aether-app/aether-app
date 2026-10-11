@@ -480,7 +480,7 @@ private fun SimpleActionDialog(
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
               },
           ) {
-            Text("OK")
+            Text(stringResource(R.string.ok))
           }
         }
       },
@@ -575,7 +575,7 @@ private fun OtbrActionDialog(
                 onThreadNetworkAction(ActionRequest(ActionType.None, ActionTask.Complete))
               },
           ) {
-            Text("OK")
+            Text(stringResource(R.string.ok))
           }
         } else {
           TextButton(
@@ -586,7 +586,7 @@ private fun OtbrActionDialog(
                 )
               },
           ) {
-            Text("OK")
+            Text(stringResource(R.string.ok))
           }
         }
       },

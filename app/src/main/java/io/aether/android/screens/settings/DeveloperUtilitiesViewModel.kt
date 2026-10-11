@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.AppErrorNotifier
-import io.aether.android.data.DevicesRepository
-import io.aether.android.data.DevicesStateRepository
+import io.aether.android.data.DeviceRepository
+import io.aether.android.data.FabricRepository
 import io.aether.android.data.UserPreferencesRepository
 import io.aether.android.screens.common.DialogInfo
 import javax.inject.Inject
@@ -28,9 +28,9 @@ import timber.log.Timber
 class DeveloperUtilitiesViewModel
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
+    private val devicesRepository: DeviceRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val devicesStateRepository: DevicesStateRepository,
+    private val fabricRepository: FabricRepository,
     private val appErrorNotifier: AppErrorNotifier,
 ) : ViewModel() {
 
@@ -59,13 +59,9 @@ constructor(
       Timber.d(
           "UserPreferences Repository\n${divider} [UserPreferences Repository] ${divider}\n${userPreferences}\n${divider} End of [UserPreferences Repository] $divider",
       )
-      val devices = devicesRepository.getAllDevices()
+      val devices = fabricRepository.getDevices()
       Timber.d(
           "Devices Repository\n${divider} [Devices Repository] ${divider}\n${devices}\n${divider} End of [Devices Repository] $divider",
-      )
-      val devicesState = devicesStateRepository.getAllDevicesState()
-      Timber.d(
-          "DevicesState Repository\n${divider} [DevicesState Repository] ${divider}\n${devicesState}\n${divider} End of [DevicesState Repository] $divider",
       )
     }
   }

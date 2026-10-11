@@ -6,12 +6,9 @@ package io.aether.android.screens.device.settings
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.protobuf.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.DISCRIMINATOR
-import io.aether.android.Device
 import io.aether.android.ITERATION
-import io.aether.android.MatterFabricState
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_API
 import io.aether.android.OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS
 import io.aether.android.OpenCommissioningWindowApi
@@ -20,14 +17,16 @@ import io.aether.android.SETUP_PIN_CODE
 import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.chip.ChipClient
 import io.aether.android.chip.ClustersHelper
-import io.aether.android.data.DevicesRepository
-import io.aether.android.data.DevicesStateRepository
-import io.aether.android.matter.DeviceTypeId
+import io.aether.android.data.DeviceRepository
+import io.aether.android.data.FabricRepository
+import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.shared.SetDeviceNameResult
 import io.aether.android.screens.shared.SetDeviceNameUseCase
+import java.time.Instant
 import javax.inject.Inject
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
@@ -57,7 +56,7 @@ data class DeviceSettingsUiState(
     // Core Screen Data
     val device: Device? = null,
     val basicInformation: BasicInformationAttributes? = null,
-    val dateCommissioned: Timestamp? = null,
+    val dateCommissioned: Instant? = null,
 
     // UI Overlay / Dialog States
     val msgDialogInfo: DialogInfo? = null,
@@ -80,8 +79,8 @@ private data class DeviceSettingsCoreData(
 class DeviceSettingsViewModel
 @Inject
 constructor(
-    private val devicesRepository: DevicesRepository,
-    private val devicesStateRepository: DevicesStateRepository,
+    private val devicesRepository: DeviceRepository,
+    private val fabricRepository: FabricRepository,
     private val chipClient: ChipClient,
     private val clustersHelper: ClustersHelper,
     private val setDeviceNameUseCase: SetDeviceNameUseCase,
@@ -97,7 +96,7 @@ constructor(
               // Use existing state as a local cache: emit stale data immediately so the UI
               // never flashes "Loading" or shows unknown values while refreshing.
               val cached = deviceCoreDataState.value
-              if (cached.device != null && cached.device.nodeId == nodeId) {
+              if (cached.device != null && cached.device.id == nodeId) {
                 emit(cached.copy(isBackgroundRefreshing = true))
               } else {
                 emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
@@ -112,14 +111,13 @@ constructor(
                 }
                 // Fetch fresh data from storage (fast local read). getDevice() throws if the
                 // device isn't found, so fall back to a stub device instead of propagating.
-                val fallbackDevice = Device.newBuilder().setNodeId(nodeId).build()
+                val fallbackDevice = Device(id = nodeId)
                 val deviceDeferred = async {
                   runCatching { devicesRepository.getDevice(nodeId) }
                       .onFailure { Timber.w(it, "Storage read failed") }
                       .getOrDefault(fallbackDevice)
                 }
-                val cachedBasicInfo =
-                    cached.takeIf { it.device?.nodeId == nodeId }?.basicInformation
+                val cachedBasicInfo = cached.takeIf { it.device?.id == nodeId }?.basicInformation
                 // Race the local storage fetch against the timeout.
                 val device =
                     select<Device> {
@@ -200,10 +198,6 @@ constructor(
         .onFailure { Timber.e(it, "syncBasicInfoToStorage failed") }
   }
 
-  private fun isDefaultTimestamp(timestamp: Timestamp): Boolean {
-    return timestamp.seconds == 0L && timestamp.nanos == 0
-  }
-
   // Controls whether the "Message" AlertDialog should be shown in the UI.
   private var _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
 
@@ -221,7 +215,7 @@ constructor(
   val uiState: StateFlow<DeviceSettingsUiState> =
       combine(
               deviceCoreDataState,
-              devicesStateRepository.devicesStateFlow,
+              fabricRepository.devicesFlow,
               _msgDialogInfo.asStateFlow(),
               _showShareDeviceAlertDialog.asStateFlow(),
               _showRemoveDeviceAlertDialog.asStateFlow(),
@@ -230,7 +224,7 @@ constructor(
               _pairingWindowOpenForDeviceSharing.asStateFlow(),
           ) { array ->
             val coreData = array[0] as DeviceSettingsCoreData
-            val nodesState = array[1] as MatterFabricState
+            val devices = array[1] as List<*>
             val msgDialogInfo = array[2] as DialogInfo?
             val showShareDeviceAlertDialog = array[3] as Boolean
             val showRemoveDeviceAlertDialog = array[4] as Boolean
@@ -240,10 +234,10 @@ constructor(
 
             val node =
                 coreData.device?.let { dev ->
-                  nodesState.nodesList.firstOrNull { it.nodeId == dev.nodeId.toLong() }
+                  devices.filterIsInstance<Device>().firstOrNull { it.id == dev.id }
                 }
-            val isOnline = node?.online ?: false
-            val dateCommissioned = node?.dateCommissioned?.takeUnless { isDefaultTimestamp(it) }
+            val isOnline = node?.isOnline ?: false
+            val dateCommissioned = node?.dateCommissioned
             // TODO: Fix isOnline handling.
             // coreData.device?.isOnline = isOnline
 
@@ -284,11 +278,11 @@ constructor(
   // -----------------------------------------------------------------------------------------------
   // Change device type
 
-  fun changeDeviceType(nodeId: NodeId, deviceTypeId: DeviceTypeId) {
-    Timber.d("Changing device type nodeId=$nodeId deviceTypeId=$deviceTypeId")
+  fun changeDeviceType(nodeId: NodeId, deviceType: DeviceType) {
+    Timber.d("Changing device type nodeId=$nodeId deviceType=${deviceType}")
     viewModelScope.launch {
       try {
-        devicesRepository.updateDeviceType(nodeId, deviceTypeId)
+        devicesRepository.updateDeviceTypes(nodeId, listOf(deviceType))
         loadDevice(nodeId)
       } catch (e: Exception) {
         Timber.e(e, "changeDeviceType failed")

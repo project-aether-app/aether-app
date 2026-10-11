@@ -23,6 +23,9 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+# Kotlin Compiler cache
+.kotlin
+
 # Paparazzi screenshots
 app/src/test/snapshots
 

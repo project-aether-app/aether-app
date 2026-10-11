@@ -4,7 +4,6 @@
 package io.aether.android.data
 
 import android.content.Context
-import androidx.lifecycle.asLiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.aether.android.UserPreferences
 import java.io.IOException
@@ -32,8 +31,6 @@ class UserPreferencesRepository @Inject constructor(@ApplicationContext context:
           throw exception
         }
       }
-
-  val userPreferencesLiveData = userPreferencesFlow.asLiveData()
 
   suspend fun updateHideOfflineDevices(hide: Boolean) {
     Timber.d("Updating offline device visibility hide=$hide")
