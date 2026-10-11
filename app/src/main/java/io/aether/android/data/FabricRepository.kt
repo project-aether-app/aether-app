@@ -9,6 +9,7 @@ import io.aether.android.MatterEndpoint
 import io.aether.android.MatterFabricState
 import io.aether.android.MatterNode
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
 import io.aether.android.data.models.Endpoint
 import io.aether.android.data.models.Product
 import io.aether.android.data.models.Vendor
@@ -47,19 +48,15 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
         }
       }
 
-  /** All commissioned nodes. Endpoint details deliberately stay in [DeviceRepository]. */
+  /** All commissioned nodes. */
   val devicesFlow: Flow<List<Device>> = stateFlow.map { state ->
-    state.nodesList.map(::toBasicDevice)
-  }
-
-  internal val detailedDevicesFlow: Flow<List<Device>> = stateFlow.map { state ->
     state.nodesList.map(::toDevice)
   }
 
   suspend fun getDevices(): List<Device> = devicesFlow.first()
 
   internal suspend fun getDevice(nodeId: NodeId): Device? =
-      detailedDevicesFlow.first().firstOrNull { it.id == nodeId }
+      devicesFlow.first().firstOrNull { it.id == nodeId }
 
   internal suspend fun addOrUpdateDevice(device: Device) {
     dataStore.updateData { state ->
@@ -145,18 +142,16 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
     )
   }
 
-  internal suspend fun updateDeviceType(nodeId: NodeId, deviceTypeId: DeviceTypeId) {
+  internal suspend fun updateDeviceTypes(nodeId: NodeId, deviceTypes: List<DeviceType>) {
     val device = getDevice(nodeId) ?: return
     addOrUpdateDevice(
-        device.copy(endpoints = device.endpoints.map { it.copy(deviceTypeId = deviceTypeId) }),
+        device.copy(endpoints = device.endpoints.map { it.copy(deviceTypes = deviceTypes) }),
     )
   }
 
   internal suspend fun removeEndpoints(nodeId: NodeId, endpointIds: Set<EndpointId>) {
     val device = getDevice(nodeId) ?: return
-    addOrUpdateDevice(
-        device.copy(endpoints = device.endpoints.filterNot { it.id in endpointIds }),
-    )
+    addOrUpdateDevice(device.copy(endpoints = device.endpoints.filterNot { it.id in endpointIds }))
   }
 
   internal suspend fun updateEndpointState(
@@ -226,9 +221,10 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
       Endpoint(
           id = endpoint.endpointId.toEndpointId(),
           label = endpoint.label,
-          deviceTypeId =
-              endpoint.deviceTypesList.firstOrNull()?.toLong()?.toDeviceTypeId()
-                  ?: DeviceTypeId(0u),
+          deviceTypes =
+              endpoint.deviceTypesList
+                  .map { DeviceType(it.toLong().toDeviceTypeId()) }
+                  .ifEmpty { listOf(DeviceType(DeviceTypeId(0u))) },
           supportsLevelControl = endpoint.supportsLevelControl,
           supportsColorTemperature = endpoint.supportsColorTemperature,
           isOn = endpoint.on,
@@ -272,7 +268,8 @@ class FabricRepository @Inject constructor(@ApplicationContext context: Context)
             on = endpoint.isOn
             level = endpoint.level
             colorTemperature = endpoint.colorTemperature
-            if (endpoint.deviceTypeId.toInt() != 0) addDeviceTypes(endpoint.deviceTypeId.toInt())
+            if (endpoint.deviceTypes.isNotEmpty())
+                endpoint.deviceTypes.forEach { addDeviceTypes(it.id.toInt()) }
           }
           .build()
 

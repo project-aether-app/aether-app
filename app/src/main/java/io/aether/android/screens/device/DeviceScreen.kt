@@ -47,22 +47,8 @@ import io.aether.android.screens.device.control.ColorTemperatureDeviceControl
 import io.aether.android.screens.device.control.DimmableDeviceControl
 import io.aether.android.screens.device.control.OnOffDeviceControl
 import io.aether.android.spacing
-import io.aether.android.supportsColorTemperature
-import io.aether.android.supportsLevelControl
 import timber.log.Timber
 
-/**
- * The Device Screen shows all the information about the device that was selected in the Home
- * screen. It supports the following actions:
- * ```
- * - toggle the on/off state of the device
- * - navigate to device settings (gear icon in the title bar)
- * ```
- *
- * When the screen is shown, state monitoring is activated to get the device's latest state. This
- * makes it possible to update the device's online status dynamically.
- */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DeviceRoute(
     navigateToDeviceSettings: (nodeId: NodeId) -> Unit,
@@ -237,7 +223,7 @@ private fun EndpointDeviceControl(
     onColorTemperatureChange: (Int) -> Unit,
 ) {
   when {
-    supportsColorTemperature(endpoint) ->
+    endpoint.hasColorTemperatureSupport ->
         ColorTemperatureDeviceControl(
             device,
             endpoint,
@@ -246,7 +232,7 @@ private fun EndpointDeviceControl(
             onBrightnessChange,
             onColorTemperatureChange,
         )
-    supportsLevelControl(endpoint) ->
+    endpoint.hasLevelControlSupport ->
         DimmableDeviceControl(
             device,
             endpoint,

@@ -3,14 +3,13 @@
 
 package io.aether.android.screens.home
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
-import androidx.activity.result.ActivityResult
+import android.content.IntentSender
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chip.devicecontroller.model.NodeState
-import com.google.android.gms.home.matter.commissioning.CommissioningResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.R
 import io.aether.android.TaskStatus
@@ -18,41 +17,51 @@ import io.aether.android.chip.ChipClient
 import io.aether.android.chip.ClustersHelper
 import io.aether.android.chip.SubscriptionHelper
 import io.aether.android.chip.isCommunicationTimeoutError
+import io.aether.android.commissioning.CommissionedDevice
+import io.aether.android.commissioning.CommissioningWindowExpiringException
+import io.aether.android.commissioning.DeviceCommissioner
 import io.aether.android.data.DeviceRepository
 import io.aether.android.data.FabricRepository
 import io.aether.android.data.UserPreferencesRepository
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
 import io.aether.android.data.models.Endpoint
 import io.aether.android.data.models.Product
 import io.aether.android.data.models.Vendor
+import io.aether.android.isMultiAdminCommissioning
 import io.aether.android.matter.Clusters
-import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
-import io.aether.android.matter.toNodeId
-import io.aether.android.matter.toProductId
-import io.aether.android.matter.toVendorId
+import io.aether.android.platform.PlayServices
 import io.aether.android.screens.common.DialogInfo
 import javax.inject.Inject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class HomeUiState(
-    val isFirstTimeLoading: Boolean = false,
-    val isBackgroundRefreshing: Boolean = false,
-    @field:StringRes val errorMessageRes: Int? = null,
+    // Core Screen Data
     val devices: List<Device> = emptyList(),
     val showOfflineDevices: Boolean = true,
     val multiadminCommissionDeviceTaskStatus: TaskStatus = TaskStatus.NotStarted,
     val deviceAttestationFailureIgnored: Boolean = true,
+
+    // UI Overlay / Dialog States
     val msgDialogInfo: DialogInfo? = null,
     val showNewDeviceNameAlertDialog: Boolean = false,
+    val showUpdatePlayServicesDialog: Boolean = false,
 )
+
+sealed interface HomeEffect {
+  data class LaunchCommissioning(val intentSender: IntentSender) : HomeEffect
+}
 
 @HiltViewModel
 class HomeViewModel
@@ -64,44 +73,98 @@ constructor(
     private val clustersHelper: ClustersHelper,
     private val chipClient: ChipClient,
     private val subscriptionHelper: SubscriptionHelper,
+    private val deviceCommissioner: DeviceCommissioner,
+    private val playServices: PlayServices,
 ) : ViewModel() {
   private val _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
   private val _showNewDeviceNameAlertDialog = MutableStateFlow(false)
   private val _multiadminCommissionDeviceTaskStatus =
       MutableStateFlow<TaskStatus>(TaskStatus.NotStarted)
-  private var commissioningResult: CommissioningResult? = null
+  private val _showUpdatePlayServicesDialog = MutableStateFlow(false)
+  private var commissionedDevice: CommissionedDevice? = null
+  private val _effects = Channel<HomeEffect>(Channel.BUFFERED)
+  val effects: Flow<HomeEffect> = _effects.receiveAsFlow()
 
   val uiState: StateFlow<HomeUiState> =
       combine(
               fabricRepository.devicesFlow,
               userPreferencesRepository.userPreferencesFlow,
-              _msgDialogInfo,
-              _showNewDeviceNameAlertDialog,
+              combine(
+                  _msgDialogInfo,
+                  _showNewDeviceNameAlertDialog,
+                  _showUpdatePlayServicesDialog,
+              ) { dialog, showNameDialog, showUpdate ->
+                Triple(dialog, showNameDialog, showUpdate)
+              },
               _multiadminCommissionDeviceTaskStatus,
-          ) { devices, preferences, dialog, showNameDialog, status ->
+          ) { devices, preferences, (dialog, showNameDialog, showUpdate), status ->
             HomeUiState(
                 devices = devices.filter { !preferences.hideOfflineDevices || it.isOnline },
                 showOfflineDevices = !preferences.hideOfflineDevices,
                 multiadminCommissionDeviceTaskStatus = status,
                 msgDialogInfo = dialog,
                 showNewDeviceNameAlertDialog = showNameDialog,
+                showUpdatePlayServicesDialog = showUpdate,
             )
           }
           .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
 
-  fun multiadminCommissioning(intent: Intent, context: Context) = Unit
+  fun onResume(intent: Intent) {
+    _showUpdatePlayServicesDialog.value = playServices.isUpdateRequired()
+    if (!isMultiAdminCommissioning(intent)) {
+      startMonitoringStateChanges()
+    } else if (_multiadminCommissionDeviceTaskStatus.value == TaskStatus.NotStarted) {
+      _multiadminCommissionDeviceTaskStatus.value = TaskStatus.InProgress
+      launchCommissioning { deviceCommissioner.createMultiAdminIntentSender(intent) }
+    }
+  }
 
-  fun gpsCommissioningDeviceSucceeded(activityResult: ActivityResult) {
-    commissioningResult =
-        CommissioningResult.fromIntentSenderResult(activityResult.resultCode, activityResult.data)
-    _showNewDeviceNameAlertDialog.value = true
+  fun onPause() = stopMonitoringStateChanges()
+
+  fun onAddDeviceClick() {
+    stopMonitoringStateChanges()
+    launchCommissioning { deviceCommissioner.createIntentSender() }
+  }
+
+  fun onUpdatePlayServicesClick() = playServices.openInStore()
+
+  private fun launchCommissioning(createIntentSender: suspend () -> IntentSender) {
+    viewModelScope.launch {
+      runCatching { createIntentSender() }
+          .onSuccess { _effects.send(HomeEffect.LaunchCommissioning(it)) }
+          .onFailure {
+            Timber.e(it)
+            if (it is CommissioningWindowExpiringException) {
+              showMsgDialog(
+                  titleRes = R.string.home_device_add_commissioning_window_expiration_title,
+                  messageRes = R.string.home_device_add_commissioning_window_expiration_message,
+                  messageArgs = listOf(it.secondsLeft),
+              )
+            } else {
+              showMsgDialog(R.string.home_device_add_intent_sender_failed_title, it.toString())
+            }
+          }
+    }
+  }
+
+  fun onCommissioningResult(resultCode: Int, data: Intent?) {
+    if (resultCode == Activity.RESULT_OK) {
+      commissionedDevice = deviceCommissioner.parseResult(resultCode, data)
+      _showNewDeviceNameAlertDialog.value = true
+    } else if (resultCode != 0) {
+      showMsgDialog(
+          titleRes = R.string.home_device_add_commissioning_failed_title,
+          messageRes = R.string.home_device_add_commissioning_failed_message,
+          messageArgs = listOf(resultCode),
+      )
+    }
   }
 
   fun onCommissionedDeviceNameCaptured(deviceName: String) {
     _showNewDeviceNameAlertDialog.value = false
-    val result = commissioningResult ?: return
+    val result = commissionedDevice ?: return
     viewModelScope.launch {
-      val nodeId = result.token?.toLong()?.toNodeId() ?: return@launch
+      val nodeId = result.nodeId
       runCatching {
         val vendorName = clustersHelper.readBasicClusterVendorNameAttribute(nodeId.toLong())
         val productName = clustersHelper.readBasicClusterProductNameAttribute(nodeId.toLong())
@@ -120,12 +183,15 @@ constructor(
                   Endpoint(
                       id = info.endpointId,
                       label = deviceName,
-                      deviceTypeId = info.types.firstOrNull() ?: DeviceTypeId(0u),
+                      deviceTypes = info.types.map { DeviceType(it) },
                       supportsLevelControl = info.serverClusters.contains(Clusters.LevelControl.ID),
                       supportsColorTemperature =
                           info.serverClusters.contains(Clusters.ColorControl.ID) &&
                               clustersHelper
-                                  .readColorControlClusterAttributeList(nodeId, info.endpointId)
+                                  .readColorControlClusterAttributeList(
+                                      nodeId,
+                                      info.endpointId,
+                                  )
                                   .contains(
                                       Clusters.ColorControl.Attributes.ColorTemperatureMireds.ID,
                                   ),
@@ -136,12 +202,12 @@ constructor(
                 id = nodeId,
                 vendor =
                     Vendor(
-                        id = result.commissionedDeviceDescriptor.vendorId.toVendorId(),
+                        id = result.vendorId,
                         name = vendorName,
                     ),
                 product =
                     Product(
-                        id = result.commissionedDeviceDescriptor.productId.toProductId(),
+                        id = result.productId,
                         name = productName,
                     ),
                 name = deviceName,
@@ -158,24 +224,23 @@ constructor(
     }
   }
 
-  fun commissionDeviceFailed(resultCode: Int) {
-    if (resultCode != 0)
-        showMsgDialog("Commissioning the device failed", "result code: $resultCode")
-  }
-
   fun updateDeviceStateOn(nodeId: NodeId, isOn: Boolean) {
     viewModelScope.launch {
       runCatching {
         val device = devicesRepository.getDevice(nodeId)
-        val endpoint = device.primaryEndpoint ?: return@launch
-        clustersHelper.setOnOffDeviceStateOnOffCluster(nodeId.toLong(), isOn, endpoint.id)
+        val primaryEndpoint = device.primaryEndpoint
+        clustersHelper.setOnOffDeviceStateOnOffCluster(
+            nodeId.toLong(),
+            isOn,
+            primaryEndpoint.id,
+        )
         devicesRepository.upsertEndpointState(
             nodeId,
-            endpoint.id,
+            primaryEndpoint.id,
             true,
             isOn,
-            endpoint.level,
-            endpoint.colorTemperature,
+            primaryEndpoint.level,
+            primaryEndpoint.colorTemperature,
         )
       }
           .onFailure {
@@ -186,13 +251,12 @@ constructor(
     }
   }
 
-  fun startMonitoringStateChanges() {
+  private fun startMonitoringStateChanges() {
     viewModelScope.launch {
       fabricRepository.getDevices().forEach { basicDevice ->
         val device =
             runCatching { devicesRepository.getDevice(basicDevice.id) }.getOrNull()
                 ?: return@forEach
-        val endpoint = device.primaryEndpoint ?: return@forEach
         runCatching {
           subscriptionHelper.awaitSubscribeToPeriodicUpdates(
               chipClient.getConnectedDevicePointer(device.id),
@@ -218,7 +282,7 @@ constructor(
                 }
 
                 override fun onReport(nodeState: NodeState) {
-                  updateEndpointFromReport(device, endpoint, nodeState)
+                  updateEndpointFromReport(device, device.primaryEndpoint, nodeState)
                 }
               },
           )
@@ -228,7 +292,7 @@ constructor(
     }
   }
 
-  fun stopMonitoringStateChanges() {
+  private fun stopMonitoringStateChanges() {
     viewModelScope.launch {
       fabricRepository.getDevices().forEach { device ->
         runCatching {
@@ -265,19 +329,20 @@ constructor(
     }
   }
 
-  fun showMsgDialog(title: String, msg: String?) {
-    _msgDialogInfo.value = DialogInfo(title = title, message = msg)
-  }
-
   fun showMsgDialog(@StringRes titleRes: Int, msg: String?) {
     _msgDialogInfo.value = DialogInfo(titleRes = titleRes, message = msg)
   }
 
-  fun dismissMsgDialog() {
-    _msgDialogInfo.value = null
+  fun showMsgDialog(
+      @StringRes titleRes: Int,
+      @StringRes messageRes: Int,
+      messageArgs: List<Any> = emptyList(),
+  ) {
+    _msgDialogInfo.value =
+        DialogInfo(titleRes = titleRes, messageRes = messageRes, messageArgs = messageArgs)
   }
 
-  fun setMultiadminCommissioningTaskStatus(taskStatus: TaskStatus) {
-    _multiadminCommissionDeviceTaskStatus.value = taskStatus
+  fun dismissMsgDialog() {
+    _msgDialogInfo.value = null
   }
 }

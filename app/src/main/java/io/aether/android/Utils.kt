@@ -9,8 +9,6 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.protobuf.Timestamp
-import io.aether.android.matter.DEVICES
-import io.aether.android.matter.DeviceTypeId
 import java.io.File
 import java.lang.Long.max
 import java.security.SecureRandom
@@ -49,10 +47,6 @@ sealed class TaskStatus {
    * @param statusMessage a message to be displayed in the UI
    */
   class Completed(val statusMessage: String) : TaskStatus()
-}
-
-fun getDeviceTypeDisplayStringId(deviceTypeId: DeviceTypeId): String {
-  return DEVICES[deviceTypeId] ?: "Unknown (${deviceTypeId})"
 }
 
 /** Converts the "isOn" boolean into a proper string for the UI. */

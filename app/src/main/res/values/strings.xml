@@ -18,11 +18,14 @@ SPDX-License-Identifier: Apache-2.0
     <string name="menu_item_matter_gps_notification">Matter Discovery Notification</string>
     <string name="menu_item_about">About this app</string>
 
-    <!-- GPS Matter Discovery Notification -->
+    <!-- Google Play Services -->
     <string name="gps_matter_discovery_notification_alert">
         Changing the setting for Google Play Services Matter discovery notifications
         will take effect the next time the app enters the foreground.
     </string>
+    <string name="gps_update_title">Update required</string>
+    <string name="gps_update_message">Please update Google Play services to continue.</string>
+    <string name="gps_update_button">Update</string>
 
     <!-- About -->
     <string name="about_app">
@@ -41,8 +44,19 @@ SPDX-License-Identifier: Apache-2.0
     <!-- Device Types -->
     <string name="device_type_unknown">Unknown</string>
 
-    <string name="empty_dashboard_title">No devices yet</string>
-    <string name="empty_dashboard_subtitle">Start by adding your first Matter device</string>
+    <!-- Home Screen -->
+    <string name="home_empty_dashboard_title">No devices yet</string>
+    <string name="home_empty_dashboard_subtitle">Start by adding your first Matter device</string>
+    <string name="home_device_add_button">Add</string>
+    <string name="home_device_add_intent_sender_failed_title">Failed to get the IntentSender</string>
+    <string name="home_device_add_commissioning_failed_title">Commissioning the device failed</string>
+    <string name="home_device_add_commissioning_failed_message">Result code: %1$d</string>
+    <string name="home_device_add_commissioning_window_expiration_title">Commissioning Window Expiration</string>
+    <string name="home_device_add_commissioning_window_expiration_message">
+        The commissioning window will expire in %1$d seconds, not long enough to complete the commissioning.
+        In the future, please select the target commissioning application faster to avoid this situation.
+    </string>
+
     <string name="brightness">Brightness</string>
     <string name="color_temperature">Color Temperature</string>
 
@@ -59,7 +73,10 @@ SPDX-License-Identifier: Apache-2.0
     <string name="error_introspecting_device">Error introspecting the device</string>
     <string name="controllers_offline">The device is offline and its controllers cannot be retrieved.</string>
     <string name="unlinking_device_title">Unlinking the device</string>
-    <string name="unlinking_device_body">Calling the device to remove this controller\'s fabric. If the device is offline, this will fail when the call times out, and this may take a while.\n\nUnlinking the device\u2026</string>
+    <string name="unlinking_device_body">
+        Calling the device to remove this controller\'s fabric. If the device is offline, this will
+        fail when the call times out, and this may take a while.\n\nUnlinking the device\u2026
+    </string>
 
     <!-- Matter Beacon -->
     <string name="beacon_detail_text" tools:ignore="PluralsCandidate">VID: 0x%04X PID: 0x%04X Disc: 0x%03X</string>

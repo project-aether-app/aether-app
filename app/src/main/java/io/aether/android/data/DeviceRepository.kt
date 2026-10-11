@@ -3,11 +3,9 @@
 
 package io.aether.android.data
 
-import com.google.protobuf.Timestamp
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
 import io.aether.android.data.models.Endpoint
-import io.aether.android.getTimestampForNow
-import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
@@ -25,7 +23,6 @@ class DeviceRepository @Inject constructor(private val fabricRepository: FabricR
   data class EndpointStateSnapshot(
       val nodeId: NodeId,
       val endpointId: EndpointId,
-      val dateCaptured: Timestamp,
       val online: Boolean,
       val on: Boolean,
       val level: Int,
@@ -36,7 +33,7 @@ class DeviceRepository @Inject constructor(private val fabricRepository: FabricR
   val lastUpdatedEndpointState = _lastUpdatedEndpointState
 
   fun deviceFlow(nodeId: NodeId): Flow<Device> =
-      fabricRepository.detailedDevicesFlow
+      fabricRepository.devicesFlow
           .map { devices -> devices.firstOrNull { it.id == nodeId } }
           .filterNotNull()
 
@@ -81,8 +78,8 @@ class DeviceRepository @Inject constructor(private val fabricRepository: FabricR
           nodeLabel,
       )
 
-  suspend fun updateDeviceType(nodeId: NodeId, deviceTypeId: DeviceTypeId) =
-      fabricRepository.updateDeviceType(nodeId, deviceTypeId)
+  suspend fun updateDeviceTypes(nodeId: NodeId, deviceTypes: List<DeviceType>) =
+      fabricRepository.updateDeviceTypes(nodeId, deviceTypes)
 
   suspend fun removeEndpointsFromNode(nodeId: NodeId, endpointIds: Set<EndpointId>) =
       fabricRepository.removeEndpoints(nodeId, endpointIds)
@@ -114,7 +111,6 @@ class DeviceRepository @Inject constructor(private val fabricRepository: FabricR
         EndpointStateSnapshot(
             nodeId,
             endpointId,
-            getTimestampForNow(),
             isOnline,
             isOn,
             level,

@@ -20,7 +20,7 @@ import io.aether.android.chip.ClustersHelper
 import io.aether.android.data.DeviceRepository
 import io.aether.android.data.FabricRepository
 import io.aether.android.data.models.Device
-import io.aether.android.matter.DeviceTypeId
+import io.aether.android.data.models.DeviceType
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
@@ -278,11 +278,11 @@ constructor(
   // -----------------------------------------------------------------------------------------------
   // Change device type
 
-  fun changeDeviceType(nodeId: NodeId, deviceTypeId: DeviceTypeId) {
-    Timber.d("Changing device type nodeId=$nodeId deviceTypeId=$deviceTypeId")
+  fun changeDeviceType(nodeId: NodeId, deviceType: DeviceType) {
+    Timber.d("Changing device type nodeId=$nodeId deviceType=${deviceType}")
     viewModelScope.launch {
       try {
-        devicesRepository.updateDeviceType(nodeId, deviceTypeId)
+        devicesRepository.updateDeviceTypes(nodeId, listOf(deviceType))
         loadDevice(nodeId)
       } catch (e: Exception) {
         Timber.e(e, "changeDeviceType failed")

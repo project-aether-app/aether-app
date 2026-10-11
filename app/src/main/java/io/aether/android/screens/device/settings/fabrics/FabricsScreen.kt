@@ -48,7 +48,7 @@ import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.spacing
 
 @Composable
-fun FabricsRoute(
+internal fun FabricsRoute(
     nodeId: NodeId,
     onBackClick: () -> Unit,
     viewModel: FabricsViewModel = hiltViewModel(),

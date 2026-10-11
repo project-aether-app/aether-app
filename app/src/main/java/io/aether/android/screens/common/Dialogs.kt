@@ -19,6 +19,7 @@ data class DialogInfo(
     @field:StringRes val titleRes: Int? = null,
     val title: String? = null,
     @field:StringRes val messageRes: Int? = null,
+    val messageArgs: List<Any> = emptyList(),
     val message: String? = null,
     val showConfirmButton: Boolean = true,
 )
@@ -26,7 +27,9 @@ data class DialogInfo(
 @Composable
 fun MsgAlertDialog(dialogInfo: DialogInfo, onDismissMsgAlertDialog: () -> Unit) {
   val resolvedTitle = dialogInfo.titleRes?.let { stringResource(it) } ?: dialogInfo.title
-  val resolvedMessage = dialogInfo.messageRes?.let { stringResource(it) } ?: dialogInfo.message
+  val resolvedMessage =
+      dialogInfo.messageRes?.let { stringResource(it, *dialogInfo.messageArgs.toTypedArray()) }
+          ?: dialogInfo.message
   AlertDialog(
       title = {
         if (!resolvedTitle.isNullOrEmpty()) {

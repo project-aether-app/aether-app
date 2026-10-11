@@ -7,6 +7,7 @@ import app.cash.paparazzi.Paparazzi
 import io.aether.android.R
 import io.aether.android.chip.BasicInformationAttributes
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
 import io.aether.android.data.models.Endpoint
 import io.aether.android.data.models.Product
 import io.aether.android.data.models.Vendor
@@ -39,7 +40,7 @@ class DeviceSettingsPreviewTest {
               listOf(
                   Endpoint(
                       id = io.aether.android.matter.EndpointId(1u),
-                      deviceTypeId = Devices.OnOffPluginUnit.ID,
+                      deviceTypes = listOf(Devices.OnOffPluginUnit.ID).map { DeviceType(id = it) },
                   ),
               ),
       )

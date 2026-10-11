@@ -22,9 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.aether.android.R
-import io.aether.android.getDeviceTypeDisplayStringId
+import io.aether.android.data.models.DeviceType
 import io.aether.android.matter.DEVICES
-import io.aether.android.matter.DeviceTypeId
 
 @Composable
 internal fun ChangeDeviceNameDialog(
@@ -61,8 +60,8 @@ internal fun ChangeDeviceNameDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChangeDeviceTypeDialog(
-    currentType: DeviceTypeId,
-    onConfirm: (DeviceTypeId) -> Unit,
+    currentType: DeviceType,
+    onConfirm: (DeviceType) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
   var expanded by remember { mutableStateOf(false) }
@@ -75,7 +74,7 @@ internal fun ChangeDeviceTypeDialog(
             onExpandedChange = { expanded = it },
         ) {
           OutlinedTextField(
-              value = getDeviceTypeDisplayStringId(selectedType),
+              value = selectedType.name,
               onValueChange = {},
               readOnly = true,
               trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -93,7 +92,7 @@ internal fun ChangeDeviceTypeDialog(
                   DropdownMenuItem(
                       text = { Text(typeName) },
                       onClick = {
-                        selectedType = typeId
+                        selectedType = DeviceType(typeId)
                         expanded = false
                       },
                   )

@@ -40,9 +40,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.aether.android.R
+import io.aether.android.data.models.DeviceType
 import io.aether.android.formatTimestamp
-import io.aether.android.getDeviceTypeDisplayStringId
-import io.aether.android.matter.DeviceTypeId
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
@@ -59,7 +58,7 @@ import io.aether.android.screens.thread.getActivity
 import io.aether.android.spacing
 
 @Composable
-fun DeviceSettingsRoute(
+internal fun DeviceSettingsRoute(
     navigateToHome: () -> Unit,
     navigateToDeviceExplorer: (nodeId: NodeId) -> Unit,
     navigateToDeviceFabrics: (nodeId: NodeId) -> Unit,
@@ -146,7 +145,7 @@ fun DeviceSettingsScreen(
     onBackClick: () -> Unit,
     onDismissMsgDialog: () -> Unit,
     onDeviceNameChange: (String) -> Unit,
-    onDeviceTypeChange: (DeviceTypeId) -> Unit,
+    onDeviceTypeChange: (DeviceType) -> Unit,
     onManageFabricsClick: () -> Unit,
     onDataModelExplorerClick: () -> Unit,
     onDiagnosticsClick: () -> Unit,
@@ -211,7 +210,7 @@ private fun DeviceSettings(
     uiState: DeviceSettingsUiState,
     onDismissMsgDialog: () -> Unit,
     onDeviceNameChange: (String) -> Unit,
-    onDeviceTypeChange: (DeviceTypeId) -> Unit,
+    onDeviceTypeChange: (DeviceType) -> Unit,
     onManageFabricsClick: () -> Unit,
     onDataModelExplorerClick: () -> Unit,
     onDiagnosticsClick: () -> Unit,
@@ -248,7 +247,7 @@ private fun DeviceSettings(
         )
     showTypeDialog ->
         ChangeDeviceTypeDialog(
-            currentType = device.primaryEndpoint?.deviceTypeId ?: DeviceTypeId(0u),
+            currentType = device.deviceType,
             onConfirm = { type ->
               onDeviceTypeChange(type)
               showTypeDialog = false
@@ -337,10 +336,7 @@ private fun DeviceSettings(
       )
       SettingsClickableRow(
           label = stringResource(R.string.device_settings_general_type),
-          value =
-              getDeviceTypeDisplayStringId(
-                  device.primaryEndpoint?.deviceTypeId ?: DeviceTypeId(0u),
-              ),
+          value = device.deviceType.name,
           onClick = { showTypeDialog = true },
       )
     }

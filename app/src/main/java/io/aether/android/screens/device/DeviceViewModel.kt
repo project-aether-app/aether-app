@@ -17,14 +17,13 @@ import io.aether.android.chip.SubscriptionHelper
 import io.aether.android.chip.isCommunicationTimeoutError
 import io.aether.android.data.DeviceRepository
 import io.aether.android.data.models.Device
+import io.aether.android.data.models.DeviceType
 import io.aether.android.data.models.Endpoint
 import io.aether.android.matter.Clusters
 import io.aether.android.matter.EndpointId
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.DialogInfo
 import io.aether.android.screens.shared.SetDeviceNameUseCase
-import io.aether.android.supportsColorTemperature
-import io.aether.android.supportsLevelControl
 import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +36,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class DeviceUiState(
+    // Lifecycle Flags
     val isFirstTimeLoading: Boolean = true,
     val isBackgroundRefreshing: Boolean = false,
     @field:StringRes val errorMessageRes: Int? = null,
+
+    // Core Screen Data
     val device: Device? = null,
     val lastUpdatedEndpointState: DeviceRepository.EndpointStateSnapshot? = null,
     val msgDialogInfo: DialogInfo? = null,
@@ -103,7 +105,7 @@ constructor(
         Endpoint(
             id = info.endpointId,
             label = current.name,
-            deviceTypeId = info.types.firstOrNull() ?: io.aether.android.matter.DeviceTypeId(0u),
+            deviceTypes = info.types.map { DeviceType(it) },
             supportsLevelControl = info.serverClusters.contains(Clusters.LevelControl.ID),
             supportsColorTemperature = supportsColorTemperature,
         )
@@ -145,14 +147,14 @@ constructor(
       }
 
   fun updateDeviceStateLevel(endpoint: Endpoint, level: Int) {
-    if (!supportsLevelControl(endpoint)) return
+    if (!endpoint.hasLevelControlSupport) return
     updateEndpoint(endpoint, endpoint.isOn, level, endpoint.colorTemperature) { nodeId ->
       clustersHelper.setLevelStateLevelControlCluster(nodeId.toLong(), level, endpoint.id)
     }
   }
 
   fun updateDeviceStateColorTemperature(endpoint: Endpoint, colorTemperature: Int) {
-    if (!supportsColorTemperature(endpoint)) return
+    if (!endpoint.hasColorTemperatureSupport) return
     updateEndpoint(endpoint, endpoint.isOn, endpoint.level, colorTemperature) { nodeId ->
       clustersHelper.setColorTemperatureColorControlCluster(
           nodeId.toLong(),
@@ -261,7 +263,7 @@ constructor(
             Clusters.OnOff.Attributes.OnOff.ID.toLong(),
         ) as Boolean? ?: return
     val level =
-        if (supportsLevelControl(endpoint)) {
+        if (endpoint.hasLevelControlSupport) {
           subscriptionHelper.extractAttribute(
               nodeState,
               endpoint.id,
@@ -270,7 +272,7 @@ constructor(
           ) as Int? ?: return
         } else 0
     val colorTemperature =
-        if (supportsColorTemperature(endpoint)) {
+        if (endpoint.hasColorTemperatureSupport) {
           subscriptionHelper.extractAttribute(
               nodeState,
               endpoint.id,
@@ -303,14 +305,14 @@ constructor(
                   endpoint.id,
               )
           val level =
-              if (supportsLevelControl(endpoint)) {
+              if (endpoint.hasLevelControlSupport) {
                 clustersHelper.getDeviceStateLevelControlCluster(
                     current.id.toLong(),
                     endpoint.id,
                 )
               } else 0
           val colorTemperature =
-              if (supportsColorTemperature(endpoint)) {
+              if (endpoint.hasColorTemperatureSupport) {
                 clustersHelper.getColorTemperatureColorControlCluster(
                     current.id.toLong(),
                     endpoint.id,

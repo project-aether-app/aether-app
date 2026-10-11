@@ -35,7 +35,7 @@ import io.aether.android.screens.common.LoadingIndicator
 import io.aether.android.screens.common.MsgAlertDialog
 
 @Composable
-fun ExplorerRoute(
+internal fun ExplorerRoute(
     onBackClick: () -> Unit,
     nodeId: NodeId,
     viewModel: ExplorerViewModel = hiltViewModel(),
