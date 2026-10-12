@@ -27,8 +27,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 
-class GmsDeviceCommissioner @Inject constructor(@param:ApplicationContext private val context: Context) :
-  DeviceCommissioner {
+class GmsDeviceCommissioner
+@Inject
+constructor(@param:ApplicationContext private val context: Context) : DeviceCommissioner {
 
   override suspend fun createIntentSender(): IntentSender =
     request(CommissioningRequest.builder().setCommissioningService(service()).build())

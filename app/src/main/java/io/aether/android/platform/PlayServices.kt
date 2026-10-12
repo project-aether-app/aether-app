@@ -19,8 +19,9 @@ interface PlayServices {
   fun openInStore()
 }
 
-class AndroidPlayServices @Inject constructor(@param:ApplicationContext private val context: Context) :
-  PlayServices {
+class AndroidPlayServices
+@Inject
+constructor(@param:ApplicationContext private val context: Context) : PlayServices {
 
   override fun isUpdateRequired(): Boolean {
     val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
