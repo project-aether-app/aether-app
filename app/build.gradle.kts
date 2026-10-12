@@ -20,6 +20,8 @@ plugins {
   alias(libs.plugins.paparazzi)
 }
 
+ktfmt { googleStyle() }
+
 /**
  * Locate (and possibly download) a JDK used to build your kotlin source code. This also acts as a
  * default for sourceCompatibility, targetCompatibility and jvmTarget. Note that this does not
