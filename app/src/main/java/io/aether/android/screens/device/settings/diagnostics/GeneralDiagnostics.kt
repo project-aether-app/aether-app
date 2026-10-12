@@ -38,49 +38,47 @@ fun GeneralDiagnostics(data: GeneralDiagnosticsData) {
       }
     }
     activeHardwareFaults
-        .takeIf { it.isNotEmpty() }
-        ?.let {
-          DiagnosticsInfoRow(
-              stringResource(R.string.device_diagnostics_label_active_hardware_faults),
-          ) {
-            Text(it)
-          }
+      .takeIf { it.isNotEmpty() }
+      ?.let {
+        DiagnosticsInfoRow(
+          stringResource(R.string.device_diagnostics_label_active_hardware_faults),
+        ) {
+          Text(it)
         }
+      }
     activeRadioFaults
-        .takeIf { it.isNotEmpty() }
-        ?.let {
-          DiagnosticsInfoRow(
-              stringResource(R.string.device_diagnostics_label_active_radio_faults),
-          ) {
-            Text(it)
-          }
+      .takeIf { it.isNotEmpty() }
+      ?.let {
+        DiagnosticsInfoRow(stringResource(R.string.device_diagnostics_label_active_radio_faults)) {
+          Text(it)
         }
+      }
     activeNetworkFaults
-        .takeIf { it.isNotEmpty() }
-        ?.let {
-          DiagnosticsInfoRow(
-              stringResource(R.string.device_diagnostics_label_active_network_faults),
-          ) {
-            Text(it)
-          }
+      .takeIf { it.isNotEmpty() }
+      ?.let {
+        DiagnosticsInfoRow(
+          stringResource(R.string.device_diagnostics_label_active_network_faults),
+        ) {
+          Text(it)
         }
+      }
   }
   DiagnosticsSection(stringResource(R.string.device_diagnostics_section_interfaces)) {
     data.networkInterfaces.forEach {
       val status =
-          if (it.isOperational) stringResource(R.string.device_diagnostics_network_up)
-          else stringResource(R.string.device_diagnostics_network_down)
+        if (it.isOperational) stringResource(R.string.device_diagnostics_network_up)
+        else stringResource(R.string.device_diagnostics_network_down)
       val hardwareAddress = it.hardwareAddress.joinToString(separator = ":") { "%02X".format(it) }
       val ipv4Addresses = it.ipv4Addresses.mapNotNull { it.hostAddress }.joinToString(SEPARATOR)
       val ipv6Addresses = it.ipv6Addresses.mapNotNull { it.hostAddress }.joinToString(SEPARATOR)
       DiagnosticsInfoRow("${it.name} (${it.type.name}) [$status]") {
         Text(stringResource(R.string.device_diagnostics_interface_hw_address, hardwareAddress))
         ipv4Addresses
-            .takeIf { it.isNotEmpty() }
-            ?.let { Text(stringResource(R.string.device_diagnostics_interface_ipv4_address, it)) }
+          .takeIf { it.isNotEmpty() }
+          ?.let { Text(stringResource(R.string.device_diagnostics_interface_ipv4_address, it)) }
         ipv6Addresses
-            .takeIf { it.isNotEmpty() }
-            ?.let { Text(stringResource(R.string.device_diagnostics_interface_ipv6_address, it)) }
+          .takeIf { it.isNotEmpty() }
+          ?.let { Text(stringResource(R.string.device_diagnostics_interface_ipv6_address, it)) }
       }
     }
   }

@@ -25,11 +25,11 @@ val ColorScheme.success: Color
   @Composable get() = if (isSystemInDarkTheme()) Color(0xFF81C784) else Color(0xFF4CAF50)
 
 data class Spacing(
-    val paddingNormal: Dp = 16.dp,
-    val paddingSmall: Dp = 8.dp,
-    val paddingTiny: Dp = 4.dp,
-    val paddingSurfaceContent: Dp = 12.dp,
-    val roundedCorner: Dp = 12.dp,
+  val paddingNormal: Dp = 16.dp,
+  val paddingSmall: Dp = 8.dp,
+  val paddingTiny: Dp = 4.dp,
+  val paddingSurfaceContent: Dp = 12.dp,
+  val roundedCorner: Dp = 12.dp,
 )
 
 val LocalSpacing = staticCompositionLocalOf { Spacing() }
@@ -39,19 +39,19 @@ val MaterialTheme.spacing: Spacing
 
 @Composable
 fun AetherTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  content: @Composable () -> Unit,
 ) {
   val context = LocalContext.current
   val colorScheme =
-      remember(darkTheme, context) {
-        when {
-          Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
-              if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-          darkTheme -> darkColorScheme()
-          else -> lightColorScheme()
-        }
+    remember(darkTheme, context) {
+      when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+          if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        darkTheme -> darkColorScheme()
+        else -> lightColorScheme()
       }
+    }
   CompositionLocalProvider(LocalSpacing provides Spacing()) {
     MaterialTheme(colorScheme = colorScheme, content = content)
   }

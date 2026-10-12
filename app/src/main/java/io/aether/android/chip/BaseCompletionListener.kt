@@ -48,13 +48,13 @@ abstract class BaseCompletionListener : ChipDeviceController.CompletionListener 
   }
 
   override fun onReadCommissioningInfo(
-      vendorId: Int,
-      productId: Int,
-      wifiEndpointId: Int,
-      threadEndpointId: Int,
+    vendorId: Int,
+    productId: Int,
+    wifiEndpointId: Int,
+    threadEndpointId: Int,
   ) {
     Timber.d(
-        "Commissioning info vendorId=$vendorId productId=$productId wifiEndpointId=$wifiEndpointId threadEndpointId=$threadEndpointId",
+      "Commissioning info vendorId=$vendorId productId=$productId wifiEndpointId=$wifiEndpointId threadEndpointId=$threadEndpointId",
     )
   }
 

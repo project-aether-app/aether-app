@@ -29,4 +29,4 @@ object UserPreferencesSerializer : Serializer<UserPreferences> {
 }
 
 val Context.userPreferencesDataStore: DataStore<UserPreferences> by
-    dataStore(fileName = "user_prefs_store.proto", serializer = UserPreferencesSerializer)
+  dataStore(fileName = "user_prefs_store.proto", serializer = UserPreferencesSerializer)

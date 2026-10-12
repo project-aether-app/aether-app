@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LoadingIndicator(message: String, modifier: Modifier = Modifier) {
   Box(
-      modifier = modifier.fillMaxSize(),
-      contentAlignment = Alignment.Center,
+    modifier = modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       CircularProgressIndicator()
       Text(text = message, style = MaterialTheme.typography.bodyMedium)

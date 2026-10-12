@@ -27,17 +27,17 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class ThreadUiState(
-    // Lifecycle Flags
-    val isFirstTimeLoading: Boolean = false,
-    val isBackgroundRefreshing: Boolean = false,
-    @field:StringRes val errorMessageRes: Int? = null,
+  // Lifecycle Flags
+  val isFirstTimeLoading: Boolean = false,
+  val isBackgroundRefreshing: Boolean = false,
+  @field:StringRes val errorMessageRes: Int? = null,
 
-    // Core Screen Data
-    val threadCredentialsInfo: ThreadCredentialsInfo = ThreadCredentialsInfo(),
-    val threadClientIntentSender: IntentSender? = null,
+  // Core Screen Data
+  val threadCredentialsInfo: ThreadCredentialsInfo = ThreadCredentialsInfo(),
+  val threadClientIntentSender: IntentSender? = null,
 
-    // UI Overlay / Dialog States
-    val currentActionInfo: ActionDialogInfo = ActionDialogInfo(),
+  // UI Overlay / Dialog States
+  val currentActionInfo: ActionDialogInfo = ActionDialogInfo(),
 )
 
 /** The ViewModel for the Thread Fragment. See [ThreadFragment] for additional information. */
@@ -63,35 +63,35 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
   }
 
   private fun setActionDialogInfoWithBorderRoutersList(
-      actionType: ActionType,
-      actionState: ActionState,
-      borderRoutersList: List<NsdServiceInfo>,
+    actionType: ActionType,
+    actionState: ActionState,
+    borderRoutersList: List<NsdServiceInfo>,
   ) {
     _uiState.update {
       it.copy(
-          currentActionInfo =
-              it.currentActionInfo.copy(
-                  type = actionType,
-                  state = actionState,
-                  borderRoutersList = borderRoutersList,
-              ),
+        currentActionInfo =
+          it.currentActionInfo.copy(
+            type = actionType,
+            state = actionState,
+            borderRoutersList = borderRoutersList,
+          ),
       )
     }
   }
 
   private fun setActionDialogInfoWithQrCodeBitmap(
-      actionType: ActionType,
-      actionState: ActionState,
-      qrCodeBitmap: Bitmap,
+    actionType: ActionType,
+    actionState: ActionState,
+    qrCodeBitmap: Bitmap,
   ) {
     _uiState.update {
       it.copy(
-          currentActionInfo =
-              it.currentActionInfo.copy(
-                  type = actionType,
-                  state = actionState,
-                  qrCodeBitmap = qrCodeBitmap,
-              ),
+        currentActionInfo =
+          it.currentActionInfo.copy(
+            type = actionType,
+            state = actionState,
+            qrCodeBitmap = qrCodeBitmap,
+          ),
       )
     }
   }
@@ -99,12 +99,12 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
   fun setActionDialogInfoWithError(actionType: ActionType, error: String) {
     _uiState.update {
       it.copy(
-          currentActionInfo =
-              it.currentActionInfo.copy(
-                  type = actionType,
-                  state = ActionState.Error,
-                  data = error,
-              ),
+        currentActionInfo =
+          it.currentActionInfo.copy(
+            type = actionType,
+            state = ActionState.Error,
+            data = error,
+          ),
       )
     }
   }
@@ -112,24 +112,24 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
   fun setActionDialogInfoWithMessage(actionType: ActionType, message: String) {
     _uiState.update {
       it.copy(
-          currentActionInfo =
-              it.currentActionInfo.copy(
-                  type = actionType,
-                  state = ActionState.Completed,
-                  data = message,
-              ),
+        currentActionInfo =
+          it.currentActionInfo.copy(
+            type = actionType,
+            state = ActionState.Completed,
+            data = message,
+          ),
       )
     }
   }
 
   fun setThreadCredentialsInfo(
-      selectedThreadBorderRouterId: ByteArray?,
-      threadNetworkCredentials: ThreadNetworkCredentials?,
+    selectedThreadBorderRouterId: ByteArray?,
+    threadNetworkCredentials: ThreadNetworkCredentials?,
   ) {
     _uiState.update {
       it.copy(
-          threadCredentialsInfo =
-              ThreadCredentialsInfo(selectedThreadBorderRouterId, threadNetworkCredentials),
+        threadCredentialsInfo =
+          ThreadCredentialsInfo(selectedThreadBorderRouterId, threadNetworkCredentials),
       )
     }
   }
@@ -155,15 +155,15 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
 
   /** Gets the credentials of a sample RPi running a Thread Border Router */
   fun getOTBRActiveThreadCredentials(
-      actionRequest: ActionRequest,
-      borderRoutersList: List<NsdServiceInfo>,
+    actionRequest: ActionRequest,
+    borderRoutersList: List<NsdServiceInfo>,
   ) {
     if (actionRequest.task == ActionTask.Init) {
       // We get the list of OTBRs and return it to the UI.
       setActionDialogInfoWithBorderRoutersList(
-          actionRequest.type,
-          ActionState.BorderRoutersProvided,
-          borderRoutersList,
+        actionRequest.type,
+        ActionState.BorderRoutersProvided,
+        borderRoutersList,
       )
     } else if (actionRequest.task == ActionTask.Process) {
       // Update UI with processing state for the action
@@ -172,7 +172,7 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
       viewModelScope.launch {
         try {
           val threadNetworkCredentials =
-              getOtbrActiveThreadCredentialsProcess(actionRequest.serviceInfo!!)
+            getOtbrActiveThreadCredentialsProcess(actionRequest.serviceInfo!!)
           if (threadNetworkCredentials == null) {
             setActionDialogInfo(actionRequest.type, ActionState.Error)
           } else {
@@ -189,18 +189,18 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
 
   /** Gets the credentials of a sample RPi running a Thread Border Router. */
   private suspend fun getOtbrActiveThreadCredentialsProcess(
-      serviceInfo: NsdServiceInfo,
+    serviceInfo: NsdServiceInfo,
   ): ThreadNetworkCredentials? {
     val ipAddress = serviceInfoHostAddress(serviceInfo)
     val response =
-        OtbrHttpClient.createJsonHttpRequest(
-            URL("http://$ipAddress:$otbrPort$otbrDatasetActiveEndpoint"),
-            OtbrHttpClient.Verbs.GET,
-            acceptMimeType = "text/plain",
-        )
+      OtbrHttpClient.createJsonHttpRequest(
+        URL("http://$ipAddress:$otbrPort$otbrDatasetActiveEndpoint"),
+        OtbrHttpClient.Verbs.GET,
+        acceptMimeType = "text/plain",
+      )
     return if (response.first.responseCode in OtbrHttpClient.okResponses) {
       ThreadNetworkCredentials.fromActiveOperationalDataset(
-          BaseEncoding.base16().decode(response.second.uppercase()),
+        BaseEncoding.base16().decode(response.second.uppercase()),
       )
     } else {
       null
@@ -212,8 +212,8 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
    * Router.
    */
   fun setOTBRPendingThreadCredentials(
-      actionRequest: ActionRequest,
-      borderRoutersList: List<NsdServiceInfo>,
+    actionRequest: ActionRequest,
+    borderRoutersList: List<NsdServiceInfo>,
   ) {
     val threadCredentialsInfo = uiState.value.threadCredentialsInfo
     if (threadCredentialsInfo.credentials == null) {
@@ -222,9 +222,9 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
     } else if (actionRequest.task == ActionTask.Init) {
       // We get the list of OTBRs and return it to the UI.
       setActionDialogInfoWithBorderRoutersList(
-          actionRequest.type,
-          ActionState.BorderRoutersProvided,
-          borderRoutersList,
+        actionRequest.type,
+        ActionState.BorderRoutersProvided,
+        borderRoutersList,
       )
     } else if (actionRequest.task == ActionTask.Process) {
       // Update UI with processing state for the action
@@ -234,19 +234,19 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
         try {
           val ipAddress = serviceInfoHostAddress(actionRequest.serviceInfo!!)
           val jsonQuery =
-              OtbrHttpClient.createJsonCredentialsObject(threadCredentialsInfo.credentials)
+            OtbrHttpClient.createJsonCredentialsObject(threadCredentialsInfo.credentials)
           val response =
-              OtbrHttpClient.createJsonHttpRequest(
-                  URL("http://$ipAddress:$otbrPort$otbrDatasetPendingEndpoint"),
-                  OtbrHttpClient.Verbs.PUT,
-                  jsonQuery.toString(),
-              )
+            OtbrHttpClient.createJsonHttpRequest(
+              URL("http://$ipAddress:$otbrPort$otbrDatasetPendingEndpoint"),
+              OtbrHttpClient.Verbs.PUT,
+              jsonQuery.toString(),
+            )
           if (response.first.responseCode in OtbrHttpClient.okResponses) {
             setActionDialogInfoWithMessage(actionRequest.type, "Success!")
           } else {
             setActionDialogInfoWithError(
-                actionRequest.type,
-                "Error: responseCode [${response.first.responseCode}",
+              actionRequest.type,
+              "Error: responseCode [${response.first.responseCode}",
             )
           }
         } catch (e: Exception) {
@@ -266,9 +266,8 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
       val threadCredentialsInfo = uiState.value.threadCredentialsInfo
       if (threadCredentialsInfo.credentials != null) {
         val qrCodeContent =
-            threadCredentialsQRCodePrefix +
-                BaseEncoding.base16()
-                    .encode(threadCredentialsInfo.credentials.activeOperationalDataset)
+          threadCredentialsQRCodePrefix +
+            BaseEncoding.base16().encode(threadCredentialsInfo.credentials.activeOperationalDataset)
         Timber.d("Showing QRCode of $qrCodeContent")
         val mMatrix = mWriter.encode(qrCodeContent, BarcodeFormat.QR_CODE, 600, 600)
         val mEncoder = BarcodeEncoder()
@@ -303,8 +302,8 @@ class ThreadViewModel @Inject constructor() : ViewModel() {
 
   fun getBase16ThreadCredentials(): String {
     val credentials =
-        uiState.value.threadCredentialsInfo.credentials
-            ?: throw IllegalStateException("Credentials are null")
+      uiState.value.threadCredentialsInfo.credentials
+        ?: throw IllegalStateException("Credentials are null")
     return BaseEncoding.base16().encode(credentials.activeOperationalDataset)
   }
 }

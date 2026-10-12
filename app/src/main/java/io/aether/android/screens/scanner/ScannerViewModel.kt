@@ -18,13 +18,13 @@ import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 
 data class ScannerUiState(
-    // Lifecycle Flags
-    val isFirstTimeLoading: Boolean = false,
-    val isBackgroundRefreshing: Boolean = false,
-    @field:StringRes val errorMessageRes: Int? = null,
+  // Lifecycle Flags
+  val isFirstTimeLoading: Boolean = false,
+  val isBackgroundRefreshing: Boolean = false,
+  @field:StringRes val errorMessageRes: Int? = null,
 
-    // Core Screen Data
-    val beacons: List<MatterBeacon> = emptyList(),
+  // Core Screen Data
+  val beacons: List<MatterBeacon> = emptyList(),
 )
 
 /**
@@ -41,16 +41,16 @@ constructor(producers: Set<@JvmSuppressWildcards MatterBeaconProducer>) : ViewMo
    * view.
    */
   private val beaconsFlow: Flow<Set<MatterBeacon>> =
-      merge(*producers.map { it.getBeaconsFlow() }.toTypedArray())
-          .runningFold(setOf<MatterBeacon>()) { set, item -> set + item }
-          .stateIn(
-              scope = viewModelScope,
-              started = WhileSubscribed(2000),
-              initialValue = emptySet(),
-          )
+    merge(*producers.map { it.getBeaconsFlow() }.toTypedArray())
+      .runningFold(setOf<MatterBeacon>()) { set, item -> set + item }
+      .stateIn(
+        scope = viewModelScope,
+        started = WhileSubscribed(2000),
+        initialValue = emptySet(),
+      )
 
   val uiState: StateFlow<ScannerUiState> =
-      beaconsFlow
-          .map { ScannerUiState(beacons = it.toList()) }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), ScannerUiState())
+    beaconsFlow
+      .map { ScannerUiState(beacons = it.toList()) }
+      .stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), ScannerUiState())
 }

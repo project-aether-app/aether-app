@@ -46,6 +46,14 @@ screenshot tests with:
 ./gradlew :app:recordPaparazziDebug
 ```
 
+### Update Catalog
+
+To update the version catalog, run:
+
+```bash
+./gradlew versionCatalogUpdate
+```
+
 [ktfmt]: https://github.com/Kotlin/ktfmt
 [Paparazzi]: https://github.com/cashapp/paparazzi
 

@@ -17,20 +17,20 @@ import io.aether.android.screens.common.LabeledContent
 
 @Composable
 internal fun DiagnosticsSection(title: String, content: @Composable ColumnScope.() -> Unit) =
-    GroupBox(title = title, content = content)
+  GroupBox(title = title, content = content)
 
 @Composable
 internal fun DiagnosticsInfoRow(
-    label: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+  label: String,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) =
-    LabeledContent(
-        label = label,
-        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
-    ) {
-      CompositionLocalProvider(
-          LocalTextStyle provides MaterialTheme.typography.bodyMedium,
-          content = content,
-      )
-    }
+  LabeledContent(
+    label = label,
+    modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
+  ) {
+    CompositionLocalProvider(
+      LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+      content = content,
+    )
+  }

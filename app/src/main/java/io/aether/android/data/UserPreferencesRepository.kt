@@ -22,15 +22,15 @@ class UserPreferencesRepository @Inject constructor(@ApplicationContext context:
 
   // The Flow to read data from the DataStore.
   val userPreferencesFlow: Flow<UserPreferences> =
-      userPreferencesDataStore.data.catch { exception ->
-        // dataStore.data throws an IOException when an error is encountered when reading data
-        if (exception is IOException) {
-          Timber.e(exception, "Error reading user preferences.")
-          emit(UserPreferences.getDefaultInstance())
-        } else {
-          throw exception
-        }
+    userPreferencesDataStore.data.catch { exception ->
+      // dataStore.data throws an IOException when an error is encountered when reading data
+      if (exception is IOException) {
+        Timber.e(exception, "Error reading user preferences.")
+        emit(UserPreferences.getDefaultInstance())
+      } else {
+        throw exception
       }
+    }
 
   suspend fun updateHideOfflineDevices(hide: Boolean) {
     Timber.d("Updating offline device visibility hide=$hide")

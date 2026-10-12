@@ -29,8 +29,8 @@ import timber.log.Timber
 class MatterBeaconProducerMdns
 @Inject
 constructor(
-    private val chipClient: ChipClient,
-    @param:ApplicationContext private val context: Context,
+  private val chipClient: ChipClient,
+  @param:ApplicationContext private val context: Context,
 ) : MatterBeaconProducer {
 
   // Android's NSD Manager. Used to scan mDNS advertisements.
@@ -50,53 +50,53 @@ constructor(
   // DiscoveryListener for NsdManager.discoverServices().
 
   private val discoveryListener =
-      object : NsdManager.DiscoveryListener {
+    object : NsdManager.DiscoveryListener {
 
-        // Called as soon as service discovery begins.
-        override fun onDiscoveryStarted(regType: String) {
-          Timber.d("mDNS discovery started regType=$regType")
-        }
+      // Called as soon as service discovery begins.
+      override fun onDiscoveryStarted(regType: String) {
+        Timber.d("mDNS discovery started regType=$regType")
+      }
 
-        override fun onServiceFound(service: NsdServiceInfo) {
-          Timber.d("mDNS service found service=$service")
-          if (service.serviceType != SERVICE_TYPE_ANDROID) {
-            Timber.d(
-                "Discarded serviceType=${service.serviceType} serviceName=${service.serviceName}",
-            )
-          } else {
-            // Resolve the service.
-            val resolveServiceRequest =
-                ResolveServiceRequest.create(service.serviceName, SERVICE_TYPE_COMMISSIONABLE)
-            discoveryClient
-                .resolveService(resolveServiceRequest)
-                .addOnSuccessListener { result ->
-                  Timber.d("mDNS service resolved serviceInfo=${result.serviceInfo}")
-                  resolvedDnsSdServiceInfo(result.serviceInfo)
-                }
-                .addOnFailureListener { error -> Timber.e(error, "Service resolution failed") }
-          }
-        }
-
-        override fun onServiceLost(service: NsdServiceInfo) {
-          // When the network service is no longer available.
-          Timber.d("mDNS service lost service=$service")
-          lostNsdServiceInfo(service)
-        }
-
-        override fun onDiscoveryStopped(serviceType: String) {
-          Timber.d("mDNS discovery stopped serviceType=$serviceType")
-        }
-
-        override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
-          Timber.e("mDNS discovery failed serviceType=$serviceType errorCode=$errorCode")
-          nsdManager.stopServiceDiscovery(this)
-        }
-
-        override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {
-          Timber.e("mDNS discovery stop failed serviceType=$serviceType errorCode=$errorCode")
-          nsdManager.stopServiceDiscovery(this)
+      override fun onServiceFound(service: NsdServiceInfo) {
+        Timber.d("mDNS service found service=$service")
+        if (service.serviceType != SERVICE_TYPE_ANDROID) {
+          Timber.d(
+            "Discarded serviceType=${service.serviceType} serviceName=${service.serviceName}",
+          )
+        } else {
+          // Resolve the service.
+          val resolveServiceRequest =
+            ResolveServiceRequest.create(service.serviceName, SERVICE_TYPE_COMMISSIONABLE)
+          discoveryClient
+            .resolveService(resolveServiceRequest)
+            .addOnSuccessListener { result ->
+              Timber.d("mDNS service resolved serviceInfo=${result.serviceInfo}")
+              resolvedDnsSdServiceInfo(result.serviceInfo)
+            }
+            .addOnFailureListener { error -> Timber.e(error, "Service resolution failed") }
         }
       }
+
+      override fun onServiceLost(service: NsdServiceInfo) {
+        // When the network service is no longer available.
+        Timber.d("mDNS service lost service=$service")
+        lostNsdServiceInfo(service)
+      }
+
+      override fun onDiscoveryStopped(serviceType: String) {
+        Timber.d("mDNS discovery stopped serviceType=$serviceType")
+      }
+
+      override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
+        Timber.e("mDNS discovery failed serviceType=$serviceType errorCode=$errorCode")
+        nsdManager.stopServiceDiscovery(this)
+      }
+
+      override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {
+        Timber.e("mDNS discovery stop failed serviceType=$serviceType errorCode=$errorCode")
+        nsdManager.stopServiceDiscovery(this)
+      }
+    }
 
   // ---------------------------------------------------------------------------
   // Utility methods to manage the discovered mDNS services.
@@ -107,31 +107,31 @@ constructor(
    */
   private fun resolvedDnsSdServiceInfo(dnsSdServiceInfo: DnsSdServiceInfo) {
     val discriminator =
-        dnsSdServiceInfo
-            .getTxtAttributeValue("D")
-            ?.takeIf { it.length <= 4 }
-            ?.takeIf { it.all { char -> char.isDigit() } }
-            ?.toIntOrNull()
+      dnsSdServiceInfo
+        .getTxtAttributeValue("D")
+        ?.takeIf { it.length <= 4 }
+        ?.takeIf { it.all { char -> char.isDigit() } }
+        ?.toIntOrNull()
 
     val vidPid =
-        dnsSdServiceInfo
-            .getTxtAttributeValue("VP")
-            .orEmpty()
-            .split("+")
-            .takeUnless { it.size > 2 }
-            ?.takeIf { it.all { value -> value.all { char -> char.isDigit() } } }
+      dnsSdServiceInfo
+        .getTxtAttributeValue("VP")
+        .orEmpty()
+        .split("+")
+        .takeUnless { it.size > 2 }
+        ?.takeIf { it.all { value -> value.all { char -> char.isDigit() } } }
 
     val address = dnsSdServiceInfo.networkLocations.get(0).formattedIpAddress
     val port = dnsSdServiceInfo.networkLocations.get(0).port
 
     val beacon =
-        MatterBeacon(
-            name = dnsSdServiceInfo.instanceName,
-            vendorId = VendorId((vidPid?.getOrNull(0)?.toIntOrNull() ?: 0).toUShort()),
-            productId = ProductId((vidPid?.getOrNull(1)?.toIntOrNull() ?: 0).toUShort()),
-            discriminator = discriminator!!,
-            transport = Transport.Mdns(address, port, true),
-        )
+      MatterBeacon(
+        name = dnsSdServiceInfo.instanceName,
+        vendorId = VendorId((vidPid?.getOrNull(0)?.toIntOrNull() ?: 0).toUShort()),
+        productId = ProductId((vidPid?.getOrNull(1)?.toIntOrNull() ?: 0).toUShort()),
+        discriminator = discriminator!!,
+        transport = Transport.Mdns(address, port, true),
+      )
     Timber.d("Resolved DNS-SD beacon=$beacon")
     producer.trySend(beacon)
   }
@@ -140,13 +140,13 @@ constructor(
   private fun lostNsdServiceInfo(nsdServiceInfo: NsdServiceInfo) {
     Timber.d("Lost DNS-SD serviceName=${nsdServiceInfo.serviceName}")
     val beacon =
-        MatterBeacon(
-            name = nsdServiceInfo.serviceName,
-            vendorId = VendorId(0u.toUShort()),
-            productId = ProductId(0u.toUShort()),
-            discriminator = 0,
-            Transport.Mdns("0.0.0.0", 0 /* fixme */, false),
-        )
+      MatterBeacon(
+        name = nsdServiceInfo.serviceName,
+        vendorId = VendorId(0u.toUShort()),
+        productId = ProductId(0u.toUShort()),
+        discriminator = 0,
+        Transport.Mdns("0.0.0.0", 0 /* fixme */, false),
+      )
     producer.trySend(beacon)
   }
 

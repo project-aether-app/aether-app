@@ -46,13 +46,13 @@ jobs:
       - name: Download Kotlin formatter
         uses: robinraju/release-downloader@v1
         with:
-          repository: facebook/ktfmt
-          fileName: ktfmt-*-with-dependencies.jar
+          repository: kotlin/ktfmt
+          fileName: ktfmt-linux-x86_64-*.tar.gz
+          extract: true
           latest: true
       - name: Format Kotlin scripts and source files
         run: |
-          java \
-            -jar ktfmt-*-with-dependencies.jar \
+          ./ktfmt --google-style \
             $(find . -name "*.kt" -o -name "*.kts")
       - name: Check for formatting violations
         run: git diff --exit-code

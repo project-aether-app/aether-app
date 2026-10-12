@@ -19,8 +19,8 @@ interface PlayServices {
   fun openInStore()
 }
 
-class AndroidPlayServices @Inject constructor(@ApplicationContext private val context: Context) :
-    PlayServices {
+class AndroidPlayServices @Inject constructor(@param:ApplicationContext private val context: Context) :
+  PlayServices {
 
   override fun isUpdateRequired(): Boolean {
     val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
@@ -29,29 +29,29 @@ class AndroidPlayServices @Inject constructor(@ApplicationContext private val co
 
   private fun version(): Long = runCatching {
     PackageInfoCompat.getLongVersionCode(
-        context.packageManager.getPackageInfo(
-            GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE,
-            0,
-        ),
+      context.packageManager.getPackageInfo(
+        GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE,
+        0,
+      ),
     )
   }
-      .getOrDefault(0L)
+    .getOrDefault(0L)
 
   override fun openInStore() {
     val nativeIntent =
-        Intent(Intent.ACTION_VIEW).apply {
-          data = "market://details?id=$PACKAGE".toUri()
-          setPackage("com.android.vending")
-          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+      Intent(Intent.ACTION_VIEW).apply {
+        data = "market://details?id=$PACKAGE".toUri()
+        setPackage("com.android.vending")
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      }
     try {
       context.startActivity(nativeIntent)
     } catch (e: Exception) {
       val webIntent =
-          Intent(Intent.ACTION_VIEW).apply {
-            data = "https://play.google.com/store/apps/details?id=$PACKAGE".toUri()
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-          }
+        Intent(Intent.ACTION_VIEW).apply {
+          data = "https://play.google.com/store/apps/details?id=$PACKAGE".toUri()
+          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
       context.startActivity(webIntent)
     }
   }

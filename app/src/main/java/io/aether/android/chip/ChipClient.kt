@@ -41,16 +41,16 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
   val chipDeviceController: ChipDeviceController by lazy {
     ChipDeviceController.loadJni()
     AndroidChipPlatform(
-        AndroidBleManager(),
-        PreferencesKeyValueStoreManager(context),
-        PreferencesConfigurationManager(context),
-        NsdManagerServiceResolver(context),
-        NsdManagerServiceBrowser(context),
-        ChipMdnsCallbackImpl(),
-        DiagnosticDataProviderImpl(context),
+      AndroidBleManager(),
+      PreferencesKeyValueStoreManager(context),
+      PreferencesConfigurationManager(context),
+      NsdManagerServiceResolver(context),
+      NsdManagerServiceBrowser(context),
+      ChipMdnsCallbackImpl(),
+      DiagnosticDataProviderImpl(context),
     )
     ChipDeviceController(
-        ControllerParams.newBuilder().setUdpListenPort(0).setControllerVendorId(VENDOR_ID).build(),
+      ControllerParams.newBuilder().setUdpListenPort(0).setControllerVendorId(VENDOR_ID).build(),
     )
   }
 
@@ -60,19 +60,19 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
   suspend fun getConnectedDevicePointer(nodeId: NodeId): Long {
     return suspendCoroutine { continuation ->
       chipDeviceController.getConnectedDevicePointer(
-          nodeId.toLong(),
-          object : GetConnectedDeviceCallback {
-            override fun onDeviceConnected(devicePointer: Long) {
-              Timber.d("Got connected device pointer")
-              continuation.resume(devicePointer)
-            }
+        nodeId.toLong(),
+        object : GetConnectedDeviceCallback {
+          override fun onDeviceConnected(devicePointer: Long) {
+            Timber.d("Got connected device pointer")
+            continuation.resume(devicePointer)
+          }
 
-            override fun onConnectionFailure(id: Long, error: Exception) {
-              val errorMessage = "Unable to get connected device with nodeId ${id.toNodeId()}."
-              Timber.e(error, errorMessage)
-              continuation.resumeWithException(IllegalStateException(errorMessage))
-            }
-          },
+          override fun onConnectionFailure(id: Long, error: Exception) {
+            val errorMessage = "Unable to get connected device with nodeId ${id.toNodeId()}."
+            Timber.e(error, errorMessage)
+            continuation.resumeWithException(IllegalStateException(errorMessage))
+          }
+        },
       )
     }
   }
@@ -88,18 +88,18 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
     return suspendCoroutine { continuation ->
       Timber.d("Calling chipDeviceController.unpair")
       val callback: UnpairDeviceCallback =
-          object : UnpairDeviceCallback {
-            override fun onError(status: Int, id: Long) {
-              continuation.resumeWithException(
-                  java.lang.IllegalStateException("Failed to unpair deviceId=$id status=$status"),
-              )
-            }
-
-            override fun onSuccess(id: Long) {
-              Timber.d("Device unpaired deviceId=$id")
-              continuation.resume(Unit)
-            }
+        object : UnpairDeviceCallback {
+          override fun onError(status: Int, id: Long) {
+            continuation.resumeWithException(
+              java.lang.IllegalStateException("Failed to unpair deviceId=$id status=$status"),
+            )
           }
+
+          override fun onSuccess(id: Long) {
+            Timber.d("Device unpaired deviceId=$id")
+            continuation.resume(Unit)
+          }
+        }
       chipDeviceController.unpairDeviceCallback(nodeId.toLong(), callback)
     }
   }
@@ -109,73 +109,73 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
   }
 
   fun computePaseVerifier(
-      devicePtr: Long,
-      pinCode: Long,
-      iterations: Long,
-      salt: ByteArray,
+    devicePtr: Long,
+    pinCode: Long,
+    iterations: Long,
+    salt: ByteArray,
   ): PaseVerifierParams {
     Timber.d(
-        "Computing PASE verifier devicePtr=$devicePtr pinCode=$pinCode iterations=$iterations salt=$salt",
+      "Computing PASE verifier devicePtr=$devicePtr pinCode=$pinCode iterations=$iterations salt=$salt",
     )
     return chipDeviceController.computePaseVerifier(devicePtr, pinCode, iterations, salt)
   }
 
   suspend fun awaitEstablishPaseConnection(
-      deviceId: Long,
-      ipAddress: String,
-      port: Int,
-      setupPinCode: Long,
+    deviceId: Long,
+    ipAddress: String,
+    port: Int,
+    setupPinCode: Long,
   ) {
     return suspendCoroutine { continuation ->
       chipDeviceController.setCompletionListener(
-          object : BaseCompletionListener() {
-            override fun onConnectDeviceComplete() {
-              super.onConnectDeviceComplete()
+        object : BaseCompletionListener() {
+          override fun onConnectDeviceComplete() {
+            super.onConnectDeviceComplete()
+            continuation.resume(Unit)
+          }
+
+          // Note that an error in processing is not necessarily communicated via onError().
+          // onCommissioningComplete with a "code != 0" also denotes an error in processing.
+          override fun onPairingComplete(code: Int) {
+            super.onPairingComplete(code)
+            if (code != 0) {
+              continuation.resumeWithException(
+                IllegalStateException("Pairing failed errorCode=$code"),
+              )
+            } else {
               continuation.resume(Unit)
             }
+          }
 
-            // Note that an error in processing is not necessarily communicated via onError().
-            // onCommissioningComplete with a "code != 0" also denotes an error in processing.
-            override fun onPairingComplete(code: Int) {
-              super.onPairingComplete(code)
-              if (code != 0) {
-                continuation.resumeWithException(
-                    IllegalStateException("Pairing failed errorCode=$code"),
-                )
-              } else {
-                continuation.resume(Unit)
-              }
-            }
+          override fun onError(error: Throwable) {
+            super.onError(error)
+            continuation.resumeWithException(error)
+          }
 
-            override fun onError(error: Throwable) {
-              super.onError(error)
-              continuation.resumeWithException(error)
-            }
+          override fun onReadCommissioningInfo(
+            vendorId: Int,
+            productId: Int,
+            wifiEndpointId: Int,
+            threadEndpointId: Int,
+          ) {
+            super.onReadCommissioningInfo(vendorId, productId, wifiEndpointId, threadEndpointId)
+            continuation.resume(Unit)
+          }
 
-            override fun onReadCommissioningInfo(
-                vendorId: Int,
-                productId: Int,
-                wifiEndpointId: Int,
-                threadEndpointId: Int,
-            ) {
-              super.onReadCommissioningInfo(vendorId, productId, wifiEndpointId, threadEndpointId)
-              continuation.resume(Unit)
-            }
-
-            override fun onCommissioningStatusUpdate(id: Long, stage: String?, errorCode: Int) {
-              super.onCommissioningStatusUpdate(id, stage, errorCode)
-              continuation.resume(Unit)
-            }
-          },
+          override fun onCommissioningStatusUpdate(id: Long, stage: String?, errorCode: Int) {
+            super.onCommissioningStatusUpdate(id, stage, errorCode)
+            continuation.resume(Unit)
+          }
+        },
       )
 
       // Temporary workaround to remove interface indexes from ipAddress
       // due to https://github.com/project-chip/connectedhomeip/pull/19394/files
       chipDeviceController.establishPaseConnection(
-          deviceId,
-          stripLinkLocalInIpAddress(ipAddress),
-          port,
-          setupPinCode,
+        deviceId,
+        stripLinkLocalInIpAddress(ipAddress),
+        port,
+        setupPinCode,
       )
     }
   }
@@ -183,60 +183,60 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
   suspend fun awaitCommissionDevice(deviceId: Long, networkCredentials: NetworkCredentials?) {
     return suspendCoroutine { continuation ->
       chipDeviceController.setCompletionListener(
-          object : BaseCompletionListener() {
-            // Note that an error in processing is not necessarily communicated via onError().
-            // onCommissioningComplete with an "errorCode != 0" also denotes an error in processing.
-            override fun onCommissioningComplete(id: Long, errorCode: Int) {
-              super.onCommissioningComplete(id, errorCode)
-              if (errorCode != 0) {
-                continuation.resumeWithException(
-                    IllegalStateException("Commissioning failed errorCode=$errorCode"),
-                )
-              } else {
-                continuation.resume(Unit)
-              }
+        object : BaseCompletionListener() {
+          // Note that an error in processing is not necessarily communicated via onError().
+          // onCommissioningComplete with an "errorCode != 0" also denotes an error in processing.
+          override fun onCommissioningComplete(id: Long, errorCode: Int) {
+            super.onCommissioningComplete(id, errorCode)
+            if (errorCode != 0) {
+              continuation.resumeWithException(
+                IllegalStateException("Commissioning failed errorCode=$errorCode"),
+              )
+            } else {
+              continuation.resume(Unit)
             }
+          }
 
-            override fun onError(error: Throwable) {
-              super.onError(error)
-              continuation.resumeWithException(error)
-            }
-          },
+          override fun onError(error: Throwable) {
+            super.onError(error)
+            continuation.resumeWithException(error)
+          }
+        },
       )
       chipDeviceController.commissionDevice(deviceId, networkCredentials)
     }
   }
 
   suspend fun awaitOpenPairingWindowWithPIN(
-      connectedDevicePointer: Long,
-      duration: Int,
-      iteration: Long,
-      discriminator: Int,
-      setupPinCode: Long,
+    connectedDevicePointer: Long,
+    duration: Int,
+    iteration: Long,
+    discriminator: Int,
+    setupPinCode: Long,
   ) {
     return suspendCoroutine { continuation ->
       Timber.d("Calling chipDeviceController.openPairingWindowWithPIN")
       val callback: OpenCommissioningCallback =
-          object : OpenCommissioningCallback {
-            override fun onError(status: Int, deviceId: Long) {
-              Timber.e("Failed to open pairing window status=$status deviceId=$deviceId")
-              continuation.resumeWithException(
-                  java.lang.IllegalStateException("Failed to open pairing window status=$status"),
-              )
-            }
-
-            override fun onSuccess(deviceId: Long, manualPairingCode: String?, qrCode: String?) {
-              Timber.d("Pairing window opened deviceId=$deviceId")
-              continuation.resume(Unit)
-            }
+        object : OpenCommissioningCallback {
+          override fun onError(status: Int, deviceId: Long) {
+            Timber.e("Failed to open pairing window status=$status deviceId=$deviceId")
+            continuation.resumeWithException(
+              java.lang.IllegalStateException("Failed to open pairing window status=$status"),
+            )
           }
+
+          override fun onSuccess(deviceId: Long, manualPairingCode: String?, qrCode: String?) {
+            Timber.d("Pairing window opened deviceId=$deviceId")
+            continuation.resume(Unit)
+          }
+        }
       chipDeviceController.openPairingWindowWithPINCallback(
-          connectedDevicePointer,
-          duration,
-          iteration,
-          discriminator,
-          setupPinCode,
-          callback,
+        connectedDevicePointer,
+        duration,
+        iteration,
+        discriminator,
+        setupPinCode,
+        callback,
       )
     }
   }
@@ -247,25 +247,25 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
   suspend fun awaitGetConnectedDevicePointer(nodeId: NodeId): Long {
     return suspendCoroutine { continuation ->
       chipDeviceController.getConnectedDevicePointer(
-          nodeId.toLong(),
-          object : GetConnectedDeviceCallback {
-            override fun onDeviceConnected(devicePointer: Long) {
-              Timber.d("Got connected device pointer")
-              continuation.resume(devicePointer)
-            }
+        nodeId.toLong(),
+        object : GetConnectedDeviceCallback {
+          override fun onDeviceConnected(devicePointer: Long) {
+            Timber.d("Got connected device pointer")
+            continuation.resume(devicePointer)
+          }
 
-            override fun onConnectionFailure(id: Long, error: Exception) {
-              val errorMessage = "Unable to get connected device with nodeId ${id.toNodeId()}"
-              Timber.e(error, errorMessage)
-              continuation.resumeWithException(IllegalStateException(errorMessage))
-            }
-          },
+          override fun onConnectionFailure(id: Long, error: Exception) {
+            val errorMessage = "Unable to get connected device with nodeId ${id.toNodeId()}"
+            Timber.e(error, errorMessage)
+            continuation.resumeWithException(IllegalStateException(errorMessage))
+          }
+        },
       )
     }
   }
 
   suspend fun awaitGetConnectedDevicePointer(id: Long): Long =
-      awaitGetConnectedDevicePointer(id.toNodeId())
+    awaitGetConnectedDevicePointer(id.toNodeId())
 
   // ---------------------------------------------------------------------------
   // We use our own mDNS discovery code, but interesting to note that
@@ -284,56 +284,56 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
   // Access clusters via numeric ids. Useful to access manufacturer specific clusters.
 
   suspend fun writeAttribute(
-      devicePtr: Long,
-      attributePath: ChipAttributePath,
-      tlv: ByteArray,
-      timedRequestTimeoutMs: Int = DEFAULT_TIMEOUT,
-      imTimeoutMs: Int = DEFAULT_TIMEOUT,
+    devicePtr: Long,
+    attributePath: ChipAttributePath,
+    tlv: ByteArray,
+    timedRequestTimeoutMs: Int = DEFAULT_TIMEOUT,
+    imTimeoutMs: Int = DEFAULT_TIMEOUT,
   ) {
     return writeAttributes(
-        devicePtr,
-        mapOf(attributePath to tlv),
-        timedRequestTimeoutMs,
-        imTimeoutMs,
+      devicePtr,
+      mapOf(attributePath to tlv),
+      timedRequestTimeoutMs,
+      imTimeoutMs,
     )
   }
 
   /** Wrapper around [ChipDeviceController.write] */
   suspend fun writeAttributes(
-      devicePtr: Long,
-      attributes: Map<ChipAttributePath, ByteArray>,
-      timedRequestTimeoutMs: Int = DEFAULT_TIMEOUT,
-      imTimeoutMs: Int = DEFAULT_TIMEOUT,
+    devicePtr: Long,
+    attributes: Map<ChipAttributePath, ByteArray>,
+    timedRequestTimeoutMs: Int = DEFAULT_TIMEOUT,
+    imTimeoutMs: Int = DEFAULT_TIMEOUT,
   ) {
     return suspendCoroutine { continuation ->
       val requests: List<AttributeWriteRequest> =
-          attributes.toList().map {
-            AttributeWriteRequest.newInstance(
-                it.first.endpointId,
-                it.first.clusterId,
-                it.first.attributeId,
-                it.second,
-            )
-          }
+        attributes.toList().map {
+          AttributeWriteRequest.newInstance(
+            it.first.endpointId,
+            it.first.clusterId,
+            it.first.attributeId,
+            it.second,
+          )
+        }
       val callback: WriteAttributesCallback =
-          object : WriteAttributesCallback {
-            override fun onError(attributePath: ChipAttributePath?, e: java.lang.Exception?) {
-              continuation.resumeWithException(IllegalStateException("writeAttributes failed", e))
-            }
+        object : WriteAttributesCallback {
+          override fun onError(attributePath: ChipAttributePath?, e: java.lang.Exception?) {
+            continuation.resumeWithException(IllegalStateException("writeAttributes failed", e))
+          }
 
-            override fun onResponse(attributePath: ChipAttributePath?) {
-              if (
-                  attributePath!! ==
-                      ChipAttributePath.newInstance(
-                          requests.last().endpointId,
-                          requests.last().clusterId,
-                          requests.last().attributeId,
-                      )
-              ) {
-                continuation.resume(Unit)
-              }
+          override fun onResponse(attributePath: ChipAttributePath?) {
+            if (
+              attributePath!! ==
+                ChipAttributePath.newInstance(
+                  requests.last().endpointId,
+                  requests.last().clusterId,
+                  requests.last().attributeId,
+                )
+            ) {
+              continuation.resume(Unit)
             }
           }
+        }
 
       chipDeviceController.write(callback, devicePtr, requests, timedRequestTimeoutMs, imTimeoutMs)
     }
@@ -345,112 +345,112 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
 
   /** Wrapper around [ChipDeviceController.readAttributePath] */
   suspend fun readAttributes(
-      devicePtr: Long,
-      attributePaths: List<ChipAttributePath>,
+    devicePtr: Long,
+    attributePaths: List<ChipAttributePath>,
   ): Map<ChipAttributePath, AttributeState> {
     return suspendCoroutine { continuation ->
       val completed = AtomicBoolean(false)
       val callback: ReportCallback =
-          object : ReportCallback {
-            override fun onError(
-                attributePath: ChipAttributePath?,
-                eventPath: ChipEventPath?,
-                e: Exception?,
-            ) {
-              if (completed.compareAndSet(false, true)) {
-                continuation.resumeWithException(
-                    IllegalStateException(
-                        "readAttributes failed",
-                        e ?: IllegalStateException("Unknown readAttributes error"),
-                    ),
-                )
-              }
-            }
-
-            override fun onReport(nodeState: NodeState?) {
-              if (!completed.compareAndSet(false, true)) {
-                return
-              }
-
-              try {
-                val states: HashMap<ChipAttributePath, AttributeState> = HashMap()
-                val reportState =
-                    nodeState
-                        ?: run {
-                          continuation.resume(states)
-                          return
-                        }
-
-                for (path in attributePaths) {
-                  val endpoint = path.endpointId.id.toInt()
-                  val attributeState =
-                      reportState
-                          .getEndpointState(endpoint)
-                          ?.getClusterState(path.clusterId.id)
-                          ?.getAttributeState(path.attributeId.id)
-                  if (attributeState != null) {
-                    states[path] = attributeState
-                  }
-                }
-
-                continuation.resume(states)
-              } catch (ex: Exception) {
-                continuation.resumeWithException(IllegalStateException("readAttributes failed", ex))
-              }
-            }
-
-            override fun onDone() {
-              super.onDone()
+        object : ReportCallback {
+          override fun onError(
+            attributePath: ChipAttributePath?,
+            eventPath: ChipEventPath?,
+            e: Exception?,
+          ) {
+            if (completed.compareAndSet(false, true)) {
+              continuation.resumeWithException(
+                IllegalStateException(
+                  "readAttributes failed",
+                  e ?: IllegalStateException("Unknown readAttributes error"),
+                ),
+              )
             }
           }
+
+          override fun onReport(nodeState: NodeState?) {
+            if (!completed.compareAndSet(false, true)) {
+              return
+            }
+
+            try {
+              val states: HashMap<ChipAttributePath, AttributeState> = HashMap()
+              val reportState =
+                nodeState
+                  ?: run {
+                    continuation.resume(states)
+                    return
+                  }
+
+              for (path in attributePaths) {
+                val endpoint = path.endpointId.id.toInt()
+                val attributeState =
+                  reportState
+                    .getEndpointState(endpoint)
+                    ?.getClusterState(path.clusterId.id)
+                    ?.getAttributeState(path.attributeId.id)
+                if (attributeState != null) {
+                  states[path] = attributeState
+                }
+              }
+
+              continuation.resume(states)
+            } catch (ex: Exception) {
+              continuation.resumeWithException(IllegalStateException("readAttributes failed", ex))
+            }
+          }
+
+          override fun onDone() {
+            super.onDone()
+          }
+        }
       chipDeviceController.readAttributePath(callback, devicePtr, attributePaths)
     }
   }
 
   /** Wrapper around [ChipDeviceController.subscribeToAttributePath] */
   suspend fun subscribeToAttribute(
-      devicePtr: Long,
-      attributePath: ChipAttributePath,
-      minInterval: Int,
-      maxInterval: Int,
-      callback: ReportCallback,
+    devicePtr: Long,
+    attributePath: ChipAttributePath,
+    minInterval: Int,
+    maxInterval: Int,
+    callback: ReportCallback,
   ) {
     return suspendCoroutine { continuation ->
       chipDeviceController.subscribeToAttributePath(
-          { continuation.resume(Unit) },
-          callback,
-          devicePtr,
-          listOf(attributePath),
-          minInterval,
-          maxInterval,
+        { continuation.resume(Unit) },
+        callback,
+        devicePtr,
+        listOf(attributePath),
+        minInterval,
+        maxInterval,
       )
     }
   }
 
   /** Wrapper around [ChipDeviceController.invoke] */
   suspend fun invoke(
-      devicePtr: Long,
-      invokeElement: InvokeElement,
-      timedRequestTimeoutMs: Int = DEFAULT_TIMEOUT,
-      imTimeoutMs: Int = DEFAULT_TIMEOUT,
+    devicePtr: Long,
+    invokeElement: InvokeElement,
+    timedRequestTimeoutMs: Int = DEFAULT_TIMEOUT,
+    imTimeoutMs: Int = DEFAULT_TIMEOUT,
   ): Long {
     return suspendCoroutine { continuation ->
       val invokeCallback: InvokeCallback =
-          object : InvokeCallback {
-            override fun onError(e: java.lang.Exception?) {
-              continuation.resumeWithException(IllegalStateException("invoke failed", e))
-            }
-
-            override fun onResponse(invokeElement: InvokeElement?, successCode: Long) {
-              continuation.resume(successCode)
-            }
+        object : InvokeCallback {
+          override fun onError(e: java.lang.Exception?) {
+            continuation.resumeWithException(IllegalStateException("invoke failed", e))
           }
+
+          override fun onResponse(invokeElement: InvokeElement?, successCode: Long) {
+            continuation.resume(successCode)
+          }
+        }
       chipDeviceController.invoke(
-          invokeCallback,
-          devicePtr,
-          invokeElement,
-          timedRequestTimeoutMs,
-          imTimeoutMs,
+        invokeCallback,
+        devicePtr,
+        invokeElement,
+        timedRequestTimeoutMs,
+        imTimeoutMs,
       )
     }
   }

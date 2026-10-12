@@ -36,11 +36,11 @@ import io.aether.android.spacing
  */
 @Composable
 internal fun DimmableDeviceControl(
-    device: Device,
-    endpoint: Endpoint,
-    lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
-    onOnOffClick: (Boolean) -> Unit,
-    onBrightnessChange: (Int) -> Unit,
+  device: Device,
+  endpoint: Endpoint,
+  lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
+  onOnOffClick: (Boolean) -> Unit,
+  onBrightnessChange: (Int) -> Unit,
 ) {
   var isOnline by remember(device, endpoint) { mutableStateOf(device.isOnline) }
   var isOn by remember(device, endpoint) { mutableStateOf(endpoint.isOn) }
@@ -49,7 +49,7 @@ internal fun DimmableDeviceControl(
   LaunchedEffect(device, endpoint, lastUpdatedDeviceState) {
     when {
       lastUpdatedDeviceState?.nodeId == device.id &&
-          lastUpdatedDeviceState.endpointId == endpoint.id -> {
+        lastUpdatedDeviceState.endpointId == endpoint.id -> {
         isOnline = lastUpdatedDeviceState.online
         isOn = lastUpdatedDeviceState.on
         brightness = lastUpdatedDeviceState.level / LEVEL_MAX
@@ -64,20 +64,20 @@ internal fun DimmableDeviceControl(
 
   Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal)) {
     OnOffClusterControl(
-        isOnline = isOnline,
-        isOn = isOn,
-        onToggle = { value ->
-          isOn = value
-          onOnOffClick(value)
-        },
+      isOnline = isOnline,
+      isOn = isOn,
+      onToggle = { value ->
+        isOn = value
+        onOnOffClick(value)
+      },
     )
     LevelClusterControl(
-        title = stringResource(R.string.brightness),
-        isOnline = isOnline,
-        isOn = isOn,
-        level = brightness,
-        onLevelChange = { brightness = it },
-        onLevelChangeFinished = { onBrightnessChange((brightness * LEVEL_MAX).toInt()) },
+      title = stringResource(R.string.brightness),
+      isOnline = isOnline,
+      isOn = isOn,
+      level = brightness,
+      onLevelChange = { brightness = it },
+      onLevelChangeFinished = { onBrightnessChange((brightness * LEVEL_MAX).toInt()) },
     )
   }
 }

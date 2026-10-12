@@ -22,50 +22,50 @@ import io.aether.android.spacing
 
 @Composable
 internal fun CommandInvokeContent(
-    command: ExplorerCommandUiItem,
-    invokeSuccessCount: Int,
-    onInvoke: (Map<String, String>) -> Unit,
+  command: ExplorerCommandUiItem,
+  invokeSuccessCount: Int,
+  onInvoke: (Map<String, String>) -> Unit,
 ) {
   val commandArguments =
-      remember(command.id) {
-        mutableStateMapOf<String, String>().also { map ->
-          command.arguments.forEach { map[it.key] = "" }
-        }
+    remember(command.id) {
+      mutableStateMapOf<String, String>().also { map ->
+        command.arguments.forEach { map[it.key] = "" }
       }
+    }
 
   Column(
-      modifier = Modifier.fillMaxSize().padding(MaterialTheme.spacing.paddingNormal),
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+    modifier = Modifier.fillMaxSize().padding(MaterialTheme.spacing.paddingNormal),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     val focusManager = LocalFocusManager.current
     if (command.arguments.isNotEmpty()) {
       command.arguments.forEach { argument ->
         ExplorerTypedValueField(
-            value = commandArguments[argument.key].orEmpty(),
-            onValueChange = { commandArguments[argument.key] = it },
-            type = argument.type,
-            successTrigger = invokeSuccessCount,
-            resetKey = command.id,
-            label = {
-              Text(
-                  stringResource(
-                      R.string.device_explorer_label_with_type,
-                      argument.name,
-                      argument.type.label,
-                  ),
-              )
-            },
-            modifier = Modifier.fillMaxWidth(),
+          value = commandArguments[argument.key].orEmpty(),
+          onValueChange = { commandArguments[argument.key] = it },
+          type = argument.type,
+          successTrigger = invokeSuccessCount,
+          resetKey = command.id,
+          label = {
+            Text(
+              stringResource(
+                R.string.device_explorer_label_with_type,
+                argument.name,
+                argument.type.label,
+              ),
+            )
+          },
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     }
 
     Button(
-        onClick = {
-          focusManager.clearFocus()
-          onInvoke(commandArguments.toMap())
-        },
-        modifier = Modifier.fillMaxWidth(),
+      onClick = {
+        focusManager.clearFocus()
+        onInvoke(commandArguments.toMap())
+      },
+      modifier = Modifier.fillMaxWidth(),
     ) {
       Text(stringResource(R.string.device_explorer_invoke))
     }

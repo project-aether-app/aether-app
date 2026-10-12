@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 internal class ExplorerInputValidationException(
-    @field:StringRes @param:StringRes val messageRes: Int,
+  @field:StringRes @param:StringRes val messageRes: Int,
 ) : IllegalArgumentException()
 
 internal class ExplorerUnsupportedValueException : IllegalArgumentException()
@@ -43,8 +43,8 @@ internal object ExplorerTlvCodec {
   private const val TLV_ANON_STRING_1 = 0x0C
 
   fun encodeCommandPayload(
-      definitions: List<ExplorerCommandArgumentDefinition>,
-      argumentValues: Map<String, String>,
+    definitions: List<ExplorerCommandArgumentDefinition>,
+    argumentValues: Map<String, String>,
   ): ByteArray {
     val out = ByteArrayOutputStream()
     out.write(TLV_STRUCTURE_START)
@@ -56,9 +56,9 @@ internal object ExplorerTlvCodec {
   }
 
   fun encodeAnonymousValue(
-      type: DataType,
-      rawValue: String,
-      @StringRes invalidNumberMessageRes: Int,
+    type: DataType,
+    rawValue: String,
+    @StringRes invalidNumberMessageRes: Int,
   ): ByteArray? {
     if (type == DataType.UNKNOWN) {
       return null
@@ -71,7 +71,7 @@ internal object ExplorerTlvCodec {
           true -> out.write(TLV_ANON_BOOL_TRUE)
           false -> out.write(TLV_ANON_BOOL_FALSE)
           null ->
-              throw ExplorerInputValidationException(R.string.device_explorer_error_invalid_boolean)
+            throw ExplorerInputValidationException(R.string.device_explorer_error_invalid_boolean)
         }
       }
       DataType.STRING,
@@ -88,21 +88,21 @@ internal object ExplorerTlvCodec {
       DataType.U_INT8,
       DataType.ENUM8,
       DataType.MAP8 ->
-          writeAnonymousUnsigned(
-              out,
-              TLV_ANON_UNSIGNED_1,
-              parseUnsigned(rawValue, 0xFF, invalidNumberMessageRes),
-              1,
-          )
+        writeAnonymousUnsigned(
+          out,
+          TLV_ANON_UNSIGNED_1,
+          parseUnsigned(rawValue, 0xFF, invalidNumberMessageRes),
+          1,
+        )
       DataType.U_INT16,
       DataType.ENUM16,
       DataType.MAP16 ->
-          writeAnonymousUnsigned(
-              out,
-              TLV_ANON_UNSIGNED_2,
-              parseUnsigned(rawValue, 0xFFFF, invalidNumberMessageRes),
-              2,
-          )
+        writeAnonymousUnsigned(
+          out,
+          TLV_ANON_UNSIGNED_2,
+          parseUnsigned(rawValue, 0xFFFF, invalidNumberMessageRes),
+          2,
+        )
       DataType.U_INT24,
       DataType.U_INT32,
       DataType.CLUSTER_ID,
@@ -111,12 +111,12 @@ internal object ExplorerTlvCodec {
       DataType.VENDOR_ID,
       DataType.MESSAGE_ID,
       DataType.TLS_ENDPOINT_ID ->
-          writeAnonymousUnsigned(
-              out,
-              TLV_ANON_UNSIGNED_4,
-              parseUnsigned(rawValue, 0xFFFFFFFFL, invalidNumberMessageRes),
-              4,
-          )
+        writeAnonymousUnsigned(
+          out,
+          TLV_ANON_UNSIGNED_4,
+          parseUnsigned(rawValue, 0xFFFFFFFFL, invalidNumberMessageRes),
+          4,
+        )
       DataType.U_INT64,
       DataType.EPOCH_SECONDS,
       DataType.EPOCH_MICROSECONDS,
@@ -125,55 +125,55 @@ internal object ExplorerTlvCodec {
       DataType.SUBJECT_ID,
       DataType.TLSCAID,
       DataType.TLSCCDID ->
-          writeAnonymousUnsigned(
-              out,
-              TLV_ANON_UNSIGNED_8,
-              parseUnsigned64(rawValue, invalidNumberMessageRes),
-              8,
-          )
+        writeAnonymousUnsigned(
+          out,
+          TLV_ANON_UNSIGNED_8,
+          parseUnsigned64(rawValue, invalidNumberMessageRes),
+          8,
+        )
       DataType.INT8 ->
-          writeAnonymousSigned(
-              out,
-              TLV_ANON_SIGNED_1,
-              parseSigned(rawValue, -128, 127, invalidNumberMessageRes),
-              1,
-          )
+        writeAnonymousSigned(
+          out,
+          TLV_ANON_SIGNED_1,
+          parseSigned(rawValue, -128, 127, invalidNumberMessageRes),
+          1,
+        )
       DataType.INT16 ->
-          writeAnonymousSigned(
-              out,
-              TLV_ANON_SIGNED_2,
-              parseSigned(rawValue, -32768, 32767, invalidNumberMessageRes),
-              2,
-          )
+        writeAnonymousSigned(
+          out,
+          TLV_ANON_SIGNED_2,
+          parseSigned(rawValue, -32768, 32767, invalidNumberMessageRes),
+          2,
+        )
       DataType.INT32 ->
-          writeAnonymousSigned(
-              out,
-              TLV_ANON_SIGNED_4,
-              parseSigned(
-                  rawValue,
-                  Int.MIN_VALUE.toLong(),
-                  Int.MAX_VALUE.toLong(),
-                  invalidNumberMessageRes,
-              ),
-              4,
-          )
+        writeAnonymousSigned(
+          out,
+          TLV_ANON_SIGNED_4,
+          parseSigned(
+            rawValue,
+            Int.MIN_VALUE.toLong(),
+            Int.MAX_VALUE.toLong(),
+            invalidNumberMessageRes,
+          ),
+          4,
+        )
       DataType.INT64 ->
-          writeAnonymousSigned(
-              out,
-              TLV_ANON_SIGNED_8,
-              parseSigned(rawValue, Long.MIN_VALUE, Long.MAX_VALUE, invalidNumberMessageRes),
-              8,
-          )
+        writeAnonymousSigned(
+          out,
+          TLV_ANON_SIGNED_8,
+          parseSigned(rawValue, Long.MIN_VALUE, Long.MAX_VALUE, invalidNumberMessageRes),
+          8,
+        )
       else -> return null
     }
     return out.toByteArray()
   }
 
   private fun encodeContextValue(
-      out: ByteArrayOutputStream,
-      tag: Int,
-      definition: ExplorerCommandArgumentDefinition,
-      rawValue: String?,
+    out: ByteArrayOutputStream,
+    tag: Int,
+    definition: ExplorerCommandArgumentDefinition,
+    rawValue: String?,
   ) {
     val requiredValue = rawValue?.trim().orEmpty()
     when (definition.type) {
@@ -183,7 +183,7 @@ internal object ExplorerTlvCodec {
           true -> out.write(TLV_CONTEXT_BOOL_TRUE)
           false -> out.write(TLV_CONTEXT_BOOL_FALSE)
           null ->
-              throw ExplorerInputValidationException(R.string.device_explorer_error_invalid_boolean)
+            throw ExplorerInputValidationException(R.string.device_explorer_error_invalid_boolean)
         }
         out.write(tag)
       }
@@ -202,23 +202,23 @@ internal object ExplorerTlvCodec {
       DataType.U_INT8,
       DataType.ENUM8,
       DataType.MAP8 ->
-          writeContextUnsigned(
-              out,
-              tag,
-              TLV_CONTEXT_UNSIGNED_1,
-              parseUnsigned(requiredValue, 0xFF, R.string.device_explorer_error_invalid_number),
-              1,
-          )
+        writeContextUnsigned(
+          out,
+          tag,
+          TLV_CONTEXT_UNSIGNED_1,
+          parseUnsigned(requiredValue, 0xFF, R.string.device_explorer_error_invalid_number),
+          1,
+        )
       DataType.U_INT16,
       DataType.ENUM16,
       DataType.MAP16 ->
-          writeContextUnsigned(
-              out,
-              tag,
-              TLV_CONTEXT_UNSIGNED_2,
-              parseUnsigned(requiredValue, 0xFFFF, R.string.device_explorer_error_invalid_number),
-              2,
-          )
+        writeContextUnsigned(
+          out,
+          tag,
+          TLV_CONTEXT_UNSIGNED_2,
+          parseUnsigned(requiredValue, 0xFFFF, R.string.device_explorer_error_invalid_number),
+          2,
+        )
       DataType.U_INT24,
       DataType.U_INT32,
       DataType.CLUSTER_ID,
@@ -227,17 +227,17 @@ internal object ExplorerTlvCodec {
       DataType.VENDOR_ID,
       DataType.MESSAGE_ID,
       DataType.TLS_ENDPOINT_ID ->
-          writeContextUnsigned(
-              out,
-              tag,
-              TLV_CONTEXT_UNSIGNED_4,
-              parseUnsigned(
-                  requiredValue,
-                  0xFFFFFFFFL,
-                  R.string.device_explorer_error_invalid_number,
-              ),
-              4,
-          )
+        writeContextUnsigned(
+          out,
+          tag,
+          TLV_CONTEXT_UNSIGNED_4,
+          parseUnsigned(
+            requiredValue,
+            0xFFFFFFFFL,
+            R.string.device_explorer_error_invalid_number,
+          ),
+          4,
+        )
       DataType.U_INT64,
       DataType.EPOCH_SECONDS,
       DataType.EPOCH_MICROSECONDS,
@@ -246,75 +246,75 @@ internal object ExplorerTlvCodec {
       DataType.SUBJECT_ID,
       DataType.TLSCAID,
       DataType.TLSCCDID ->
-          writeContextUnsigned(
-              out,
-              tag,
-              TLV_CONTEXT_UNSIGNED_8,
-              parseUnsigned64(requiredValue, R.string.device_explorer_error_invalid_number),
-              8,
-          )
+        writeContextUnsigned(
+          out,
+          tag,
+          TLV_CONTEXT_UNSIGNED_8,
+          parseUnsigned64(requiredValue, R.string.device_explorer_error_invalid_number),
+          8,
+        )
       DataType.INT8 ->
-          writeContextSigned(
-              out,
-              tag,
-              TLV_CONTEXT_SIGNED_1,
-              parseSigned(
-                  requiredValue,
-                  -128,
-                  127,
-                  R.string.device_explorer_error_invalid_number,
-              ),
-              1,
-          )
+        writeContextSigned(
+          out,
+          tag,
+          TLV_CONTEXT_SIGNED_1,
+          parseSigned(
+            requiredValue,
+            -128,
+            127,
+            R.string.device_explorer_error_invalid_number,
+          ),
+          1,
+        )
       DataType.INT16 ->
-          writeContextSigned(
-              out,
-              tag,
-              TLV_CONTEXT_SIGNED_2,
-              parseSigned(
-                  requiredValue,
-                  -32768,
-                  32767,
-                  R.string.device_explorer_error_invalid_number,
-              ),
-              2,
-          )
+        writeContextSigned(
+          out,
+          tag,
+          TLV_CONTEXT_SIGNED_2,
+          parseSigned(
+            requiredValue,
+            -32768,
+            32767,
+            R.string.device_explorer_error_invalid_number,
+          ),
+          2,
+        )
       DataType.INT32 ->
-          writeContextSigned(
-              out,
-              tag,
-              TLV_CONTEXT_SIGNED_4,
-              parseSigned(
-                  requiredValue,
-                  Int.MIN_VALUE.toLong(),
-                  Int.MAX_VALUE.toLong(),
-                  R.string.device_explorer_error_invalid_number,
-              ),
-              4,
-          )
+        writeContextSigned(
+          out,
+          tag,
+          TLV_CONTEXT_SIGNED_4,
+          parseSigned(
+            requiredValue,
+            Int.MIN_VALUE.toLong(),
+            Int.MAX_VALUE.toLong(),
+            R.string.device_explorer_error_invalid_number,
+          ),
+          4,
+        )
       DataType.INT64 ->
-          writeContextSigned(
-              out,
-              tag,
-              TLV_CONTEXT_SIGNED_8,
-              parseSigned(
-                  requiredValue,
-                  Long.MIN_VALUE,
-                  Long.MAX_VALUE,
-                  R.string.device_explorer_error_invalid_number,
-              ),
-              8,
-          )
+        writeContextSigned(
+          out,
+          tag,
+          TLV_CONTEXT_SIGNED_8,
+          parseSigned(
+            requiredValue,
+            Long.MIN_VALUE,
+            Long.MAX_VALUE,
+            R.string.device_explorer_error_invalid_number,
+          ),
+          8,
+        )
       else -> throw ExplorerUnsupportedValueException()
     }
   }
 
   private fun writeContextUnsigned(
-      out: ByteArrayOutputStream,
-      tag: Int,
-      controlByte: Int,
-      value: Long,
-      sizeBytes: Int,
+    out: ByteArrayOutputStream,
+    tag: Int,
+    controlByte: Int,
+    value: Long,
+    sizeBytes: Int,
   ) {
     out.write(controlByte)
     out.write(tag)
@@ -322,11 +322,11 @@ internal object ExplorerTlvCodec {
   }
 
   private fun writeContextSigned(
-      out: ByteArrayOutputStream,
-      tag: Int,
-      controlByte: Int,
-      value: Long,
-      sizeBytes: Int,
+    out: ByteArrayOutputStream,
+    tag: Int,
+    controlByte: Int,
+    value: Long,
+    sizeBytes: Int,
   ) {
     out.write(controlByte)
     out.write(tag)
@@ -334,20 +334,20 @@ internal object ExplorerTlvCodec {
   }
 
   private fun writeAnonymousUnsigned(
-      out: ByteArrayOutputStream,
-      controlByte: Int,
-      value: Long,
-      sizeBytes: Int,
+    out: ByteArrayOutputStream,
+    controlByte: Int,
+    value: Long,
+    sizeBytes: Int,
   ) {
     out.write(controlByte)
     writeLittleEndian(out, value, sizeBytes)
   }
 
   private fun writeAnonymousSigned(
-      out: ByteArrayOutputStream,
-      controlByte: Int,
-      value: Long,
-      sizeBytes: Int,
+    out: ByteArrayOutputStream,
+    controlByte: Int,
+    value: Long,
+    sizeBytes: Int,
   ) {
     out.write(controlByte)
     writeLittleEndian(out, value, sizeBytes)
@@ -358,31 +358,31 @@ internal object ExplorerTlvCodec {
   }
 
   private fun parseUnsigned64(
-      value: String,
-      @StringRes invalidNumberMessageRes: Int,
+    value: String,
+    @StringRes invalidNumberMessageRes: Int,
   ): Long {
     val normalized = value.trim()
     if (normalized.isBlank()) {
       throw ExplorerInputValidationException(invalidNumberMessageRes)
     }
     val ulong =
-        when {
-          normalized.startsWith("0x", ignoreCase = true) ->
-              normalized.substring(2).toULongOrNull(16)
-                  ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
-          else ->
-              normalized.toULongOrNull()
-                  ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
-        }
+      when {
+        normalized.startsWith("0x", ignoreCase = true) ->
+          normalized.substring(2).toULongOrNull(16)
+            ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
+        else ->
+          normalized.toULongOrNull()
+            ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
+      }
     // Reinterpret the ULong bits as Long; writeLittleEndian uses ushr which correctly
     // serializes all 8 bytes regardless of the sign bit.
     return ulong.toLong()
   }
 
   private fun parseUnsigned(
-      value: String,
-      max: Long,
-      @StringRes invalidNumberMessageRes: Int,
+    value: String,
+    max: Long,
+    @StringRes invalidNumberMessageRes: Int,
   ): Long {
     val parsed = parseFlexibleLong(value, invalidNumberMessageRes)
     if (parsed < 0 || parsed > max) {
@@ -392,10 +392,10 @@ internal object ExplorerTlvCodec {
   }
 
   private fun parseSigned(
-      value: String,
-      min: Long,
-      max: Long,
-      @StringRes invalidNumberMessageRes: Int,
+    value: String,
+    min: Long,
+    max: Long,
+    @StringRes invalidNumberMessageRes: Int,
   ): Long {
     val parsed = parseFlexibleLong(value, invalidNumberMessageRes)
     if (parsed < min || parsed > max) {
@@ -411,14 +411,13 @@ internal object ExplorerTlvCodec {
     }
     return when {
       normalized.startsWith("0x", ignoreCase = true) ->
-          normalized.substring(2).toLongOrNull(16)
-              ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
+        normalized.substring(2).toLongOrNull(16)
+          ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
       normalized.startsWith("-0x", ignoreCase = true) ->
-          -(normalized.substring(3).toLongOrNull(16)
-              ?: throw ExplorerInputValidationException(invalidNumberMessageRes))
+        -(normalized.substring(3).toLongOrNull(16)
+          ?: throw ExplorerInputValidationException(invalidNumberMessageRes))
       else ->
-          normalized.toLongOrNull()
-              ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
+        normalized.toLongOrNull() ?: throw ExplorerInputValidationException(invalidNumberMessageRes)
     }
   }
 

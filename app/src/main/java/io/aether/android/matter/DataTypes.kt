@@ -14,7 +14,7 @@ enum class DataType(val label: String) {
   ACTIONS_CLUSTER_ACTION_ERROR_ENUM("ActionsClusterActionErrorEnum"),
   ACTIONS_CLUSTER_ACTION_STATE_ENUM("ActionsClusterActionStateEnum"),
   ADMIN_COMMISSIONING_CLUSTER_COMMISSIONING_WINDOW_STATUS_ENUM(
-      "AdminCommissioningClusterCommissioningWindowStatusEnum",
+    "AdminCommissioningClusterCommissioningWindowStatusEnum",
   ),
   AIR_QUALITY_CLUSTER_AIR_QUALITY_ENUM("AirQualityClusterAirQualityEnum"),
   ALARM_MODE_BITMAP("AlarmModeBitmap"),
@@ -31,22 +31,22 @@ enum class DataType(val label: String) {
   BOOT_REASON("BootReason"),
   BRANDING_INFORMATION("BrandingInformation"),
   CAMERA_AV_SETTINGS_USER_LEVEL_MANAGEMENT_CLUSTER_PHYSICAL_MOVEMENT_ENUM(
-      "CameraAVSettingsUserLevelManagementClusterPhysicalMovementEnum",
+    "CameraAVSettingsUserLevelManagementClusterPhysicalMovementEnum",
   ),
   CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_AUDIO_CODEC_ENUM(
-      "CameraAVStreamManagementClusterAudioCodecEnum",
+    "CameraAVStreamManagementClusterAudioCodecEnum",
   ),
   CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_IMAGE_CODEC_ENUM(
-      "CameraAVStreamManagementClusterImageCodecEnum",
+    "CameraAVStreamManagementClusterImageCodecEnum",
   ),
   CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TRI_STATE_AUTO_ENUM(
-      "CameraAVStreamManagementClusterTriStateAutoEnum",
+    "CameraAVStreamManagementClusterTriStateAutoEnum",
   ),
   CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TWO_WAY_TALK_SUPPORT_TYPE_ENUM(
-      "CameraAVStreamManagementClusterTwoWayTalkSupportTypeEnum",
+    "CameraAVStreamManagementClusterTwoWayTalkSupportTypeEnum",
   ),
   CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_VIDEO_CODEC_ENUM(
-      "CameraAVStreamManagementClusterVideoCodecEnum",
+    "CameraAVStreamManagementClusterVideoCodecEnum",
   ),
   CAPABILITY_MINIMA_STRUCT("CapabilityMinimaStruct"),
   CHANNEL_CLUSTER_STATUS_ENUM("ChannelClusterStatusEnum"),
@@ -60,22 +60,22 @@ enum class DataType(val label: String) {
   CLOSURE_DIMENSION_CLUSTER_ROTATION_AXIS_ENUM("ClosureDimensionClusterRotationAxisEnum"),
   CLOSURE_DIMENSION_CLUSTER_STEP_DIRECTION_ENUM("ClosureDimensionClusterStepDirectionEnum"),
   CLOSURE_DIMENSION_CLUSTER_TRANSLATION_DIRECTION_ENUM(
-      "ClosureDimensionClusterTranslationDirectionEnum",
+    "ClosureDimensionClusterTranslationDirectionEnum",
   ),
   CLUSTER_ID("ClusterId"),
   COMMODITY_PRICE_DETAIL_BITMAP("CommodityPriceDetailBitmap"),
   COMMODITY_PRICE_STRUCT("CommodityPriceStruct"),
   COMMODITY_TARIFF_CLUSTER_DAY_ENTRY_RANDOMIZATION_TYPE_ENUM(
-      "CommodityTariffClusterDayEntryRandomizationTypeEnum",
+    "CommodityTariffClusterDayEntryRandomizationTypeEnum",
   ),
   CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM(
-      "ConcentrationMeasurementClusterLevelValueEnum",
+    "ConcentrationMeasurementClusterLevelValueEnum",
   ),
   CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM(
-      "ConcentrationMeasurementClusterMeasurementMediumEnum",
+    "ConcentrationMeasurementClusterMeasurementMediumEnum",
   ),
   CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM(
-      "ConcentrationMeasurementClusterMeasurementUnitEnum",
+    "ConcentrationMeasurementClusterMeasurementUnitEnum",
   ),
   CONTENT_APP_OBSERVER_CLUSTER_STATUS_ENUM("ContentAppObserverClusterStatusEnum"),
   CONTENT_LAUNCHER_CLUSTER_STATUS_ENUM("ContentLauncherClusterStatusEnum"),
@@ -90,13 +90,13 @@ enum class DataType(val label: String) {
   DAY_STRUCT("DayStruct"),
   DAYS_MASK_MAP("DaysMaskMap"),
   DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM(
-      "DeviceEnergyManagementClusterAdjustmentCauseEnum",
+    "DeviceEnergyManagementClusterAdjustmentCauseEnum",
   ),
   DEVICE_ENERGY_MANAGEMENT_CLUSTER_CAUSE_ENUM("DeviceEnergyManagementClusterCauseEnum"),
   DEVICE_ENERGY_MANAGEMENT_CLUSTER_ESA_STATE_ENUM("DeviceEnergyManagementClusterESAStateEnum"),
   DEVICE_ENERGY_MANAGEMENT_CLUSTER_ESA_TYPE_ENUM("DeviceEnergyManagementClusterESATypeEnum"),
   DEVICE_ENERGY_MANAGEMENT_CLUSTER_OPT_OUT_STATE_ENUM(
-      "DeviceEnergyManagementClusterOptOutStateEnum",
+    "DeviceEnergyManagementClusterOptOutStateEnum",
   ),
   DEVICE_LOAD_STRUCT("DeviceLoadStruct"),
   DIAGNOSTIC_LOGS_CLUSTER_INTENT_ENUM("DiagnosticLogsClusterIntentEnum"),
@@ -106,7 +106,7 @@ enum class DataType(val label: String) {
   DIAGNOSTICS_THREAD_CLUSTER_CONNECTION_STATUS_ENUM("DiagnosticsThreadClusterConnectionStatusEnum"),
   DIAGNOSTICS_THREAD_CLUSTER_ROUTING_ROLE_ENUM("DiagnosticsThreadClusterRoutingRoleEnum"),
   DIAGNOSTICS_WI_FI_CLUSTER_ASSOCIATION_FAILURE_CAUSE_ENUM(
-      "DiagnosticsWiFiClusterAssociationFailureCauseEnum",
+    "DiagnosticsWiFiClusterAssociationFailureCauseEnum",
   ),
   DIAGNOSTICS_WI_FI_CLUSTER_CONNECTION_STATUS_ENUM("DiagnosticsWiFiClusterConnectionStatusEnum"),
   DIAGNOSTICS_WI_FI_CLUSTER_SECURITY_TYPE_ENUM("DiagnosticsWiFiClusterSecurityTypeEnum"),
@@ -126,11 +126,11 @@ enum class DataType(val label: String) {
   ELAPSED_SECONDS("ElapsedSeconds"),
   ELECTRICAL_GRID_CONDITIONS_STRUCT("ElectricalGridConditionsStruct"),
   ELECTRICAL_POWER_MEASUREMENT_CLUSTER_POWER_MODE_ENUM(
-      "ElectricalPowerMeasurementClusterPowerModeEnum",
+    "ElectricalPowerMeasurementClusterPowerModeEnum",
   ),
   ENDPOINT_ID("EndpointId"),
   ENERGY_EVSE_CLUSTER_ENERGY_TRANSFER_STOPPED_REASON_ENUM(
-      "EnergyEVSEClusterEnergyTransferStoppedReasonEnum",
+    "EnergyEVSEClusterEnergyTransferStoppedReasonEnum",
   ),
   ENERGY_EVSE_CLUSTER_FAULT_STATE_ENUM("EnergyEVSEClusterFaultStateEnum"),
   ENERGY_EVSE_CLUSTER_STATE_ENUM("EnergyEVSEClusterStateEnum"),
@@ -148,13 +148,13 @@ enum class DataType(val label: String) {
   FAN_CONTROL_CLUSTER_STEP_DIRECTION_ENUM("FanControlClusterStepDirectionEnum"),
   FORECAST_STRUCT("ForecastStruct"),
   GENERAL_COMMISSIONING_CLUSTER_COMMISSIONING_ERROR_ENUM(
-      "GeneralCommissioningClusterCommissioningErrorEnum",
+    "GeneralCommissioningClusterCommissioningErrorEnum",
   ),
   GENERAL_COMMISSIONING_CLUSTER_NETWORK_RECOVERY_REASON_ENUM(
-      "GeneralCommissioningClusterNetworkRecoveryReasonEnum",
+    "GeneralCommissioningClusterNetworkRecoveryReasonEnum",
   ),
   GENERAL_COMMISSIONING_CLUSTER_REGULATORY_LOCATION_TYPE_ENUM(
-      "GeneralCommissioningClusterRegulatoryLocationTypeEnum",
+    "GeneralCommissioningClusterRegulatoryLocationTypeEnum",
   ),
   GROUP_ID("GroupId"),
   GROUP_KEY_SET_STRUCT("GroupKeySetStruct"),
@@ -172,19 +172,19 @@ enum class DataType(val label: String) {
   INT64("Int64"),
   INT8("Int8"),
   JOINT_FABRIC_ADMINISTRATOR_CLUSTER_TRANSFER_ANCHOR_RESPONSE_STATUS_ENUM(
-      "JointFabricAdministratorClusterTransferAnchorResponseStatusEnum",
+    "JointFabricAdministratorClusterTransferAnchorResponseStatusEnum",
   ),
   JOINT_FABRIC_PKI_CLUSTER_ICAC_SIGNING_REQUEST_STATUS_ENUM(
-      "JointFabricPKIClusterICACSigningRequestStatusEnum",
+    "JointFabricPKIClusterICACSigningRequestStatusEnum",
   ),
   JOINT_FABRIC_PKI_CLUSTER_TRANSFER_ANCHOR_RESPONSE_STATUS_ENUM(
-      "JointFabricPKIClusterTransferAnchorResponseStatusEnum",
+    "JointFabricPKIClusterTransferAnchorResponseStatusEnum",
   ),
   KEYPAD_INPUT_CLUSTER_STATUS_ENUM("KeypadInputClusterStatusEnum"),
   LATCH_CONTROL_MODES_BITMAP("LatchControlModesBitmap"),
   LAUNDRY_DRYER_CONTROLS_CLUSTER_DRYNESS_LEVEL_ENUM("LaundryDryerControlsClusterDrynessLevelEnum"),
   LAUNDRY_WASHER_CONTROLS_CLUSTER_NUMBER_OF_RINSES_ENUM(
-      "LaundryWasherControlsClusterNumberOfRinsesEnum",
+    "LaundryWasherControlsClusterNumberOfRinsesEnum",
   ),
   LINEUP_INFO("LineupInfo"),
   LIST_ACCESS_CONTROL_ENTRY_STRUCT("List<AccessControlEntryStruct>"),
@@ -207,7 +207,7 @@ enum class DataType(val label: String) {
   LIST_CLOSURE_CONTROL_CLUSTER_CLOSURE_ERROR_ENUM("List<ClosureControlClusterClosureErrorEnum>"),
   LIST_CLUSTER_ID("List<ClusterId>"),
   LIST_COMMISSIONING_ACCESS_RESTRICTION_ENTRY_STRUCT(
-      "List<CommissioningAccessRestrictionEntryStruct>",
+    "List<CommissioningAccessRestrictionEntryStruct>",
   ),
   LIST_COMMODITY_PRICE_STRUCT("List<CommodityPriceStruct>"),
   LIST_CONFIGURATION_STRUCT("List<ConfigurationStruct>"),
@@ -228,13 +228,13 @@ enum class DataType(val label: String) {
   LIST_DAY_STRUCT("List<DayStruct>"),
   LIST_DEVICE_TYPE_STRUCT("List<DeviceTypeStruct>"),
   LIST_DIAGNOSTICS_GENERAL_CLUSTER_HARDWARE_FAULT_ENUM(
-      "List<DiagnosticsGeneralClusterHardwareFaultEnum>",
+    "List<DiagnosticsGeneralClusterHardwareFaultEnum>",
   ),
   LIST_DIAGNOSTICS_GENERAL_CLUSTER_NETWORK_FAULT_ENUM(
-      "List<DiagnosticsGeneralClusterNetworkFaultEnum>",
+    "List<DiagnosticsGeneralClusterNetworkFaultEnum>",
   ),
   LIST_DIAGNOSTICS_GENERAL_CLUSTER_RADIO_FAULT_ENUM(
-      "List<DiagnosticsGeneralClusterRadioFaultEnum>",
+    "List<DiagnosticsGeneralClusterRadioFaultEnum>",
   ),
   LIST_DIAGNOSTICS_THREAD_CLUSTER_NETWORK_FAULT("List<DiagnosticsThreadClusterNetworkFault>"),
   LIST_DST_OFFSET_TYPE("List<DstOffsetType>"),
@@ -244,7 +244,7 @@ enum class DataType(val label: String) {
   LIST_ENDPOINT_ID("List<EndpointId>"),
   LIST_ENDPOINT_LIST_STRUCT("List<EndpointListStruct>"),
   LIST_ENERGY_PREFERENCE_CLUSTER_ENERGY_PRIORITY_ENUM(
-      "List<EnergyPreferenceClusterEnergyPriorityEnum>",
+    "List<EnergyPreferenceClusterEnergyPriorityEnum>",
   ),
   LIST_EXTENSION_FIELD_SET("List<ExtensionFieldSet>"),
   LIST_EXTENSION_FIELD_SET_STRUCT("List<ExtensionFieldSetStruct>"),
@@ -260,13 +260,13 @@ enum class DataType(val label: String) {
   LIST_INPUT_INFO("List<InputInfo>"),
   LIST_LABEL_STRUCT("List<LabelStruct>"),
   LIST_LAUNDRY_DRYER_CONTROLS_CLUSTER_DRYNESS_LEVEL_ENUM(
-      "List<LaundryDryerControlsClusterDrynessLevelEnum>",
+    "List<LaundryDryerControlsClusterDrynessLevelEnum>",
   ),
   LIST_LAUNDRY_WASHER_CONTROLS_CLUSTER_NUMBER_OF_RINSES_ENUM(
-      "List<LaundryWasherControlsClusterNumberOfRinsesEnum>",
+    "List<LaundryWasherControlsClusterNumberOfRinsesEnum>",
   ),
   LIST_LOCALIZATION_TIME_FORMAT_CLUSTER_CALENDAR_TYPE(
-      "List<LocalizationTimeFormatClusterCalendarType>",
+    "List<LocalizationTimeFormatClusterCalendarType>",
   ),
   LIST_LOCALIZATION_UNIT_CLUSTER_TEMP_UNIT_ENUM("List<LocalizationUnitClusterTempUnitEnum>"),
   LIST_MPTZ_PRESET_STRUCT("List<MPTZPresetStruct>"),
@@ -283,7 +283,7 @@ enum class DataType(val label: String) {
   LIST_NOC_STRUCT("List<NOCStruct>"),
   LIST_NEIGHBOR_TABLE_STRUCT("List<NeighborTableStruct>"),
   LIST_NETWORK_COMMISSIONING_CLUSTER_WI_FI_BAND_ENUM(
-      "List<NetworkCommissioningClusterWiFiBandEnum>",
+    "List<NetworkCommissioningClusterWiFiBandEnum>",
   ),
   LIST_NETWORK_INFO_STRUCTURE("List<NetworkInfoStructure>"),
   LIST_NETWORK_INTERFACE_STRUCT("List<NetworkInterfaceStruct>"),
@@ -365,7 +365,7 @@ enum class DataType(val label: String) {
   MODE_FOR_SEQUENCE("ModeForSequence"),
   MODE_SELECT_CLUSTER_CHANGE_TO_MODE_STATUS_ENUM("ModeSelectClusterChangeToModeStatusEnum"),
   NETWORK_COMMISSIONING_CLUSTER_NETWORK_COMMISSIONING_STATUS_ENUM(
-      "NetworkCommissioningClusterNetworkCommissioningStatusEnum",
+    "NetworkCommissioningClusterNetworkCommissioningStatusEnum",
   ),
   NODE_ID("NodeId"),
   OTA_PROVIDER_CLUSTER_APPLY_UPDATE_ACTION_ENUM("OTAProviderClusterApplyUpdateActionEnum"),
@@ -378,10 +378,10 @@ enum class DataType(val label: String) {
   OCTET_STRING("OctetString"),
   ON_OFF_CLUSTER_START_UP_ON_OFF_ENUM("OnOffClusterStartUpOnOffEnum"),
   OPERATIONAL_CREDENTIAL_CLUSTER_CERTIFICATE_CHAIN_TYPE_ENUM(
-      "OperationalCredentialClusterCertificateChainTypeEnum",
+    "OperationalCredentialClusterCertificateChainTypeEnum",
   ),
   OPERATIONAL_CREDENTIAL_CLUSTER_NODE_OPERATIONAL_CERT_STATUS_ENUM(
-      "OperationalCredentialClusterNodeOperationalCertStatusEnum",
+    "OperationalCredentialClusterNodeOperationalCertStatusEnum",
   ),
   OPERATIONAL_DATASET_COMPONENTS_STRUCT("OperationalDatasetComponentsStruct"),
   OPERATIONAL_STATE_CLUSTER_OPERATIONAL_STATE_ENUM("OperationalStateClusterOperationalStateEnum"),
@@ -405,33 +405,33 @@ enum class DataType(val label: String) {
   POWER_THRESHOLD_STRUCT("PowerThresholdStruct"),
   PRODUCT_APPEARANCE_STRUCT("ProductAppearanceStruct"),
   PUMP_CONFIGURATION_CONTROL_CLUSTER_CONTROL_MODE_ENUM(
-      "PumpConfigurationControlClusterControlModeEnum",
+    "PumpConfigurationControlClusterControlModeEnum",
   ),
   PUMP_CONFIGURATION_CONTROL_CLUSTER_OPERATION_MODE_ENUM(
-      "PumpConfigurationControlClusterOperationModeEnum",
+    "PumpConfigurationControlClusterOperationModeEnum",
   ),
   PUMP_STATUS_BITMAP("PumpStatusBitmap"),
   PUSH_AV_STREAM_TRANSPORT_CLUSTER_CONTAINER_FORMAT_ENUM(
-      "PushAVStreamTransportClusterContainerFormatEnum",
+    "PushAVStreamTransportClusterContainerFormatEnum",
   ),
   PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRANSPORT_STATUS_ENUM(
-      "PushAVStreamTransportClusterTransportStatusEnum",
+    "PushAVStreamTransportClusterTransportStatusEnum",
   ),
   PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRANSPORT_TRIGGER_TYPE_ENUM(
-      "PushAVStreamTransportClusterTransportTriggerTypeEnum",
+    "PushAVStreamTransportClusterTransportTriggerTypeEnum",
   ),
   PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRIGGER_ACTIVATION_REASON_ENUM(
-      "PushAVStreamTransportClusterTriggerActivationReasonEnum",
+    "PushAVStreamTransportClusterTriggerActivationReasonEnum",
   ),
   PUSH_TRANSPORT_CONNECTION_ID("PushTransportConnectionID"),
   RANGE_PERCENT100THS_STRUCT("RangePercent100thsStruct"),
   RECORDING_FLAG_BITMAP("RecordingFlagBitmap"),
   RELAY_STATE_BITMAP("RelayStateBitmap"),
   RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM(
-      "ResourceMonitoringClusterChangeIndicationEnum",
+    "ResourceMonitoringClusterChangeIndicationEnum",
   ),
   RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM(
-      "ResourceMonitoringClusterDegradationDirectionEnum",
+    "ResourceMonitoringClusterDegradationDirectionEnum",
   ),
   S_FRAME_STRUCT("SFrameStruct"),
   SCHEDULE_DAY_OF_WEEK_BITMAP("ScheduleDayOfWeekBitmap"),
@@ -492,7 +492,7 @@ enum class DataType(val label: String) {
   UNSIGNED_TEMPERATURE_CX10TEMP_U8_TYPE("UnsignedTemperatureCX10tempU8Type"),
   USER_ACTIVE_MODE_TRIGGER_BITMAP("UserActiveModeTriggerBitmap"),
   VALVE_CONFIGURATION_CONTROL_CLUSTER_VALVE_STATE_ENUM(
-      "ValveConfigurationControlClusterValveStateEnum",
+    "ValveConfigurationControlClusterValveStateEnum",
   ),
   VALVE_FAULT_BITMAP("ValveFaultBitmap"),
   VENDOR_ID("VendorId"),
@@ -508,10 +508,10 @@ enum class DataType(val label: String) {
   WEB_RTC_SESSION_ID("WebRTCSessionID"),
   ZONE_ID("ZoneID"),
   ZONE_MANAGEMENT_CLUSTER_ZONE_EVENT_STOPPED_REASON_ENUM(
-      "ZoneManagementClusterZoneEventStoppedReasonEnum",
+    "ZoneManagementClusterZoneEventStoppedReasonEnum",
   ),
   ZONE_MANAGEMENT_CLUSTER_ZONE_EVENT_TRIGGERED_REASON_ENUM(
-      "ZoneManagementClusterZoneEventTriggeredReasonEnum",
+    "ZoneManagementClusterZoneEventTriggeredReasonEnum",
   ),
   ZONE_TRIGGER_CONTROL_STRUCT("ZoneTriggerControlStruct"),
 }

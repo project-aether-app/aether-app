@@ -27,11 +27,11 @@ import javax.inject.Inject
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 
-class GmsDeviceCommissioner @Inject constructor(@ApplicationContext private val context: Context) :
-    DeviceCommissioner {
+class GmsDeviceCommissioner @Inject constructor(@param:ApplicationContext private val context: Context) :
+  DeviceCommissioner {
 
   override suspend fun createIntentSender(): IntentSender =
-      request(CommissioningRequest.builder().setCommissioningService(service()).build())
+    request(CommissioningRequest.builder().setCommissioningService(service()).build())
 
   override suspend fun createMultiAdminIntentSender(intent: Intent): IntentSender {
     Timber.d("Starting multi-admin commissioning data=${SharedDeviceData.fromIntent(intent)}")
@@ -43,17 +43,17 @@ class GmsDeviceCommissioner @Inject constructor(@ApplicationContext private val 
       throw CommissioningWindowExpiringException(timeLeftSeconds)
     }
     val deviceInfo =
-        DeviceInfo.builder()
-            .setProductId(intent.getIntExtra(EXTRA_PRODUCT_ID, -1))
-            .setVendorId(intent.getIntExtra(EXTRA_VENDOR_ID, -1))
-            .build()
+      DeviceInfo.builder()
+        .setProductId(intent.getIntExtra(EXTRA_PRODUCT_ID, -1))
+        .setVendorId(intent.getIntExtra(EXTRA_VENDOR_ID, -1))
+        .build()
     return request(
-        CommissioningRequest.builder()
-            .setCommissioningService(service())
-            .setDeviceNameHint(intent.getStringExtra(EXTRA_DEVICE_NAME))
-            .setDeviceInfo(deviceInfo)
-            .setOnboardingPayload(intent.getStringExtra(EXTRA_MANUAL_PAIRING_CODE))
-            .build(),
+      CommissioningRequest.builder()
+        .setCommissioningService(service())
+        .setDeviceNameHint(intent.getStringExtra(EXTRA_DEVICE_NAME))
+        .setDeviceInfo(deviceInfo)
+        .setOnboardingPayload(intent.getStringExtra(EXTRA_MANUAL_PAIRING_CODE))
+        .build(),
     )
   }
 
@@ -62,19 +62,19 @@ class GmsDeviceCommissioner @Inject constructor(@ApplicationContext private val 
     val nodeId = result.token?.toLong()?.toNodeId() ?: return null
     val descriptor = result.commissionedDeviceDescriptor
     return CommissionedDevice(
-        nodeId = nodeId,
-        vendorId = descriptor.vendorId.toVendorId(),
-        productId = descriptor.productId.toProductId(),
+      nodeId = nodeId,
+      vendorId = descriptor.vendorId.toVendorId(),
+      productId = descriptor.productId.toProductId(),
     )
   }
 
   private fun service() = ComponentName(context, AppCommissioningService::class.java)
 
   private suspend fun request(request: CommissioningRequest): IntentSender =
-      suspendCancellableCoroutine { cont ->
-        Matter.getCommissioningClient(context)
-            .commissionDevice(request)
-            .addOnSuccessListener { cont.resumeWith(Result.success(it)) }
-            .addOnFailureListener { cont.resumeWith(Result.failure(it)) }
-      }
+    suspendCancellableCoroutine { cont ->
+      Matter.getCommissioningClient(context)
+        .commissionDevice(request)
+        .addOnSuccessListener { cont.resumeWith(Result.success(it)) }
+        .addOnFailureListener { cont.resumeWith(Result.failure(it)) }
+    }
 }

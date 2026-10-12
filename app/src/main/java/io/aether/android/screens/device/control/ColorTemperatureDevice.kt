@@ -38,25 +38,25 @@ import io.aether.android.spacing
  */
 @Composable
 internal fun ColorTemperatureDeviceControl(
-    device: Device,
-    endpoint: Endpoint,
-    lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
-    onOnOffClick: (Boolean) -> Unit,
-    onBrightnessChange: (Int) -> Unit,
-    onColorTemperatureChange: (Int) -> Unit,
+  device: Device,
+  endpoint: Endpoint,
+  lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
+  onOnOffClick: (Boolean) -> Unit,
+  onBrightnessChange: (Int) -> Unit,
+  onColorTemperatureChange: (Int) -> Unit,
 ) {
   var isOnline by remember(device, endpoint) { mutableStateOf(device.isOnline) }
   var isOn by remember(device, endpoint) { mutableStateOf(endpoint.isOn) }
   var brightness by remember(device, endpoint) { mutableFloatStateOf(endpoint.level / LEVEL_MAX) }
   var colorTemperature by
-      remember(device, endpoint) {
-        mutableFloatStateOf(endpoint.colorTemperature / COLOR_TEMPERATURE_MAX)
-      }
+    remember(device, endpoint) {
+      mutableFloatStateOf(endpoint.colorTemperature / COLOR_TEMPERATURE_MAX)
+    }
 
   LaunchedEffect(device, endpoint, lastUpdatedDeviceState) {
     when {
       lastUpdatedDeviceState?.nodeId == device.id &&
-          lastUpdatedDeviceState.endpointId == endpoint.id -> {
+        lastUpdatedDeviceState.endpointId == endpoint.id -> {
         isOnline = lastUpdatedDeviceState.online
         isOn = lastUpdatedDeviceState.on
         brightness = lastUpdatedDeviceState.level / LEVEL_MAX
@@ -73,30 +73,30 @@ internal fun ColorTemperatureDeviceControl(
 
   Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal)) {
     OnOffClusterControl(
-        isOnline = isOnline,
-        isOn = isOn,
-        onToggle = { value ->
-          isOn = value
-          onOnOffClick(value)
-        },
+      isOnline = isOnline,
+      isOn = isOn,
+      onToggle = { value ->
+        isOn = value
+        onOnOffClick(value)
+      },
     )
     LevelClusterControl(
-        title = stringResource(R.string.brightness),
-        isOnline = isOnline,
-        isOn = isOn,
-        level = brightness,
-        onLevelChange = { brightness = it },
-        onLevelChangeFinished = { onBrightnessChange((brightness * LEVEL_MAX).toInt()) },
+      title = stringResource(R.string.brightness),
+      isOnline = isOnline,
+      isOn = isOn,
+      level = brightness,
+      onLevelChange = { brightness = it },
+      onLevelChangeFinished = { onBrightnessChange((brightness * LEVEL_MAX).toInt()) },
     )
     LevelClusterControl(
-        title = stringResource(R.string.color_temperature),
-        isOnline = isOnline,
-        isOn = isOn,
-        level = colorTemperature,
-        onLevelChange = { colorTemperature = it },
-        onLevelChangeFinished = {
-          onColorTemperatureChange((colorTemperature * COLOR_TEMPERATURE_MAX).toInt())
-        },
+      title = stringResource(R.string.color_temperature),
+      isOnline = isOnline,
+      isOn = isOn,
+      level = colorTemperature,
+      onLevelChange = { colorTemperature = it },
+      onLevelChangeFinished = {
+        onColorTemperatureChange((colorTemperature * COLOR_TEMPERATURE_MAX).toInt())
+      },
     )
   }
 }

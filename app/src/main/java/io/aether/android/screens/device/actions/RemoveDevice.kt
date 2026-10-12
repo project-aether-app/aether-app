@@ -15,54 +15,54 @@ import io.aether.android.R
 
 @Composable
 internal fun RemoveDeviceConfirmationDialog(
-    onConfirm: () -> Unit,
-    onDismissRequest: () -> Unit,
+  onConfirm: () -> Unit,
+  onDismissRequest: () -> Unit,
 ) {
   AlertDialog(
-      title = { Text(stringResource(R.string.device_remove_dialog_title)) },
-      text = { Text(stringResource(R.string.device_remove_dialog_body)) },
-      confirmButton = {
-        Button(
-            onClick = onConfirm,
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError,
-                ),
-        ) {
-          Text(stringResource(R.string.device_remove_dialog_yes))
-        }
-      },
-      onDismissRequest = onDismissRequest,
-      dismissButton = {
-        TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
-      },
+    title = { Text(stringResource(R.string.device_remove_dialog_title)) },
+    text = { Text(stringResource(R.string.device_remove_dialog_body)) },
+    confirmButton = {
+      Button(
+        onClick = onConfirm,
+        colors =
+          ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError,
+          ),
+      ) {
+        Text(stringResource(R.string.device_remove_dialog_yes))
+      }
+    },
+    onDismissRequest = onDismissRequest,
+    dismissButton = {
+      TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
+    },
   )
 }
 
 @Composable
 internal fun ForceRemoveDeviceConfirmationDialog(
-    onConfirm: () -> Unit,
-    onDismissRequest: () -> Unit,
+  onConfirm: () -> Unit,
+  onDismissRequest: () -> Unit,
 ) {
   AlertDialog(
-      title = { Text(stringResource(R.string.device_remove_failed_confirm_dialog_title)) },
-      text = { Text(stringResource(R.string.device_remove_failed_confirm_dialog_body)) },
-      confirmButton = {
-        Button(
-            onClick = onConfirm,
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError,
-                ),
-        ) {
-          Text(stringResource(R.string.device_remove_failed_confirm_dialog_yes))
-        }
-      },
-      onDismissRequest = onDismissRequest,
-      dismissButton = {
-        TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
-      },
+    title = { Text(stringResource(R.string.device_remove_failed_confirm_dialog_title)) },
+    text = { Text(stringResource(R.string.device_remove_failed_confirm_dialog_body)) },
+    confirmButton = {
+      Button(
+        onClick = onConfirm,
+        colors =
+          ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError,
+          ),
+      ) {
+        Text(stringResource(R.string.device_remove_failed_confirm_dialog_yes))
+      }
+    },
+    onDismissRequest = onDismissRequest,
+    dismissButton = {
+      TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
+    },
   )
 }

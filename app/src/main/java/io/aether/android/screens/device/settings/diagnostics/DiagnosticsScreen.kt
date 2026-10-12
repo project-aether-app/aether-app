@@ -36,9 +36,9 @@ import io.aether.android.spacing
 
 @Composable
 internal fun DiagnosticsRoute(
-    onBackClick: () -> Unit,
-    nodeId: NodeId,
-    viewModel: DiagnosticsViewModel = hiltViewModel(),
+  onBackClick: () -> Unit,
+  nodeId: NodeId,
+  viewModel: DiagnosticsViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -48,59 +48,59 @@ internal fun DiagnosticsRoute(
   }
 
   DiagnosticsScreen(
-      uiState = uiState,
-      onBackClick = onBackClick,
-      onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
+    uiState = uiState,
+    onBackClick = onBackClick,
+    onRefresh = { viewModel.loadDiagnostics(nodeId, forceRefresh = true) },
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiagnosticsScreen(
-    uiState: DiagnosticsUiState,
-    onBackClick: () -> Unit,
-    onRefresh: () -> Unit,
+  uiState: DiagnosticsUiState,
+  onBackClick: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
   Scaffold(
-      topBar = {
-        Column {
-          TopAppBar(
-              title = { Text(stringResource(R.string.device_settings_admin_diagnostics)) },
-              navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                  Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                }
-              },
-          )
-        }
-      },
+    topBar = {
+      Column {
+        TopAppBar(
+          title = { Text(stringResource(R.string.device_settings_admin_diagnostics)) },
+          navigationIcon = {
+            IconButton(onClick = onBackClick) {
+              Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+          },
+        )
+      }
+    },
   ) { innerPadding ->
     if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
-          stringResource(R.string.device_diagnostics_loading),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
+        stringResource(R.string.device_diagnostics_loading),
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
     } else {
       PullToRefreshBox(
-          isRefreshing = uiState.isBackgroundRefreshing,
-          onRefresh = onRefresh,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
+        isRefreshing = uiState.isBackgroundRefreshing,
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
       ) {
         if (uiState.errorMessageRes != null) {
           // Satisfy the requirement of having a scrollable container.
           Box(
-              modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-              contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center,
           ) {
             EmptyStateErrorBanner(
-                stringResource(uiState.errorMessageRes),
-                modifier = Modifier.fillMaxSize(),
+              stringResource(uiState.errorMessageRes),
+              modifier = Modifier.fillMaxSize(),
             )
           }
         } else {
           Diagnostics(
-              uiState = uiState,
-              modifier = Modifier.fillMaxSize(),
+            uiState = uiState,
+            modifier = Modifier.fillMaxSize(),
           )
         }
       }
@@ -110,16 +110,16 @@ fun DiagnosticsScreen(
 
 @Composable
 private fun Diagnostics(
-    uiState: DiagnosticsUiState,
-    modifier: Modifier = Modifier,
+  uiState: DiagnosticsUiState,
+  modifier: Modifier = Modifier,
 ) {
   Column(
-      modifier =
-          modifier
-              .fillMaxSize()
-              .verticalScroll(rememberScrollState())
-              .padding(MaterialTheme.spacing.paddingNormal),
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+    modifier =
+      modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(MaterialTheme.spacing.paddingNormal),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     uiState.generalDiagnostics?.let { GeneralDiagnostics(it) }
     uiState.ethernetNetworkDiagnostics?.let { EthernetNetworkDiagnostics(it) }

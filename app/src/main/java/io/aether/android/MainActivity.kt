@@ -60,10 +60,10 @@ class MainActivity : ComponentActivity() {
     APP_NAME = getString(R.string.app_name)
     packageInfo.packageName
     Timber.i(
-        "====================================\n" +
-            "Version ${VERSION_NAME}\n" +
-            "App     ${APP_NAME}\n" +
-            "====================================",
+      "====================================\n" +
+        "Version ${VERSION_NAME}\n" +
+        "App     ${APP_NAME}\n" +
+        "====================================",
     )
   }
 }

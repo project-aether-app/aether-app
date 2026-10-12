@@ -6,2066 +6,1983 @@
 package io.aether.android.matter
 
 val CLUSTERS_1_3 =
-    mapOf<ClusterId, ClusterInfo>(
-        Clusters.OvenCavityOperationalState.ID to
-            ClusterInfo(
-                name = "Oven Cavity Operational State",
-                attributes = mapOf<AttributeId, AttributeInfo>(),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.OvenCavityOperationalState.CommandsOutgoing.Pause.ID to
-                            CommandInfo(
-                                name = "Pause",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OvenCavityOperationalState.CommandsOutgoing.Stop.ID to
-                            CommandInfo(
-                                name = "Stop",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OvenCavityOperationalState.CommandsOutgoing.Start.ID to
-                            CommandInfo(
-                                name = "Start",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OvenCavityOperationalState.CommandsOutgoing.Resume.ID to
-                            CommandInfo(
-                                name = "Resume",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OvenCavityOperationalState.CommandsOutgoing
-                            .OperationalCommandResponse
-                            .ID to
-                            CommandInfo(
-                                name = "OperationalCommandResponse",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.OvenMode.ID to
-            ClusterInfo(
-                name = "Oven Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.OvenMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.OvenMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.OvenMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.OvenMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.LaundryDryerControls.ID to
-            ClusterInfo(
-                name = "Laundry Dryer Controls",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.LaundryDryerControls.Attributes.SupportedDrynessLevels.ID to
-                            AttributeInfo(
-                                name = "SupportedDrynessLevels",
-                                type =
-                                    DataType.LIST_LAUNDRY_DRYER_CONTROLS_CLUSTER_DRYNESS_LEVEL_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.LaundryDryerControls.Attributes.SelectedDrynessLevel.ID to
-                            AttributeInfo(
-                                name = "SelectedDrynessLevel",
-                                type = DataType.LAUNDRY_DRYER_CONTROLS_CLUSTER_DRYNESS_LEVEL_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.MicrowaveOvenMode.ID to
-            ClusterInfo(
-                name = "Microwave Oven Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.MicrowaveOvenMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.MicrowaveOvenMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.MicrowaveOvenMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.MicrowaveOvenMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.MicrowaveOvenMode.CommandsOutgoing.ChangeToMode.ID to
-                            CommandInfo(
-                                name = "ChangeToMode",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.MicrowaveOvenMode.CommandsOutgoing.ChangeToModeResponse.ID to
-                            CommandInfo(
-                                name = "ChangeToModeResponse",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.MicrowaveOvenControl.ID to
-            ClusterInfo(
-                name = "Microwave Oven Control",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.MicrowaveOvenControl.Attributes.CookTime.ID to
-                            AttributeInfo(
-                                name = "CookTime",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.MaxCookTime.ID to
-                            AttributeInfo(
-                                name = "MaxCookTime",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.PowerSetting.ID to
-                            AttributeInfo(
-                                name = "PowerSetting",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.MinPower.ID to
-                            AttributeInfo(
-                                name = "MinPower",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.MaxPower.ID to
-                            AttributeInfo(
-                                name = "MaxPower",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.PowerStep.ID to
-                            AttributeInfo(
-                                name = "PowerStep",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.SupportedWatts.ID to
-                            AttributeInfo(
-                                name = "SupportedWatts",
-                                type = DataType.LIST_U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.SelectedWattIndex.ID to
-                            AttributeInfo(
-                                name = "SelectedWattIndex",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MicrowaveOvenControl.Attributes.WattRating.ID to
-                            AttributeInfo(
-                                name = "WattRating",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.MicrowaveOvenControl.CommandsIncoming.SetCookingParameters.ID to
-                            CommandInfo(
-                                name = "SetCookingParameters",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CookMode",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "CookTime",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "PowerSetting",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "WattSettingIndex",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "StartAfterSetting",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.MicrowaveOvenControl.CommandsIncoming.AddMoreTime.ID to
-                            CommandInfo(
-                                name = "AddMoreTime",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TimeToAdd",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ScenesManagement.ID to
-            ClusterInfo(
-                name = "Scenes Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ScenesManagement.Attributes.DoNotUse.ID to
-                            AttributeInfo(
-                                name = "DoNotUse",
-                                type = DataType.NODE_ID,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ScenesManagement.Attributes.SceneTableSize.ID to
-                            AttributeInfo(
-                                name = "SceneTableSize",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ScenesManagement.Attributes.FabricSceneInfo.ID to
-                            AttributeInfo(
-                                name = "FabricSceneInfo",
-                                type = DataType.LIST_SCENE_INFO_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ScenesManagement.CommandsIncoming.AddScene.ID to
-                            CommandInfo(
-                                name = "AddScene",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "TransitionTime",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "SceneName",
-                                                type = DataType.STRING,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "ExtensionFieldSetStructs",
-                                                type = DataType.LIST_EXTENSION_FIELD_SET_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.ViewScene.ID to
-                            CommandInfo(
-                                name = "ViewScene",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.RemoveScene.ID to
-                            CommandInfo(
-                                name = "RemoveScene",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.RemoveAllScenes.ID to
-                            CommandInfo(
-                                name = "RemoveAllScenes",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.StoreScene.ID to
-                            CommandInfo(
-                                name = "StoreScene",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.RecallScene.ID to
-                            CommandInfo(
-                                name = "RecallScene",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "TransitionTime",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.GetSceneMembership.ID to
-                            CommandInfo(
-                                name = "GetSceneMembership",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsIncoming.CopyScene.ID to
-                            CommandInfo(
-                                name = "CopyScene",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Mode",
-                                                type = DataType.COPY_MODE_BITMAP,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupIdentifierFrom",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "SceneIdentifierFrom",
-                                                type = DataType.MAX254,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "GroupIdentifierTo",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "SceneIdentifierTo",
-                                                type = DataType.MAX254,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ScenesManagement.CommandsOutgoing.AddSceneResponse.ID to
-                            CommandInfo(
-                                name = "AddSceneResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsOutgoing.ViewSceneResponse.ID to
-                            CommandInfo(
-                                name = "ViewSceneResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "TransitionTime",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "SceneName",
-                                                type = DataType.STRING,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "ExtensionFieldSetStructs",
-                                                type = DataType.LIST_EXTENSION_FIELD_SET_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsOutgoing.RemoveSceneResponse.ID to
-                            CommandInfo(
-                                name = "RemoveSceneResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsOutgoing.RemoveAllScenesResponse.ID to
-                            CommandInfo(
-                                name = "RemoveAllScenesResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsOutgoing.StoreSceneResponse.ID to
-                            CommandInfo(
-                                name = "StoreSceneResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "SceneID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsOutgoing.GetSceneMembershipResponse.ID to
-                            CommandInfo(
-                                name = "GetSceneMembershipResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Capacity",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "SceneList",
-                                                type = DataType.LIST_U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ScenesManagement.CommandsOutgoing.CopySceneResponse.ID to
-                            CommandInfo(
-                                name = "CopySceneResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type = DataType.STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "GroupIdentifierFrom",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "SceneIdentifierFrom",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.BooleanStateConfiguration.ID to
-            ClusterInfo(
-                name = "Boolean State Configuration",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.BooleanStateConfiguration.Attributes.CurrentSensitivityLevel.ID to
-                            AttributeInfo(
-                                name = "CurrentSensitivityLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.SupportedSensitivityLevels
-                            .ID to
-                            AttributeInfo(
-                                name = "SupportedSensitivityLevels",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.DefaultSensitivityLevel.ID to
-                            AttributeInfo(
-                                name = "DefaultSensitivityLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.AlarmsActive.ID to
-                            AttributeInfo(
-                                name = "AlarmsActive",
-                                type = DataType.ALARM_MODE_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.AlarmsSuppressed.ID to
-                            AttributeInfo(
-                                name = "AlarmsSuppressed",
-                                type = DataType.ALARM_MODE_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.AlarmsEnabled.ID to
-                            AttributeInfo(
-                                name = "AlarmsEnabled",
-                                type = DataType.ALARM_MODE_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.AlarmsSupported.ID to
-                            AttributeInfo(
-                                name = "AlarmsSupported",
-                                type = DataType.ALARM_MODE_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.BooleanStateConfiguration.Attributes.SensorFault.ID to
-                            AttributeInfo(
-                                name = "SensorFault",
-                                type = DataType.SENSOR_FAULT_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.BooleanStateConfiguration.CommandsIncoming.SuppressAlarm.ID to
-                            CommandInfo(
-                                name = "SuppressAlarm",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "AlarmsToSuppress",
-                                                type = DataType.ALARM_MODE_BITMAP,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.BooleanStateConfiguration.CommandsIncoming.EnableDisableAlarm.ID to
-                            CommandInfo(
-                                name = "EnableDisableAlarm",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "AlarmsToEnableDisable",
-                                                type = DataType.ALARM_MODE_BITMAP,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.BooleanStateConfiguration.Events.AlarmsStateChanged.ID to
-                            EventInfo(
-                                name = "AlarmsStateChanged",
-                            ),
-                        Clusters.BooleanStateConfiguration.Events.SensorFault.ID to
-                            EventInfo(
-                                name = "SensorFault",
-                            ),
-                    ),
-            ),
-        Clusters.ValveConfigurationandControl.ID to
-            ClusterInfo(
-                name = "Valve Configuration and Control",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ValveConfigurationandControl.Attributes.OpenDuration.ID to
-                            AttributeInfo(
-                                name = "OpenDuration",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.DefaultOpenDuration.ID to
-                            AttributeInfo(
-                                name = "DefaultOpenDuration",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.AutoCloseTime.ID to
-                            AttributeInfo(
-                                name = "AutoCloseTime",
-                                type = DataType.EPOCH_MICROSECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.RemainingDuration.ID to
-                            AttributeInfo(
-                                name = "RemainingDuration",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.CurrentState.ID to
-                            AttributeInfo(
-                                name = "CurrentState",
-                                type =
-                                    DataType.VALVE_CONFIGURATION_CONTROL_CLUSTER_VALVE_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.TargetState.ID to
-                            AttributeInfo(
-                                name = "TargetState",
-                                type =
-                                    DataType.VALVE_CONFIGURATION_CONTROL_CLUSTER_VALVE_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.CurrentLevel.ID to
-                            AttributeInfo(
-                                name = "CurrentLevel",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.TargetLevel.ID to
-                            AttributeInfo(
-                                name = "TargetLevel",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.DefaultOpenLevel.ID to
-                            AttributeInfo(
-                                name = "DefaultOpenLevel",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.ValveFault.ID to
-                            AttributeInfo(
-                                name = "ValveFault",
-                                type = DataType.VALVE_FAULT_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ValveConfigurationandControl.Attributes.LevelStep.ID to
-                            AttributeInfo(
-                                name = "LevelStep",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ValveConfigurationandControl.CommandsIncoming.Open.ID to
-                            CommandInfo(
-                                name = "Open",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "OpenDuration",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "TargetLevel",
-                                                type = DataType.PERCENT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ValveConfigurationandControl.CommandsIncoming.Close.ID to
-                            CommandInfo(
-                                name = "Close",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ValveConfigurationandControl.Events.ValveStateChanged.ID to
-                            EventInfo(
-                                name = "ValveStateChanged",
-                            ),
-                        Clusters.ValveConfigurationandControl.Events.ValveFault.ID to
-                            EventInfo(
-                                name = "ValveFault",
-                            ),
-                    ),
-            ),
-        Clusters.ElectricalPowerMeasurement.ID to
-            ClusterInfo(
-                name = "Electrical Power Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ElectricalPowerMeasurement.Attributes.PowerMode.ID to
-                            AttributeInfo(
-                                name = "PowerMode",
-                                type =
-                                    DataType.ELECTRICAL_POWER_MEASUREMENT_CLUSTER_POWER_MODE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.NumberOfMeasurementTypes
-                            .ID to
-                            AttributeInfo(
-                                name = "NumberOfMeasurementTypes",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.Accuracy.ID to
-                            AttributeInfo(
-                                name = "Accuracy",
-                                type = DataType.LIST_MEASUREMENT_ACCURACY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.Ranges.ID to
-                            AttributeInfo(
-                                name = "Ranges",
-                                type = DataType.LIST_MEASUREMENT_RANGE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.Voltage.ID to
-                            AttributeInfo(
-                                name = "Voltage",
-                                type = DataType.VOLTAGE_MILLIVOLTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.ActiveCurrent.ID to
-                            AttributeInfo(
-                                name = "ActiveCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.ReactiveCurrent.ID to
-                            AttributeInfo(
-                                name = "ReactiveCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.ApparentCurrent.ID to
-                            AttributeInfo(
-                                name = "ApparentCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.ActivePower.ID to
-                            AttributeInfo(
-                                name = "ActivePower",
-                                type = DataType.POWER_MILLIWATTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.ReactivePower.ID to
-                            AttributeInfo(
-                                name = "ReactivePower",
-                                type = DataType.POWER_MILLIWATTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.ApparentPower.ID to
-                            AttributeInfo(
-                                name = "ApparentPower",
-                                type = DataType.POWER_MILLIWATTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.RMSVoltage.ID to
-                            AttributeInfo(
-                                name = "RMSVoltage",
-                                type = DataType.VOLTAGE_MILLIVOLTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.RMSCurrent.ID to
-                            AttributeInfo(
-                                name = "RMSCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.RMSPower.ID to
-                            AttributeInfo(
-                                name = "RMSPower",
-                                type = DataType.POWER_MILLIWATTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.Frequency.ID to
-                            AttributeInfo(
-                                name = "Frequency",
-                                type = DataType.INT64,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.HarmonicCurrents.ID to
-                            AttributeInfo(
-                                name = "HarmonicCurrents",
-                                type = DataType.LIST_HARMONIC_MEASUREMENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.HarmonicPhases.ID to
-                            AttributeInfo(
-                                name = "HarmonicPhases",
-                                type = DataType.LIST_HARMONIC_MEASUREMENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.PowerFactor.ID to
-                            AttributeInfo(
-                                name = "PowerFactor",
-                                type = DataType.INT64,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalPowerMeasurement.Attributes.NeutralCurrent.ID to
-                            AttributeInfo(
-                                name = "NeutralCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ElectricalPowerMeasurement.Events.MeasurementPeriodRanges.ID to
-                            EventInfo(
-                                name = "MeasurementPeriodRanges",
-                            ),
-                    ),
-            ),
-        Clusters.ElectricalEnergyMeasurement.ID to
-            ClusterInfo(
-                name = "Electrical Energy Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ElectricalEnergyMeasurement.Attributes.Accuracy.ID to
-                            AttributeInfo(
-                                name = "Accuracy",
-                                type = DataType.MEASUREMENT_ACCURACY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalEnergyMeasurement.Attributes.CumulativeEnergyImported
-                            .ID to
-                            AttributeInfo(
-                                name = "CumulativeEnergyImported",
-                                type = DataType.ENERGY_MEASUREMENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalEnergyMeasurement.Attributes.CumulativeEnergyExported
-                            .ID to
-                            AttributeInfo(
-                                name = "CumulativeEnergyExported",
-                                type = DataType.ENERGY_MEASUREMENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalEnergyMeasurement.Attributes.PeriodicEnergyImported.ID to
-                            AttributeInfo(
-                                name = "PeriodicEnergyImported",
-                                type = DataType.ENERGY_MEASUREMENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalEnergyMeasurement.Attributes.PeriodicEnergyExported.ID to
-                            AttributeInfo(
-                                name = "PeriodicEnergyExported",
-                                type = DataType.ENERGY_MEASUREMENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalEnergyMeasurement.Attributes.CumulativeEnergyReset.ID to
-                            AttributeInfo(
-                                name = "CumulativeEnergyReset",
-                                type = DataType.CUMULATIVE_ENERGY_RESET_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ElectricalEnergyMeasurement.Events.CumulativeEnergyMeasured.ID to
-                            EventInfo(
-                                name = "CumulativeEnergyMeasured",
-                            ),
-                        Clusters.ElectricalEnergyMeasurement.Events.PeriodicEnergyMeasured.ID to
-                            EventInfo(
-                                name = "PeriodicEnergyMeasured",
-                            ),
-                    ),
-            ),
-        Clusters.Messages.ID to
-            ClusterInfo(
+  mapOf<ClusterId, ClusterInfo>(
+    Clusters.OvenCavityOperationalState.ID to
+      ClusterInfo(
+        name = "Oven Cavity Operational State",
+        attributes = mapOf<AttributeId, AttributeInfo>(),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.OvenCavityOperationalState.CommandsOutgoing.Pause.ID to
+              CommandInfo(
+                name = "Pause",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OvenCavityOperationalState.CommandsOutgoing.Stop.ID to
+              CommandInfo(
+                name = "Stop",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OvenCavityOperationalState.CommandsOutgoing.Start.ID to
+              CommandInfo(
+                name = "Start",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OvenCavityOperationalState.CommandsOutgoing.Resume.ID to
+              CommandInfo(
+                name = "Resume",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OvenCavityOperationalState.CommandsOutgoing.OperationalCommandResponse.ID to
+              CommandInfo(
+                name = "OperationalCommandResponse",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.OvenMode.ID to
+      ClusterInfo(
+        name = "Oven Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.OvenMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.OvenMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.OvenMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.OvenMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.LaundryDryerControls.ID to
+      ClusterInfo(
+        name = "Laundry Dryer Controls",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.LaundryDryerControls.Attributes.SupportedDrynessLevels.ID to
+              AttributeInfo(
+                name = "SupportedDrynessLevels",
+                type = DataType.LIST_LAUNDRY_DRYER_CONTROLS_CLUSTER_DRYNESS_LEVEL_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.LaundryDryerControls.Attributes.SelectedDrynessLevel.ID to
+              AttributeInfo(
+                name = "SelectedDrynessLevel",
+                type = DataType.LAUNDRY_DRYER_CONTROLS_CLUSTER_DRYNESS_LEVEL_ENUM,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.MicrowaveOvenMode.ID to
+      ClusterInfo(
+        name = "Microwave Oven Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.MicrowaveOvenMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.MicrowaveOvenMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.MicrowaveOvenMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.MicrowaveOvenMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.MicrowaveOvenMode.CommandsOutgoing.ChangeToMode.ID to
+              CommandInfo(
+                name = "ChangeToMode",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.MicrowaveOvenMode.CommandsOutgoing.ChangeToModeResponse.ID to
+              CommandInfo(
+                name = "ChangeToModeResponse",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.MicrowaveOvenControl.ID to
+      ClusterInfo(
+        name = "Microwave Oven Control",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.MicrowaveOvenControl.Attributes.CookTime.ID to
+              AttributeInfo(
+                name = "CookTime",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.MaxCookTime.ID to
+              AttributeInfo(
+                name = "MaxCookTime",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.PowerSetting.ID to
+              AttributeInfo(
+                name = "PowerSetting",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.MinPower.ID to
+              AttributeInfo(
+                name = "MinPower",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.MaxPower.ID to
+              AttributeInfo(
+                name = "MaxPower",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.PowerStep.ID to
+              AttributeInfo(
+                name = "PowerStep",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.SupportedWatts.ID to
+              AttributeInfo(
+                name = "SupportedWatts",
+                type = DataType.LIST_U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.SelectedWattIndex.ID to
+              AttributeInfo(
+                name = "SelectedWattIndex",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MicrowaveOvenControl.Attributes.WattRating.ID to
+              AttributeInfo(
+                name = "WattRating",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.MicrowaveOvenControl.CommandsIncoming.SetCookingParameters.ID to
+              CommandInfo(
+                name = "SetCookingParameters",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CookMode",
+                        type = DataType.U_INT8,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "CookTime",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "PowerSetting",
+                        type = DataType.U_INT8,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "WattSettingIndex",
+                        type = DataType.U_INT8,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "StartAfterSetting",
+                        type = DataType.BOOLEAN,
+                      ),
+                  ),
+              ),
+            Clusters.MicrowaveOvenControl.CommandsIncoming.AddMoreTime.ID to
+              CommandInfo(
+                name = "AddMoreTime",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TimeToAdd",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ScenesManagement.ID to
+      ClusterInfo(
+        name = "Scenes Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ScenesManagement.Attributes.DoNotUse.ID to
+              AttributeInfo(
+                name = "DoNotUse",
+                type = DataType.NODE_ID,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ScenesManagement.Attributes.SceneTableSize.ID to
+              AttributeInfo(
+                name = "SceneTableSize",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ScenesManagement.Attributes.FabricSceneInfo.ID to
+              AttributeInfo(
+                name = "FabricSceneInfo",
+                type = DataType.LIST_SCENE_INFO_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ScenesManagement.CommandsIncoming.AddScene.ID to
+              CommandInfo(
+                name = "AddScene",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "TransitionTime",
+                        type = DataType.U_INT32,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "SceneName",
+                        type = DataType.STRING,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "ExtensionFieldSetStructs",
+                        type = DataType.LIST_EXTENSION_FIELD_SET_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.ViewScene.ID to
+              CommandInfo(
+                name = "ViewScene",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.RemoveScene.ID to
+              CommandInfo(
+                name = "RemoveScene",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.RemoveAllScenes.ID to
+              CommandInfo(
+                name = "RemoveAllScenes",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.StoreScene.ID to
+              CommandInfo(
+                name = "StoreScene",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.RecallScene.ID to
+              CommandInfo(
+                name = "RecallScene",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "TransitionTime",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.GetSceneMembership.ID to
+              CommandInfo(
+                name = "GetSceneMembership",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsIncoming.CopyScene.ID to
+              CommandInfo(
+                name = "CopyScene",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Mode",
+                        type = DataType.COPY_MODE_BITMAP,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupIdentifierFrom",
+                        type = DataType.GROUP_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "SceneIdentifierFrom",
+                        type = DataType.MAX254,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "GroupIdentifierTo",
+                        type = DataType.GROUP_ID,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "SceneIdentifierTo",
+                        type = DataType.MAX254,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ScenesManagement.CommandsOutgoing.AddSceneResponse.ID to
+              CommandInfo(
+                name = "AddSceneResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsOutgoing.ViewSceneResponse.ID to
+              CommandInfo(
+                name = "ViewSceneResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "TransitionTime",
+                        type = DataType.U_INT32,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "SceneName",
+                        type = DataType.STRING,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "ExtensionFieldSetStructs",
+                        type = DataType.LIST_EXTENSION_FIELD_SET_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsOutgoing.RemoveSceneResponse.ID to
+              CommandInfo(
+                name = "RemoveSceneResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsOutgoing.RemoveAllScenesResponse.ID to
+              CommandInfo(
+                name = "RemoveAllScenesResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsOutgoing.StoreSceneResponse.ID to
+              CommandInfo(
+                name = "StoreSceneResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "SceneID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsOutgoing.GetSceneMembershipResponse.ID to
+              CommandInfo(
+                name = "GetSceneMembershipResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Capacity",
+                        type = DataType.U_INT8,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "SceneList",
+                        type = DataType.LIST_U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.ScenesManagement.CommandsOutgoing.CopySceneResponse.ID to
+              CommandInfo(
+                name = "CopySceneResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "GroupIdentifierFrom",
+                        type = DataType.GROUP_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "SceneIdentifierFrom",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.BooleanStateConfiguration.ID to
+      ClusterInfo(
+        name = "Boolean State Configuration",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.BooleanStateConfiguration.Attributes.CurrentSensitivityLevel.ID to
+              AttributeInfo(
+                name = "CurrentSensitivityLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.SupportedSensitivityLevels.ID to
+              AttributeInfo(
+                name = "SupportedSensitivityLevels",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.DefaultSensitivityLevel.ID to
+              AttributeInfo(
+                name = "DefaultSensitivityLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.AlarmsActive.ID to
+              AttributeInfo(
+                name = "AlarmsActive",
+                type = DataType.ALARM_MODE_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.AlarmsSuppressed.ID to
+              AttributeInfo(
+                name = "AlarmsSuppressed",
+                type = DataType.ALARM_MODE_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.AlarmsEnabled.ID to
+              AttributeInfo(
+                name = "AlarmsEnabled",
+                type = DataType.ALARM_MODE_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.AlarmsSupported.ID to
+              AttributeInfo(
+                name = "AlarmsSupported",
+                type = DataType.ALARM_MODE_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.BooleanStateConfiguration.Attributes.SensorFault.ID to
+              AttributeInfo(
+                name = "SensorFault",
+                type = DataType.SENSOR_FAULT_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.BooleanStateConfiguration.CommandsIncoming.SuppressAlarm.ID to
+              CommandInfo(
+                name = "SuppressAlarm",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "AlarmsToSuppress",
+                        type = DataType.ALARM_MODE_BITMAP,
+                      ),
+                  ),
+              ),
+            Clusters.BooleanStateConfiguration.CommandsIncoming.EnableDisableAlarm.ID to
+              CommandInfo(
+                name = "EnableDisableAlarm",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "AlarmsToEnableDisable",
+                        type = DataType.ALARM_MODE_BITMAP,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.BooleanStateConfiguration.Events.AlarmsStateChanged.ID to
+              EventInfo(name = "AlarmsStateChanged"),
+            Clusters.BooleanStateConfiguration.Events.SensorFault.ID to
+              EventInfo(name = "SensorFault"),
+          ),
+      ),
+    Clusters.ValveConfigurationandControl.ID to
+      ClusterInfo(
+        name = "Valve Configuration and Control",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ValveConfigurationandControl.Attributes.OpenDuration.ID to
+              AttributeInfo(
+                name = "OpenDuration",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.DefaultOpenDuration.ID to
+              AttributeInfo(
+                name = "DefaultOpenDuration",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.AutoCloseTime.ID to
+              AttributeInfo(
+                name = "AutoCloseTime",
+                type = DataType.EPOCH_MICROSECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.RemainingDuration.ID to
+              AttributeInfo(
+                name = "RemainingDuration",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.CurrentState.ID to
+              AttributeInfo(
+                name = "CurrentState",
+                type = DataType.VALVE_CONFIGURATION_CONTROL_CLUSTER_VALVE_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.TargetState.ID to
+              AttributeInfo(
+                name = "TargetState",
+                type = DataType.VALVE_CONFIGURATION_CONTROL_CLUSTER_VALVE_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.CurrentLevel.ID to
+              AttributeInfo(
+                name = "CurrentLevel",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.TargetLevel.ID to
+              AttributeInfo(
+                name = "TargetLevel",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.DefaultOpenLevel.ID to
+              AttributeInfo(
+                name = "DefaultOpenLevel",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.ValveFault.ID to
+              AttributeInfo(
+                name = "ValveFault",
+                type = DataType.VALVE_FAULT_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ValveConfigurationandControl.Attributes.LevelStep.ID to
+              AttributeInfo(
+                name = "LevelStep",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ValveConfigurationandControl.CommandsIncoming.Open.ID to
+              CommandInfo(
+                name = "Open",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "OpenDuration",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "TargetLevel",
+                        type = DataType.PERCENT,
+                      ),
+                  ),
+              ),
+            Clusters.ValveConfigurationandControl.CommandsIncoming.Close.ID to
+              CommandInfo(
+                name = "Close",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ValveConfigurationandControl.Events.ValveStateChanged.ID to
+              EventInfo(name = "ValveStateChanged"),
+            Clusters.ValveConfigurationandControl.Events.ValveFault.ID to
+              EventInfo(name = "ValveFault"),
+          ),
+      ),
+    Clusters.ElectricalPowerMeasurement.ID to
+      ClusterInfo(
+        name = "Electrical Power Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ElectricalPowerMeasurement.Attributes.PowerMode.ID to
+              AttributeInfo(
+                name = "PowerMode",
+                type = DataType.ELECTRICAL_POWER_MEASUREMENT_CLUSTER_POWER_MODE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.NumberOfMeasurementTypes.ID to
+              AttributeInfo(
+                name = "NumberOfMeasurementTypes",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.Accuracy.ID to
+              AttributeInfo(
+                name = "Accuracy",
+                type = DataType.LIST_MEASUREMENT_ACCURACY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.Ranges.ID to
+              AttributeInfo(
+                name = "Ranges",
+                type = DataType.LIST_MEASUREMENT_RANGE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.Voltage.ID to
+              AttributeInfo(
+                name = "Voltage",
+                type = DataType.VOLTAGE_MILLIVOLTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.ActiveCurrent.ID to
+              AttributeInfo(
+                name = "ActiveCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.ReactiveCurrent.ID to
+              AttributeInfo(
+                name = "ReactiveCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.ApparentCurrent.ID to
+              AttributeInfo(
+                name = "ApparentCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.ActivePower.ID to
+              AttributeInfo(
+                name = "ActivePower",
+                type = DataType.POWER_MILLIWATTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.ReactivePower.ID to
+              AttributeInfo(
+                name = "ReactivePower",
+                type = DataType.POWER_MILLIWATTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.ApparentPower.ID to
+              AttributeInfo(
+                name = "ApparentPower",
+                type = DataType.POWER_MILLIWATTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.RMSVoltage.ID to
+              AttributeInfo(
+                name = "RMSVoltage",
+                type = DataType.VOLTAGE_MILLIVOLTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.RMSCurrent.ID to
+              AttributeInfo(
+                name = "RMSCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.RMSPower.ID to
+              AttributeInfo(
+                name = "RMSPower",
+                type = DataType.POWER_MILLIWATTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.Frequency.ID to
+              AttributeInfo(
+                name = "Frequency",
+                type = DataType.INT64,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.HarmonicCurrents.ID to
+              AttributeInfo(
+                name = "HarmonicCurrents",
+                type = DataType.LIST_HARMONIC_MEASUREMENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.HarmonicPhases.ID to
+              AttributeInfo(
+                name = "HarmonicPhases",
+                type = DataType.LIST_HARMONIC_MEASUREMENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.PowerFactor.ID to
+              AttributeInfo(
+                name = "PowerFactor",
+                type = DataType.INT64,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalPowerMeasurement.Attributes.NeutralCurrent.ID to
+              AttributeInfo(
+                name = "NeutralCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ElectricalPowerMeasurement.Events.MeasurementPeriodRanges.ID to
+              EventInfo(name = "MeasurementPeriodRanges"),
+          ),
+      ),
+    Clusters.ElectricalEnergyMeasurement.ID to
+      ClusterInfo(
+        name = "Electrical Energy Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ElectricalEnergyMeasurement.Attributes.Accuracy.ID to
+              AttributeInfo(
+                name = "Accuracy",
+                type = DataType.MEASUREMENT_ACCURACY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalEnergyMeasurement.Attributes.CumulativeEnergyImported.ID to
+              AttributeInfo(
+                name = "CumulativeEnergyImported",
+                type = DataType.ENERGY_MEASUREMENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalEnergyMeasurement.Attributes.CumulativeEnergyExported.ID to
+              AttributeInfo(
+                name = "CumulativeEnergyExported",
+                type = DataType.ENERGY_MEASUREMENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalEnergyMeasurement.Attributes.PeriodicEnergyImported.ID to
+              AttributeInfo(
+                name = "PeriodicEnergyImported",
+                type = DataType.ENERGY_MEASUREMENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalEnergyMeasurement.Attributes.PeriodicEnergyExported.ID to
+              AttributeInfo(
+                name = "PeriodicEnergyExported",
+                type = DataType.ENERGY_MEASUREMENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalEnergyMeasurement.Attributes.CumulativeEnergyReset.ID to
+              AttributeInfo(
+                name = "CumulativeEnergyReset",
+                type = DataType.CUMULATIVE_ENERGY_RESET_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ElectricalEnergyMeasurement.Events.CumulativeEnergyMeasured.ID to
+              EventInfo(name = "CumulativeEnergyMeasured"),
+            Clusters.ElectricalEnergyMeasurement.Events.PeriodicEnergyMeasured.ID to
+              EventInfo(name = "PeriodicEnergyMeasured"),
+          ),
+      ),
+    Clusters.Messages.ID to
+      ClusterInfo(
+        name = "Messages",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.Messages.Attributes.Messages.ID to
+              AttributeInfo(
                 name = "Messages",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.Messages.Attributes.Messages.ID to
-                            AttributeInfo(
-                                name = "Messages",
-                                type = DataType.LIST_MESSAGE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.Messages.Attributes.ActiveMessageIDs.ID to
-                            AttributeInfo(
-                                name = "ActiveMessageIDs",
-                                type = DataType.LIST_MESSAGE_ID,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.Messages.CommandsIncoming.PresentMessagesRequest.ID to
-                            CommandInfo(
-                                name = "PresentMessagesRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "MessageID",
-                                                type = DataType.MESSAGE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Priority",
-                                                type =
-                                                    DataType.MESSAGES_CLUSTER_MESSAGE_PRIORITY_ENUM,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "MessageControl",
-                                                type = DataType.MESSAGE_CONTROL_BITMAP,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "StartTime",
-                                                type = DataType.EPOCH_SECONDS,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "Duration",
-                                                type = DataType.U_INT64,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "MessageText",
-                                                type = DataType.STRING,
-                                            ),
-                                        6u to
-                                            ParameterInfo(
-                                                name = "Responses",
-                                                type = DataType.LIST_MESSAGE_RESPONSE_OPTION_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.Messages.CommandsIncoming.CancelMessagesRequest.ID to
-                            CommandInfo(
-                                name = "CancelMessagesRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "MessageIDs",
-                                                type = DataType.LIST_MESSAGE_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.Messages.Events.MessageQueued.ID to
-                            EventInfo(
-                                name = "MessageQueued",
-                            ),
-                        Clusters.Messages.Events.MessagePresented.ID to
-                            EventInfo(
-                                name = "MessagePresented",
-                            ),
-                        Clusters.Messages.Events.MessageComplete.ID to
-                            EventInfo(
-                                name = "MessageComplete",
-                            ),
-                    ),
-            ),
-        Clusters.DeviceEnergyManagement.ID to
-            ClusterInfo(
-                name = "Device Energy Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.DeviceEnergyManagement.Attributes.ESAType.ID to
-                            AttributeInfo(
-                                name = "ESAType",
-                                type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ESA_TYPE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.ESACanGenerate.ID to
-                            AttributeInfo(
-                                name = "ESACanGenerate",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.ESAState.ID to
-                            AttributeInfo(
-                                name = "ESAState",
-                                type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ESA_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.AbsMinPower.ID to
-                            AttributeInfo(
-                                name = "AbsMinPower",
-                                type = DataType.POWER_MILLIWATTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.AbsMaxPower.ID to
-                            AttributeInfo(
-                                name = "AbsMaxPower",
-                                type = DataType.POWER_MILLIWATTS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.PowerAdjustmentCapability.ID to
-                            AttributeInfo(
-                                name = "PowerAdjustmentCapability",
-                                type = DataType.LIST_POWER_ADJUST_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.Forecast.ID to
-                            AttributeInfo(
-                                name = "Forecast",
-                                type = DataType.FORECAST_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.DeviceEnergyManagement.Attributes.OptOutState.ID to
-                            AttributeInfo(
-                                name = "OptOutState",
-                                type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_OPT_OUT_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.PowerAdjustRequest.ID to
-                            CommandInfo(
-                                name = "PowerAdjustRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Power",
-                                                type = DataType.POWER_MILLIWATTS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Duration",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Cause",
-                                                type =
-                                                    DataType
-                                                        .DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.CancelPowerAdjustRequest
-                            .ID to
-                            CommandInfo(
-                                name = "CancelPowerAdjustRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.StartTimeAdjustRequest
-                            .ID to
-                            CommandInfo(
-                                name = "StartTimeAdjustRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "RequestedStartTime",
-                                                type = DataType.EPOCH_SECONDS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Cause",
-                                                type =
-                                                    DataType
-                                                        .DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.PauseRequest.ID to
-                            CommandInfo(
-                                name = "PauseRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Duration",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Cause",
-                                                type =
-                                                    DataType
-                                                        .DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.ResumeRequest.ID to
-                            CommandInfo(
-                                name = "ResumeRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.ModifyForecastRequest.ID to
-                            CommandInfo(
-                                name = "ModifyForecastRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ForecastID",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SlotAdjustments",
-                                                type = DataType.LIST_SLOT_ADJUSTMENT_STRUCT,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Cause",
-                                                type =
-                                                    DataType
-                                                        .DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming
-                            .RequestConstraintBasedForecast
-                            .ID to
-                            CommandInfo(
-                                name = "RequestConstraintBasedForecast",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Constraints",
-                                                type = DataType.LIST_CONSTRAINTS_STRUCT,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Cause",
-                                                type =
-                                                    DataType
-                                                        .DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.DeviceEnergyManagement.CommandsIncoming.CancelRequest.ID to
-                            CommandInfo(
-                                name = "CancelRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.DeviceEnergyManagement.Events.PowerAdjustStart.ID to
-                            EventInfo(
-                                name = "PowerAdjustStart",
-                            ),
-                        Clusters.DeviceEnergyManagement.Events.PowerAdjustEnd.ID to
-                            EventInfo(
-                                name = "PowerAdjustEnd",
-                            ),
-                        Clusters.DeviceEnergyManagement.Events.Paused.ID to
-                            EventInfo(
-                                name = "Paused",
-                            ),
-                        Clusters.DeviceEnergyManagement.Events.Resumed.ID to
-                            EventInfo(
-                                name = "Resumed",
-                            ),
-                    ),
-            ),
-        Clusters.EnergyEVSE.ID to
-            ClusterInfo(
-                name = "Energy EVSE",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.EnergyEVSE.Attributes.State.ID to
-                            AttributeInfo(
-                                name = "State",
-                                type = DataType.ENERGY_EVSE_CLUSTER_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.SupplyState.ID to
-                            AttributeInfo(
-                                name = "SupplyState",
-                                type = DataType.ENERGY_EVSE_CLUSTER_SUPPLY_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.FaultState.ID to
-                            AttributeInfo(
-                                name = "FaultState",
-                                type = DataType.ENERGY_EVSE_CLUSTER_FAULT_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.ChargingEnabledUntil.ID to
-                            AttributeInfo(
-                                name = "ChargingEnabledUntil",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.DischargingEnabledUntil.ID to
-                            AttributeInfo(
-                                name = "DischargingEnabledUntil",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.CircuitCapacity.ID to
-                            AttributeInfo(
-                                name = "CircuitCapacity",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.MinimumChargeCurrent.ID to
-                            AttributeInfo(
-                                name = "MinimumChargeCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.MaximumChargeCurrent.ID to
-                            AttributeInfo(
-                                name = "MaximumChargeCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.MaximumDischargeCurrent.ID to
-                            AttributeInfo(
-                                name = "MaximumDischargeCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.UserMaximumChargeCurrent.ID to
-                            AttributeInfo(
-                                name = "UserMaximumChargeCurrent",
-                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.RandomizationDelayWindow.ID to
-                            AttributeInfo(
-                                name = "RandomizationDelayWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.NextChargeStartTime.ID to
-                            AttributeInfo(
-                                name = "NextChargeStartTime",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.NextChargeTargetTime.ID to
-                            AttributeInfo(
-                                name = "NextChargeTargetTime",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.NextChargeRequiredEnergy.ID to
-                            AttributeInfo(
-                                name = "NextChargeRequiredEnergy",
-                                type = DataType.ENERGY_MILLIWATT_HOURS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.NextChargeTargetSoC.ID to
-                            AttributeInfo(
-                                name = "NextChargeTargetSoC",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.ApproximateEVEfficiency.ID to
-                            AttributeInfo(
-                                name = "ApproximateEVEfficiency",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.StateOfCharge.ID to
-                            AttributeInfo(
-                                name = "StateOfCharge",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.BatteryCapacity.ID to
-                            AttributeInfo(
-                                name = "BatteryCapacity",
-                                type = DataType.ENERGY_MILLIWATT_HOURS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.VehicleID.ID to
-                            AttributeInfo(
-                                name = "VehicleID",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.SessionID.ID to
-                            AttributeInfo(
-                                name = "SessionID",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.SessionDuration.ID to
-                            AttributeInfo(
-                                name = "SessionDuration",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.SessionEnergyCharged.ID to
-                            AttributeInfo(
-                                name = "SessionEnergyCharged",
-                                type = DataType.ENERGY_MILLIWATT_HOURS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyEVSE.Attributes.SessionEnergyDischarged.ID to
-                            AttributeInfo(
-                                name = "SessionEnergyDischarged",
-                                type = DataType.ENERGY_MILLIWATT_HOURS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.EnergyEVSE.CommandsIncoming.Disable.ID to
-                            CommandInfo(
-                                name = "Disable",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.EnergyEVSE.CommandsIncoming.EnableCharging.ID to
-                            CommandInfo(
-                                name = "EnableCharging",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ChargingEnabledUntil",
-                                                type = DataType.EPOCH_SECONDS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "MinimumChargeCurrent",
-                                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "MaximumChargeCurrent",
-                                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.EnergyEVSE.CommandsIncoming.EnableDischarging.ID to
-                            CommandInfo(
-                                name = "EnableDischarging",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "DischargingEnabledUntil",
-                                                type = DataType.EPOCH_SECONDS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "MaximumDischargeCurrent",
-                                                type = DataType.AMPERAGE_MILLIAMPERES,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.EnergyEVSE.CommandsIncoming.StartDiagnostics.ID to
-                            CommandInfo(
-                                name = "StartDiagnostics",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.EnergyEVSE.CommandsIncoming.SetTargets.ID to
-                            CommandInfo(
-                                name = "SetTargets",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ChargingTargetSchedules",
-                                                type =
-                                                    DataType.LIST_CHARGING_TARGET_SCHEDULE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.EnergyEVSE.CommandsIncoming.GetTargets.ID to
-                            CommandInfo(
-                                name = "GetTargets",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.EnergyEVSE.CommandsIncoming.ClearTargets.ID to
-                            CommandInfo(
-                                name = "ClearTargets",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.EnergyEVSE.CommandsOutgoing.GetTargetsResponse.ID to
-                            CommandInfo(
-                                name = "GetTargetsResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ChargingTargetSchedules",
-                                                type =
-                                                    DataType.LIST_CHARGING_TARGET_SCHEDULE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.EnergyEVSE.Events.EVConnected.ID to
-                            EventInfo(
-                                name = "EVConnected",
-                            ),
-                        Clusters.EnergyEVSE.Events.EVNotDetected.ID to
-                            EventInfo(
-                                name = "EVNotDetected",
-                            ),
-                        Clusters.EnergyEVSE.Events.EnergyTransferStarted.ID to
-                            EventInfo(
-                                name = "EnergyTransferStarted",
-                            ),
-                        Clusters.EnergyEVSE.Events.EnergyTransferStopped.ID to
-                            EventInfo(
-                                name = "EnergyTransferStopped",
-                            ),
-                        Clusters.EnergyEVSE.Events.Fault.ID to
-                            EventInfo(
-                                name = "Fault",
-                            ),
-                        Clusters.EnergyEVSE.Events.RFID.ID to
-                            EventInfo(
-                                name = "RFID",
-                            ),
-                    ),
-            ),
-        Clusters.EnergyPreference.ID to
-            ClusterInfo(
-                name = "Energy Preference",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.EnergyPreference.Attributes.EnergyBalances.ID to
-                            AttributeInfo(
-                                name = "EnergyBalances",
-                                type = DataType.LIST_BALANCE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyPreference.Attributes.CurrentEnergyBalance.ID to
-                            AttributeInfo(
-                                name = "CurrentEnergyBalance",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.EnergyPreference.Attributes.EnergyPriorities.ID to
-                            AttributeInfo(
-                                name = "EnergyPriorities",
-                                type = DataType.LIST_ENERGY_PREFERENCE_CLUSTER_ENERGY_PRIORITY_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyPreference.Attributes.LowPowerModeSensitivities.ID to
-                            AttributeInfo(
-                                name = "LowPowerModeSensitivities",
-                                type = DataType.LIST_BALANCE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.EnergyPreference.Attributes.CurrentLowPowerModeSensitivity.ID to
-                            AttributeInfo(
-                                name = "CurrentLowPowerModeSensitivity",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.PowerTopology.ID to
-            ClusterInfo(
-                name = "Power Topology",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.PowerTopology.Attributes.AvailableEndpoints.ID to
-                            AttributeInfo(
-                                name = "AvailableEndpoints",
-                                type = DataType.LIST_ENDPOINT_ID,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PowerTopology.Attributes.ActiveEndpoints.ID to
-                            AttributeInfo(
-                                name = "ActiveEndpoints",
-                                type = DataType.LIST_ENDPOINT_ID,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.EnergyEVSEMode.ID to
-            ClusterInfo(
-                name = "Energy EVSE Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.EnergyEVSEMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.EnergyEVSEMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.EnergyEVSEMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.EnergyEVSEMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.DeviceEnergyManagementMode.ID to
-            ClusterInfo(
-                name = "Device Energy Management Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.DeviceEnergyManagementMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.DeviceEnergyManagementMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.DeviceEnergyManagementMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.DeviceEnergyManagementMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ContentControl.ID to
-            ClusterInfo(
-                name = "Content Control",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ContentControl.Attributes.Enabled.ID to
-                            AttributeInfo(
-                                name = "Enabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.OnDemandRatings.ID to
-                            AttributeInfo(
-                                name = "OnDemandRatings",
-                                type = DataType.LIST_RATING_NAME_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.OnDemandRatingThreshold.ID to
-                            AttributeInfo(
-                                name = "OnDemandRatingThreshold",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.ScheduledContentRatings.ID to
-                            AttributeInfo(
-                                name = "ScheduledContentRatings",
-                                type = DataType.LIST_RATING_NAME_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.ScheduledContentRatingThreshold.ID to
-                            AttributeInfo(
-                                name = "ScheduledContentRatingThreshold",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.ScreenDailyTime.ID to
-                            AttributeInfo(
-                                name = "ScreenDailyTime",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.RemainingScreenTime.ID to
-                            AttributeInfo(
-                                name = "RemainingScreenTime",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.BlockUnrated.ID to
-                            AttributeInfo(
-                                name = "BlockUnrated",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.BlockChannelList.ID to
-                            AttributeInfo(
-                                name = "BlockChannelList",
-                                type = DataType.LIST_BLOCK_CHANNEL_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.BlockApplicationList.ID to
-                            AttributeInfo(
-                                name = "BlockApplicationList",
-                                type = DataType.LIST_APP_INFO_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ContentControl.Attributes.BlockContentTimeWindow.ID to
-                            AttributeInfo(
-                                name = "BlockContentTimeWindow",
-                                type = DataType.LIST_TIME_WINDOW_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ContentControl.CommandsIncoming.UpdatePIN.ID to
-                            CommandInfo(
-                                name = "UpdatePIN",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "OldPIN",
-                                                type = DataType.STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "NewPIN",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.ResetPIN.ID to
-                            CommandInfo(
-                                name = "ResetPIN",
-                                privilege = Privilege.ADMINISTER,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.Enable.ID to
-                            CommandInfo(
-                                name = "Enable",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.Disable.ID to
-                            CommandInfo(
-                                name = "Disable",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.AddBonusTime.ID to
-                            CommandInfo(
-                                name = "AddBonusTime",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PINCode",
-                                                type = DataType.STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "BonusTime",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.SetScreenDailyTime.ID to
-                            CommandInfo(
-                                name = "SetScreenDailyTime",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ScreenTime",
-                                                type = DataType.ELAPSED_SECONDS,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.BlockUnratedContent.ID to
-                            CommandInfo(
-                                name = "BlockUnratedContent",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.UnblockUnratedContent.ID to
-                            CommandInfo(
-                                name = "UnblockUnratedContent",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.SetOnDemandRatingThreshold.ID to
-                            CommandInfo(
-                                name = "SetOnDemandRatingThreshold",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Rating",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.SetScheduledContentRatingThreshold
-                            .ID to
-                            CommandInfo(
-                                name = "SetScheduledContentRatingThreshold",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Rating",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.AddBlockChannels.ID to
-                            CommandInfo(
-                                name = "AddBlockChannels",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Channels",
-                                                type = DataType.LIST_BLOCK_CHANNEL_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.RemoveBlockChannels.ID to
-                            CommandInfo(
-                                name = "RemoveBlockChannels",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ChannelIndexes",
-                                                type = DataType.LIST_U_INT16,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.AddBlockApplications.ID to
-                            CommandInfo(
-                                name = "AddBlockApplications",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Applications",
-                                                type = DataType.LIST_APP_INFO_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.RemoveBlockApplications.ID to
-                            CommandInfo(
-                                name = "RemoveBlockApplications",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Applications",
-                                                type = DataType.LIST_APP_INFO_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.SetBlockContentTimeWindow.ID to
-                            CommandInfo(
-                                name = "SetBlockContentTimeWindow",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TimeWindow",
-                                                type = DataType.TIME_WINDOW_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ContentControl.CommandsIncoming.RemoveBlockContentTimeWindow.ID to
-                            CommandInfo(
-                                name = "RemoveBlockContentTimeWindow",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TimeWindowIndexes",
-                                                type = DataType.LIST_U_INT16,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ContentControl.CommandsOutgoing.ResetPINResponse.ID to
-                            CommandInfo(
-                                name = "ResetPINResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PINCode",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ContentControl.Events.RemainingScreenTimeExpired.ID to
-                            EventInfo(
-                                name = "RemainingScreenTimeExpired",
-                            ),
-                        Clusters.ContentControl.Events.EnteringBlockContentTimeWindow.ID to
-                            EventInfo(
-                                name = "EnteringBlockContentTimeWindow",
-                            ),
-                    ),
-            ),
-        Clusters.ContentAppObserver.ID to
-            ClusterInfo(
-                name = "Content App Observer",
-                attributes = mapOf<AttributeId, AttributeInfo>(),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ContentAppObserver.CommandsIncoming.ContentAppMessage.ID to
-                            CommandInfo(
-                                name = "ContentAppMessage",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Data",
-                                                type = DataType.STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "EncodingHint",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ContentAppObserver.CommandsOutgoing.ContentAppMessageResponse.ID to
-                            CommandInfo(
-                                name = "ContentAppMessageResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type =
-                                                    DataType
-                                                        .CONTENT_APP_OBSERVER_CLUSTER_STATUS_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Data",
-                                                type = DataType.STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "EncodingHint",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-    )
+                type = DataType.LIST_MESSAGE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.Messages.Attributes.ActiveMessageIDs.ID to
+              AttributeInfo(
+                name = "ActiveMessageIDs",
+                type = DataType.LIST_MESSAGE_ID,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.Messages.CommandsIncoming.PresentMessagesRequest.ID to
+              CommandInfo(
+                name = "PresentMessagesRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "MessageID",
+                        type = DataType.MESSAGE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Priority",
+                        type = DataType.MESSAGES_CLUSTER_MESSAGE_PRIORITY_ENUM,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "MessageControl",
+                        type = DataType.MESSAGE_CONTROL_BITMAP,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "StartTime",
+                        type = DataType.EPOCH_SECONDS,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "Duration",
+                        type = DataType.U_INT64,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "MessageText",
+                        type = DataType.STRING,
+                      ),
+                    6u to
+                      ParameterInfo(
+                        name = "Responses",
+                        type = DataType.LIST_MESSAGE_RESPONSE_OPTION_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.Messages.CommandsIncoming.CancelMessagesRequest.ID to
+              CommandInfo(
+                name = "CancelMessagesRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "MessageIDs",
+                        type = DataType.LIST_MESSAGE_ID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.Messages.Events.MessageQueued.ID to EventInfo(name = "MessageQueued"),
+            Clusters.Messages.Events.MessagePresented.ID to EventInfo(name = "MessagePresented"),
+            Clusters.Messages.Events.MessageComplete.ID to EventInfo(name = "MessageComplete"),
+          ),
+      ),
+    Clusters.DeviceEnergyManagement.ID to
+      ClusterInfo(
+        name = "Device Energy Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.DeviceEnergyManagement.Attributes.ESAType.ID to
+              AttributeInfo(
+                name = "ESAType",
+                type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ESA_TYPE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.ESACanGenerate.ID to
+              AttributeInfo(
+                name = "ESACanGenerate",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.ESAState.ID to
+              AttributeInfo(
+                name = "ESAState",
+                type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ESA_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.AbsMinPower.ID to
+              AttributeInfo(
+                name = "AbsMinPower",
+                type = DataType.POWER_MILLIWATTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.AbsMaxPower.ID to
+              AttributeInfo(
+                name = "AbsMaxPower",
+                type = DataType.POWER_MILLIWATTS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.PowerAdjustmentCapability.ID to
+              AttributeInfo(
+                name = "PowerAdjustmentCapability",
+                type = DataType.LIST_POWER_ADJUST_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.Forecast.ID to
+              AttributeInfo(
+                name = "Forecast",
+                type = DataType.FORECAST_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.DeviceEnergyManagement.Attributes.OptOutState.ID to
+              AttributeInfo(
+                name = "OptOutState",
+                type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_OPT_OUT_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.DeviceEnergyManagement.CommandsIncoming.PowerAdjustRequest.ID to
+              CommandInfo(
+                name = "PowerAdjustRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Power",
+                        type = DataType.POWER_MILLIWATTS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Duration",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Cause",
+                        type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.CancelPowerAdjustRequest.ID to
+              CommandInfo(
+                name = "CancelPowerAdjustRequest",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.StartTimeAdjustRequest.ID to
+              CommandInfo(
+                name = "StartTimeAdjustRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "RequestedStartTime",
+                        type = DataType.EPOCH_SECONDS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Cause",
+                        type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.PauseRequest.ID to
+              CommandInfo(
+                name = "PauseRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Duration",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Cause",
+                        type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.ResumeRequest.ID to
+              CommandInfo(
+                name = "ResumeRequest",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.ModifyForecastRequest.ID to
+              CommandInfo(
+                name = "ModifyForecastRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ForecastID",
+                        type = DataType.U_INT32,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SlotAdjustments",
+                        type = DataType.LIST_SLOT_ADJUSTMENT_STRUCT,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Cause",
+                        type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.RequestConstraintBasedForecast.ID to
+              CommandInfo(
+                name = "RequestConstraintBasedForecast",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Constraints",
+                        type = DataType.LIST_CONSTRAINTS_STRUCT,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Cause",
+                        type = DataType.DEVICE_ENERGY_MANAGEMENT_CLUSTER_ADJUSTMENT_CAUSE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.DeviceEnergyManagement.CommandsIncoming.CancelRequest.ID to
+              CommandInfo(
+                name = "CancelRequest",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.DeviceEnergyManagement.Events.PowerAdjustStart.ID to
+              EventInfo(name = "PowerAdjustStart"),
+            Clusters.DeviceEnergyManagement.Events.PowerAdjustEnd.ID to
+              EventInfo(name = "PowerAdjustEnd"),
+            Clusters.DeviceEnergyManagement.Events.Paused.ID to EventInfo(name = "Paused"),
+            Clusters.DeviceEnergyManagement.Events.Resumed.ID to EventInfo(name = "Resumed"),
+          ),
+      ),
+    Clusters.EnergyEVSE.ID to
+      ClusterInfo(
+        name = "Energy EVSE",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.EnergyEVSE.Attributes.State.ID to
+              AttributeInfo(
+                name = "State",
+                type = DataType.ENERGY_EVSE_CLUSTER_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.SupplyState.ID to
+              AttributeInfo(
+                name = "SupplyState",
+                type = DataType.ENERGY_EVSE_CLUSTER_SUPPLY_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.FaultState.ID to
+              AttributeInfo(
+                name = "FaultState",
+                type = DataType.ENERGY_EVSE_CLUSTER_FAULT_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.ChargingEnabledUntil.ID to
+              AttributeInfo(
+                name = "ChargingEnabledUntil",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.DischargingEnabledUntil.ID to
+              AttributeInfo(
+                name = "DischargingEnabledUntil",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.CircuitCapacity.ID to
+              AttributeInfo(
+                name = "CircuitCapacity",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.MinimumChargeCurrent.ID to
+              AttributeInfo(
+                name = "MinimumChargeCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.MaximumChargeCurrent.ID to
+              AttributeInfo(
+                name = "MaximumChargeCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.MaximumDischargeCurrent.ID to
+              AttributeInfo(
+                name = "MaximumDischargeCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.UserMaximumChargeCurrent.ID to
+              AttributeInfo(
+                name = "UserMaximumChargeCurrent",
+                type = DataType.AMPERAGE_MILLIAMPERES,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.EnergyEVSE.Attributes.RandomizationDelayWindow.ID to
+              AttributeInfo(
+                name = "RandomizationDelayWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.EnergyEVSE.Attributes.NextChargeStartTime.ID to
+              AttributeInfo(
+                name = "NextChargeStartTime",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.NextChargeTargetTime.ID to
+              AttributeInfo(
+                name = "NextChargeTargetTime",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.NextChargeRequiredEnergy.ID to
+              AttributeInfo(
+                name = "NextChargeRequiredEnergy",
+                type = DataType.ENERGY_MILLIWATT_HOURS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.NextChargeTargetSoC.ID to
+              AttributeInfo(
+                name = "NextChargeTargetSoC",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.ApproximateEVEfficiency.ID to
+              AttributeInfo(
+                name = "ApproximateEVEfficiency",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.EnergyEVSE.Attributes.StateOfCharge.ID to
+              AttributeInfo(
+                name = "StateOfCharge",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.BatteryCapacity.ID to
+              AttributeInfo(
+                name = "BatteryCapacity",
+                type = DataType.ENERGY_MILLIWATT_HOURS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.VehicleID.ID to
+              AttributeInfo(
+                name = "VehicleID",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.SessionID.ID to
+              AttributeInfo(
+                name = "SessionID",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.SessionDuration.ID to
+              AttributeInfo(
+                name = "SessionDuration",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.SessionEnergyCharged.ID to
+              AttributeInfo(
+                name = "SessionEnergyCharged",
+                type = DataType.ENERGY_MILLIWATT_HOURS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyEVSE.Attributes.SessionEnergyDischarged.ID to
+              AttributeInfo(
+                name = "SessionEnergyDischarged",
+                type = DataType.ENERGY_MILLIWATT_HOURS,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.EnergyEVSE.CommandsIncoming.Disable.ID to
+              CommandInfo(
+                name = "Disable",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.EnergyEVSE.CommandsIncoming.EnableCharging.ID to
+              CommandInfo(
+                name = "EnableCharging",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ChargingEnabledUntil",
+                        type = DataType.EPOCH_SECONDS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "MinimumChargeCurrent",
+                        type = DataType.AMPERAGE_MILLIAMPERES,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "MaximumChargeCurrent",
+                        type = DataType.AMPERAGE_MILLIAMPERES,
+                      ),
+                  ),
+              ),
+            Clusters.EnergyEVSE.CommandsIncoming.EnableDischarging.ID to
+              CommandInfo(
+                name = "EnableDischarging",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "DischargingEnabledUntil",
+                        type = DataType.EPOCH_SECONDS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "MaximumDischargeCurrent",
+                        type = DataType.AMPERAGE_MILLIAMPERES,
+                      ),
+                  ),
+              ),
+            Clusters.EnergyEVSE.CommandsIncoming.StartDiagnostics.ID to
+              CommandInfo(
+                name = "StartDiagnostics",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.EnergyEVSE.CommandsIncoming.SetTargets.ID to
+              CommandInfo(
+                name = "SetTargets",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ChargingTargetSchedules",
+                        type = DataType.LIST_CHARGING_TARGET_SCHEDULE_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.EnergyEVSE.CommandsIncoming.GetTargets.ID to
+              CommandInfo(
+                name = "GetTargets",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.EnergyEVSE.CommandsIncoming.ClearTargets.ID to
+              CommandInfo(
+                name = "ClearTargets",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.EnergyEVSE.CommandsOutgoing.GetTargetsResponse.ID to
+              CommandInfo(
+                name = "GetTargetsResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ChargingTargetSchedules",
+                        type = DataType.LIST_CHARGING_TARGET_SCHEDULE_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.EnergyEVSE.Events.EVConnected.ID to EventInfo(name = "EVConnected"),
+            Clusters.EnergyEVSE.Events.EVNotDetected.ID to EventInfo(name = "EVNotDetected"),
+            Clusters.EnergyEVSE.Events.EnergyTransferStarted.ID to
+              EventInfo(name = "EnergyTransferStarted"),
+            Clusters.EnergyEVSE.Events.EnergyTransferStopped.ID to
+              EventInfo(name = "EnergyTransferStopped"),
+            Clusters.EnergyEVSE.Events.Fault.ID to EventInfo(name = "Fault"),
+            Clusters.EnergyEVSE.Events.RFID.ID to EventInfo(name = "RFID"),
+          ),
+      ),
+    Clusters.EnergyPreference.ID to
+      ClusterInfo(
+        name = "Energy Preference",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.EnergyPreference.Attributes.EnergyBalances.ID to
+              AttributeInfo(
+                name = "EnergyBalances",
+                type = DataType.LIST_BALANCE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyPreference.Attributes.CurrentEnergyBalance.ID to
+              AttributeInfo(
+                name = "CurrentEnergyBalance",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.EnergyPreference.Attributes.EnergyPriorities.ID to
+              AttributeInfo(
+                name = "EnergyPriorities",
+                type = DataType.LIST_ENERGY_PREFERENCE_CLUSTER_ENERGY_PRIORITY_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyPreference.Attributes.LowPowerModeSensitivities.ID to
+              AttributeInfo(
+                name = "LowPowerModeSensitivities",
+                type = DataType.LIST_BALANCE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.EnergyPreference.Attributes.CurrentLowPowerModeSensitivity.ID to
+              AttributeInfo(
+                name = "CurrentLowPowerModeSensitivity",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.PowerTopology.ID to
+      ClusterInfo(
+        name = "Power Topology",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.PowerTopology.Attributes.AvailableEndpoints.ID to
+              AttributeInfo(
+                name = "AvailableEndpoints",
+                type = DataType.LIST_ENDPOINT_ID,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PowerTopology.Attributes.ActiveEndpoints.ID to
+              AttributeInfo(
+                name = "ActiveEndpoints",
+                type = DataType.LIST_ENDPOINT_ID,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.EnergyEVSEMode.ID to
+      ClusterInfo(
+        name = "Energy EVSE Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.EnergyEVSEMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.EnergyEVSEMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.EnergyEVSEMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.EnergyEVSEMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.DeviceEnergyManagementMode.ID to
+      ClusterInfo(
+        name = "Device Energy Management Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.DeviceEnergyManagementMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.DeviceEnergyManagementMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.DeviceEnergyManagementMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.DeviceEnergyManagementMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ContentControl.ID to
+      ClusterInfo(
+        name = "Content Control",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ContentControl.Attributes.Enabled.ID to
+              AttributeInfo(
+                name = "Enabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.OnDemandRatings.ID to
+              AttributeInfo(
+                name = "OnDemandRatings",
+                type = DataType.LIST_RATING_NAME_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.OnDemandRatingThreshold.ID to
+              AttributeInfo(
+                name = "OnDemandRatingThreshold",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.ScheduledContentRatings.ID to
+              AttributeInfo(
+                name = "ScheduledContentRatings",
+                type = DataType.LIST_RATING_NAME_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.ScheduledContentRatingThreshold.ID to
+              AttributeInfo(
+                name = "ScheduledContentRatingThreshold",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.ScreenDailyTime.ID to
+              AttributeInfo(
+                name = "ScreenDailyTime",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.RemainingScreenTime.ID to
+              AttributeInfo(
+                name = "RemainingScreenTime",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.BlockUnrated.ID to
+              AttributeInfo(
+                name = "BlockUnrated",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.BlockChannelList.ID to
+              AttributeInfo(
+                name = "BlockChannelList",
+                type = DataType.LIST_BLOCK_CHANNEL_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.BlockApplicationList.ID to
+              AttributeInfo(
+                name = "BlockApplicationList",
+                type = DataType.LIST_APP_INFO_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ContentControl.Attributes.BlockContentTimeWindow.ID to
+              AttributeInfo(
+                name = "BlockContentTimeWindow",
+                type = DataType.LIST_TIME_WINDOW_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ContentControl.CommandsIncoming.UpdatePIN.ID to
+              CommandInfo(
+                name = "UpdatePIN",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "OldPIN",
+                        type = DataType.STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "NewPIN",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.ResetPIN.ID to
+              CommandInfo(
+                name = "ResetPIN",
+                privilege = Privilege.ADMINISTER,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ContentControl.CommandsIncoming.Enable.ID to
+              CommandInfo(
+                name = "Enable",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ContentControl.CommandsIncoming.Disable.ID to
+              CommandInfo(
+                name = "Disable",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ContentControl.CommandsIncoming.AddBonusTime.ID to
+              CommandInfo(
+                name = "AddBonusTime",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PINCode",
+                        type = DataType.STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "BonusTime",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.SetScreenDailyTime.ID to
+              CommandInfo(
+                name = "SetScreenDailyTime",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ScreenTime",
+                        type = DataType.ELAPSED_SECONDS,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.BlockUnratedContent.ID to
+              CommandInfo(
+                name = "BlockUnratedContent",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ContentControl.CommandsIncoming.UnblockUnratedContent.ID to
+              CommandInfo(
+                name = "UnblockUnratedContent",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ContentControl.CommandsIncoming.SetOnDemandRatingThreshold.ID to
+              CommandInfo(
+                name = "SetOnDemandRatingThreshold",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Rating",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.SetScheduledContentRatingThreshold.ID to
+              CommandInfo(
+                name = "SetScheduledContentRatingThreshold",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Rating",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.AddBlockChannels.ID to
+              CommandInfo(
+                name = "AddBlockChannels",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Channels",
+                        type = DataType.LIST_BLOCK_CHANNEL_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.RemoveBlockChannels.ID to
+              CommandInfo(
+                name = "RemoveBlockChannels",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ChannelIndexes",
+                        type = DataType.LIST_U_INT16,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.AddBlockApplications.ID to
+              CommandInfo(
+                name = "AddBlockApplications",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Applications",
+                        type = DataType.LIST_APP_INFO_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.RemoveBlockApplications.ID to
+              CommandInfo(
+                name = "RemoveBlockApplications",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Applications",
+                        type = DataType.LIST_APP_INFO_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.SetBlockContentTimeWindow.ID to
+              CommandInfo(
+                name = "SetBlockContentTimeWindow",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TimeWindow",
+                        type = DataType.TIME_WINDOW_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ContentControl.CommandsIncoming.RemoveBlockContentTimeWindow.ID to
+              CommandInfo(
+                name = "RemoveBlockContentTimeWindow",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TimeWindowIndexes",
+                        type = DataType.LIST_U_INT16,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ContentControl.CommandsOutgoing.ResetPINResponse.ID to
+              CommandInfo(
+                name = "ResetPINResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PINCode",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ContentControl.Events.RemainingScreenTimeExpired.ID to
+              EventInfo(name = "RemainingScreenTimeExpired"),
+            Clusters.ContentControl.Events.EnteringBlockContentTimeWindow.ID to
+              EventInfo(name = "EnteringBlockContentTimeWindow"),
+          ),
+      ),
+    Clusters.ContentAppObserver.ID to
+      ClusterInfo(
+        name = "Content App Observer",
+        attributes = mapOf<AttributeId, AttributeInfo>(),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ContentAppObserver.CommandsIncoming.ContentAppMessage.ID to
+              CommandInfo(
+                name = "ContentAppMessage",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Data",
+                        type = DataType.STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "EncodingHint",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ContentAppObserver.CommandsOutgoing.ContentAppMessageResponse.ID to
+              CommandInfo(
+                name = "ContentAppMessageResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.CONTENT_APP_OBSERVER_CLUSTER_STATUS_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Data",
+                        type = DataType.STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "EncodingHint",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+  )

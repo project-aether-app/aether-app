@@ -22,9 +22,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class UserPreferencesViewModel
 @Inject
-constructor(
-    private val userPreferencesRepository: UserPreferencesRepository,
-) : ViewModel() {
+constructor(private val userPreferencesRepository: UserPreferencesRepository) : ViewModel() {
 
   // Controls whether the "Offline" devices should be shown in the UI.
   private var _showOfflineDevices = MutableStateFlow<Boolean>(false)

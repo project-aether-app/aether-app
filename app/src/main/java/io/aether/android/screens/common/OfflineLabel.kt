@@ -15,10 +15,10 @@ import io.aether.android.R
 @Composable
 fun OfflineLabel(modifier: Modifier = Modifier) {
   Text(
-      text = stringResource(R.string.device_offline_label),
-      style = MaterialTheme.typography.bodySmall,
-      color = MaterialTheme.colorScheme.error,
-      textAlign = TextAlign.Center,
-      modifier = modifier.fillMaxWidth(),
+    text = stringResource(R.string.device_offline_label),
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.error,
+    textAlign = TextAlign.Center,
+    modifier = modifier.fillMaxWidth(),
   )
 }

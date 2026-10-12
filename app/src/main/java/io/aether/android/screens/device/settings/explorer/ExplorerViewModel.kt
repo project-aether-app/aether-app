@@ -44,63 +44,63 @@ enum class ExplorerTab(@field:StringRes @param:StringRes val titleRes: Int) {
 data class ExplorerClusterKey(val endpointId: EndpointId, val clusterId: ClusterId)
 
 data class ExplorerAttributeUiItem(
-    val id: AttributeId,
-    val name: String? = null,
-    val type: DataType = DataType.UNKNOWN,
-    val readPrivilege: Privilege = Privilege.NONE,
-    val writePrivilege: Privilege = Privilege.NONE,
-    val isSupported: Boolean = true,
+  val id: AttributeId,
+  val name: String? = null,
+  val type: DataType = DataType.UNKNOWN,
+  val readPrivilege: Privilege = Privilege.NONE,
+  val writePrivilege: Privilege = Privilege.NONE,
+  val isSupported: Boolean = true,
 )
 
 data class ExplorerCommandUiItem(
-    val id: CommandId,
-    val name: String? = null,
-    val arguments: List<ExplorerCommandArgumentDefinition> = emptyList(),
-    val isSupported: Boolean = true,
+  val id: CommandId,
+  val name: String? = null,
+  val arguments: List<ExplorerCommandArgumentDefinition> = emptyList(),
+  val isSupported: Boolean = true,
 )
 
 data class ExplorerEventUiItem(
-    val id: EventId,
-    val name: String? = null,
+  val id: EventId,
+  val name: String? = null,
 )
 
 data class ExplorerClusterDetails(
-    val attributes: List<ExplorerAttributeUiItem> = emptyList(),
-    val commands: List<ExplorerCommandUiItem> = emptyList(),
-    val events: List<ExplorerEventUiItem> = emptyList(),
+  val attributes: List<ExplorerAttributeUiItem> = emptyList(),
+  val commands: List<ExplorerCommandUiItem> = emptyList(),
+  val events: List<ExplorerEventUiItem> = emptyList(),
 )
 
 data class ExplorerUiState(
-    // Lifecycle Flags
-    val isFirstTimeLoading: Boolean = true,
-    val isBackgroundRefreshing: Boolean = false,
-    @field:StringRes val errorMessageRes: Int? = null,
+  // Lifecycle Flags
+  val isFirstTimeLoading: Boolean = true,
+  val isBackgroundRefreshing: Boolean = false,
+  @field:StringRes val errorMessageRes: Int? = null,
 
-    // Core Screen Data
-    val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
-    val navStack: List<ExplorerLevel> = listOf(ExplorerLevel.EndpointList),
-    val endpointSearchQuery: String = "",
-    val clusterSearchQuery: String = "",
-    val attributeSearchQuery: String = "",
-    val commandSearchQuery: String = "",
-    val eventSearchQuery: String = "",
-    val loadingClusterKeys: Set<ExplorerClusterKey> = emptySet(),
-    val clusterDetailsByKey: Map<ExplorerClusterKey, ExplorerClusterDetails> = emptyMap(),
-    val attributeValueByKey: Map<String, String> = emptyMap(),
-    val attributeReadSuccessCount: Int = 0,
-    val attributeWriteSuccessCount: Int = 0,
-    val commandInvokeSuccessCount: Int = 0,
-    val knownClustersById: Map<ClusterId, ExplorerClusterDefinition> = emptyMap(),
+  // Core Screen Data
+  val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
+  val navStack: List<ExplorerLevel> = listOf(ExplorerLevel.EndpointList),
+  val endpointSearchQuery: String = "",
+  val clusterSearchQuery: String = "",
+  val attributeSearchQuery: String = "",
+  val commandSearchQuery: String = "",
+  val eventSearchQuery: String = "",
+  val loadingClusterKeys: Set<ExplorerClusterKey> = emptySet(),
+  val clusterDetailsByKey: Map<ExplorerClusterKey, ExplorerClusterDetails> = emptyMap(),
+  val attributeValueByKey: Map<String, String> = emptyMap(),
+  val attributeReadSuccessCount: Int = 0,
+  val attributeWriteSuccessCount: Int = 0,
+  val commandInvokeSuccessCount: Int = 0,
+  val knownClustersById: Map<ClusterId, ExplorerClusterDefinition> = emptyMap(),
 
-    // UI Overlay / Dialog States
-    val msgDialogInfo: DialogInfo? = null,
+  // UI Overlay / Dialog States
+  val msgDialogInfo: DialogInfo? = null,
 )
 
 private data class ExplorerCoreData(
-    val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
-    val isFirstTimeLoading: Boolean = true,
-    val isBackgroundRefreshing: Boolean = false,
-    val errorMessageRes: Int? = null,
+  val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
+  val isFirstTimeLoading: Boolean = true,
+  val isBackgroundRefreshing: Boolean = false,
+  val errorMessageRes: Int? = null,
 )
 
 sealed class ExplorerLevel {
@@ -109,68 +109,65 @@ sealed class ExplorerLevel {
   data class ClusterList(val endpointId: EndpointId) : ExplorerLevel()
 
   data class ClusterDetail(
-      val endpointId: EndpointId,
-      val clusterId: ClusterId,
-      val tab: ExplorerTab = ExplorerTab.ATTRIBUTES,
+    val endpointId: EndpointId,
+    val clusterId: ClusterId,
+    val tab: ExplorerTab = ExplorerTab.ATTRIBUTES,
   ) : ExplorerLevel()
 
   data class AttributeDetail(
-      val endpointId: EndpointId,
-      val clusterId: ClusterId,
-      val attribute: ExplorerAttributeUiItem,
+    val endpointId: EndpointId,
+    val clusterId: ClusterId,
+    val attribute: ExplorerAttributeUiItem,
   ) : ExplorerLevel()
 
   data class CommandInvoke(
-      val endpointId: EndpointId,
-      val clusterId: ClusterId,
-      val command: ExplorerCommandUiItem,
+    val endpointId: EndpointId,
+    val clusterId: ClusterId,
+    val command: ExplorerCommandUiItem,
   ) : ExplorerLevel()
 }
 
 @HiltViewModel
-class ExplorerViewModel
-@Inject
-constructor(
-    private val clustersHelper: ClustersHelper,
-) : ViewModel() {
+class ExplorerViewModel @Inject constructor(private val clustersHelper: ClustersHelper) :
+  ViewModel() {
 
   private val refreshTrigger = MutableSharedFlow<NodeId>(replay = 1)
 
   @OptIn(ExperimentalCoroutinesApi::class)
   private val explorerCoreDataState: StateFlow<ExplorerCoreData> =
-      refreshTrigger
-          .flatMapLatest { nodeId ->
-            flow {
-              emit(ExplorerCoreData(isFirstTimeLoading = true))
-              runCatching {
-                clustersHelper.fetchDeviceMatterInfo(nodeId).sortedBy { it.endpointId }
-              }
-                  .onSuccess { list ->
-                    emit(
-                        ExplorerCoreData(
-                            deviceMatterInfoList = list,
-                            isFirstTimeLoading = false,
-                            isBackgroundRefreshing = false,
-                        ),
-                    )
-                  }
-                  .onFailure {
-                    Timber.e(it, "loadExplorer failed")
-                    emit(
-                        ExplorerCoreData(
-                            isFirstTimeLoading = false,
-                            isBackgroundRefreshing = false,
-                            errorMessageRes = R.string.device_explorer_error_action_failed,
-                        ),
-                    )
-                  }
-            }
+    refreshTrigger
+      .flatMapLatest { nodeId ->
+        flow {
+          emit(ExplorerCoreData(isFirstTimeLoading = true))
+          runCatching {
+            clustersHelper.fetchDeviceMatterInfo(nodeId).sortedBy { it.endpointId }
           }
-          .stateIn(
-              viewModelScope,
-              SharingStarted.WhileSubscribed(5000),
-              ExplorerCoreData(),
-          )
+            .onSuccess { list ->
+              emit(
+                ExplorerCoreData(
+                  deviceMatterInfoList = list,
+                  isFirstTimeLoading = false,
+                  isBackgroundRefreshing = false,
+                ),
+              )
+            }
+            .onFailure {
+              Timber.e(it, "loadExplorer failed")
+              emit(
+                ExplorerCoreData(
+                  isFirstTimeLoading = false,
+                  isBackgroundRefreshing = false,
+                  errorMessageRes = R.string.device_explorer_error_action_failed,
+                ),
+              )
+            }
+        }
+      }
+      .stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        ExplorerCoreData(),
+      )
 
   fun loadExplorer(nodeId: NodeId) = refreshTrigger.tryEmit(nodeId)
 
@@ -196,9 +193,9 @@ constructor(
   val loadingClusterKeys: StateFlow<Set<ExplorerClusterKey>> = _loadingClusterKeys.asStateFlow()
 
   private val _clusterDetailsByKey =
-      MutableStateFlow<Map<ExplorerClusterKey, ExplorerClusterDetails>>(emptyMap())
+    MutableStateFlow<Map<ExplorerClusterKey, ExplorerClusterDetails>>(emptyMap())
   val clusterDetailsByKey: StateFlow<Map<ExplorerClusterKey, ExplorerClusterDetails>> =
-      _clusterDetailsByKey.asStateFlow()
+    _clusterDetailsByKey.asStateFlow()
 
   private val _attributeValueByKey = MutableStateFlow<Map<String, String>>(emptyMap())
   val attributeValueByKey: StateFlow<Map<String, String>> = _attributeValueByKey.asStateFlow()
@@ -214,65 +211,65 @@ constructor(
   private val _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
 
   private val _knownClustersById =
-      MutableStateFlow<Map<ClusterId, ExplorerClusterDefinition>>(emptyMap())
+    MutableStateFlow<Map<ClusterId, ExplorerClusterDefinition>>(emptyMap())
 
   @Suppress("UNCHECKED_CAST")
   val uiState: StateFlow<ExplorerUiState> =
-      combine(
-              explorerCoreDataState,
-              _navStack.asStateFlow(),
-              _endpointSearchQuery.asStateFlow(),
-              _clusterSearchQuery.asStateFlow(),
-              _attributeSearchQuery.asStateFlow(),
-              _commandSearchQuery.asStateFlow(),
-              _eventSearchQuery.asStateFlow(),
-              _loadingClusterKeys.asStateFlow(),
-              _clusterDetailsByKey.asStateFlow(),
-              _attributeValueByKey.asStateFlow(),
-              _attributeReadSuccessCount.asStateFlow(),
-              _attributeWriteSuccessCount.asStateFlow(),
-              _commandInvokeSuccessCount.asStateFlow(),
-              _msgDialogInfo.asStateFlow(),
-              _knownClustersById.asStateFlow(),
-          ) { array ->
-            var coreData = array[0] as ExplorerCoreData
-            var navStack = array[1] as List<ExplorerLevel>
-            var endpointSearchQuery = array[2] as String
-            var clusterSearchQuery = array[3] as String
-            var attributeSearchQuery = array[4] as String
-            var commandSearchQuery = array[5] as String
-            var eventSearchQuery = array[6] as String
-            var loadingClusterKeys = array[7] as Set<ExplorerClusterKey>
-            var clusterDetailsByKey = array[8] as Map<ExplorerClusterKey, ExplorerClusterDetails>
-            var attributeValueByKey = array[9] as Map<String, String>
-            var attributeReadSuccessCount = array[10] as Int
-            var attributeWriteSuccessCount = array[11] as Int
-            var commandInvokeSuccessCount = array[12] as Int
-            var msgDialogInfo = array[13] as DialogInfo?
-            var knownClustersById = array[14] as Map<ClusterId, ExplorerClusterDefinition>
+    combine(
+        explorerCoreDataState,
+        _navStack.asStateFlow(),
+        _endpointSearchQuery.asStateFlow(),
+        _clusterSearchQuery.asStateFlow(),
+        _attributeSearchQuery.asStateFlow(),
+        _commandSearchQuery.asStateFlow(),
+        _eventSearchQuery.asStateFlow(),
+        _loadingClusterKeys.asStateFlow(),
+        _clusterDetailsByKey.asStateFlow(),
+        _attributeValueByKey.asStateFlow(),
+        _attributeReadSuccessCount.asStateFlow(),
+        _attributeWriteSuccessCount.asStateFlow(),
+        _commandInvokeSuccessCount.asStateFlow(),
+        _msgDialogInfo.asStateFlow(),
+        _knownClustersById.asStateFlow(),
+      ) { array ->
+        var coreData = array[0] as ExplorerCoreData
+        var navStack = array[1] as List<ExplorerLevel>
+        var endpointSearchQuery = array[2] as String
+        var clusterSearchQuery = array[3] as String
+        var attributeSearchQuery = array[4] as String
+        var commandSearchQuery = array[5] as String
+        var eventSearchQuery = array[6] as String
+        var loadingClusterKeys = array[7] as Set<ExplorerClusterKey>
+        var clusterDetailsByKey = array[8] as Map<ExplorerClusterKey, ExplorerClusterDetails>
+        var attributeValueByKey = array[9] as Map<String, String>
+        var attributeReadSuccessCount = array[10] as Int
+        var attributeWriteSuccessCount = array[11] as Int
+        var commandInvokeSuccessCount = array[12] as Int
+        var msgDialogInfo = array[13] as DialogInfo?
+        var knownClustersById = array[14] as Map<ClusterId, ExplorerClusterDefinition>
 
-            ExplorerUiState(
-                isFirstTimeLoading = coreData.isFirstTimeLoading,
-                isBackgroundRefreshing = coreData.isBackgroundRefreshing,
-                errorMessageRes = coreData.errorMessageRes,
-                deviceMatterInfoList = coreData.deviceMatterInfoList,
-                navStack = navStack,
-                endpointSearchQuery = endpointSearchQuery,
-                clusterSearchQuery = clusterSearchQuery,
-                attributeSearchQuery = attributeSearchQuery,
-                commandSearchQuery = commandSearchQuery,
-                eventSearchQuery = eventSearchQuery,
-                loadingClusterKeys = loadingClusterKeys,
-                clusterDetailsByKey = clusterDetailsByKey,
-                attributeValueByKey = attributeValueByKey,
-                attributeReadSuccessCount = attributeReadSuccessCount,
-                attributeWriteSuccessCount = attributeWriteSuccessCount,
-                commandInvokeSuccessCount = commandInvokeSuccessCount,
-                msgDialogInfo = msgDialogInfo,
-                knownClustersById = knownClustersById,
-            )
-          }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExplorerUiState())
+        ExplorerUiState(
+          isFirstTimeLoading = coreData.isFirstTimeLoading,
+          isBackgroundRefreshing = coreData.isBackgroundRefreshing,
+          errorMessageRes = coreData.errorMessageRes,
+          deviceMatterInfoList = coreData.deviceMatterInfoList,
+          navStack = navStack,
+          endpointSearchQuery = endpointSearchQuery,
+          clusterSearchQuery = clusterSearchQuery,
+          attributeSearchQuery = attributeSearchQuery,
+          commandSearchQuery = commandSearchQuery,
+          eventSearchQuery = eventSearchQuery,
+          loadingClusterKeys = loadingClusterKeys,
+          clusterDetailsByKey = clusterDetailsByKey,
+          attributeValueByKey = attributeValueByKey,
+          attributeReadSuccessCount = attributeReadSuccessCount,
+          attributeWriteSuccessCount = attributeWriteSuccessCount,
+          commandInvokeSuccessCount = commandInvokeSuccessCount,
+          msgDialogInfo = msgDialogInfo,
+          knownClustersById = knownClustersById,
+        )
+      }
+      .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExplorerUiState())
 
   init {
     viewModelScope.launch(Dispatchers.IO) {
@@ -313,9 +310,9 @@ constructor(
     _navStack.update { stack ->
       stack.map { level ->
         if (
-            level is ExplorerLevel.ClusterDetail &&
-                level.endpointId == endpointId &&
-                level.clusterId == clusterId
+          level is ExplorerLevel.ClusterDetail &&
+            level.endpointId == endpointId &&
+            level.clusterId == clusterId
         ) {
           level.copy(tab = tab)
         } else {
@@ -346,17 +343,17 @@ constructor(
   }
 
   fun openAttributeDetail(
-      endpointId: EndpointId,
-      clusterId: ClusterId,
-      attribute: ExplorerAttributeUiItem,
+    endpointId: EndpointId,
+    clusterId: ClusterId,
+    attribute: ExplorerAttributeUiItem,
   ) {
     _navStack.update { it + ExplorerLevel.AttributeDetail(endpointId, clusterId, attribute) }
   }
 
   fun openCommandInvoke(
-      endpointId: EndpointId,
-      clusterId: ClusterId,
-      command: ExplorerCommandUiItem,
+    endpointId: EndpointId,
+    clusterId: ClusterId,
+    command: ExplorerCommandUiItem,
   ) {
     _navStack.update { it + ExplorerLevel.CommandInvoke(endpointId, clusterId, command) }
   }
@@ -375,59 +372,59 @@ constructor(
         val attributesFromDevice = runCatching {
           clustersHelper.readClusterAttributeList(nodeId, endpointId, clusterId)
         }
-            .getOrElse {
-              Timber.w(
-                  it,
-                  "readClusterAttributeList failed endpoint=%s cluster=%s",
-                  endpointId,
-                  clusterId,
-              )
-              emptyList()
-            }
+          .getOrElse {
+            Timber.w(
+              it,
+              "readClusterAttributeList failed endpoint=%s cluster=%s",
+              endpointId,
+              clusterId,
+            )
+            emptyList()
+          }
         val commandsFromDevice = runCatching {
           clustersHelper.readClusterAcceptedCommandList(
-              nodeId,
-              endpointId,
-              clusterId,
+            nodeId,
+            endpointId,
+            clusterId,
           )
         }
-            .getOrElse {
-              Timber.w(
-                  it,
-                  "readClusterAcceptedCommandList failed endpoint=%s cluster=%s",
-                  endpointId,
-                  clusterId,
-              )
-              emptyList()
-            }
+          .getOrElse {
+            Timber.w(
+              it,
+              "readClusterAcceptedCommandList failed endpoint=%s cluster=%s",
+              endpointId,
+              clusterId,
+            )
+            emptyList()
+          }
         val generatedCommandsFromDevice = runCatching {
           clustersHelper.readClusterGeneratedCommandList(
-              nodeId,
-              endpointId,
-              clusterId,
+            nodeId,
+            endpointId,
+            clusterId,
           )
         }
-            .getOrElse {
-              Timber.w(
-                  it,
-                  "readClusterGeneratedCommandList failed endpoint=%s cluster=%s",
-                  endpointId,
-                  clusterId,
-              )
-              emptyList()
-            }
+          .getOrElse {
+            Timber.w(
+              it,
+              "readClusterGeneratedCommandList failed endpoint=%s cluster=%s",
+              endpointId,
+              clusterId,
+            )
+            emptyList()
+          }
         val eventsFromDevice = runCatching {
           clustersHelper.readClusterEventList(nodeId, endpointId, clusterId)
         }
-            .getOrElse {
-              Timber.w(
-                  it,
-                  "readClusterEventList failed endpoint=%s cluster=%s",
-                  endpointId,
-                  clusterId,
-              )
-              emptyList()
-            }
+          .getOrElse {
+            Timber.w(
+              it,
+              "readClusterEventList failed endpoint=%s cluster=%s",
+              endpointId,
+              clusterId,
+            )
+            emptyList()
+          }
 
         val knownAttributes = knownSchema?.attributes.orEmpty().associateBy { it.id }
         val knownCommands = knownSchema?.commands.orEmpty().associateBy { it.id }
@@ -436,32 +433,32 @@ constructor(
         val supportedCommandIds = (commandsFromDevice + generatedCommandsFromDevice).toSet()
 
         val attributes =
-            (attributesFromDevice + knownAttributes.keys).toSet().sorted().map { id ->
-              val known = knownAttributes[id]
-              ExplorerAttributeUiItem(
-                  id = id,
-                  name = known?.name,
-                  type = known?.type ?: DataType.UNKNOWN,
-                  readPrivilege = known?.readPrivilege ?: Privilege.NONE,
-                  writePrivilege = known?.writePrivilege ?: Privilege.NONE,
-                  isSupported = id in supportedAttributeIds,
-              )
-            }
+          (attributesFromDevice + knownAttributes.keys).toSet().sorted().map { id ->
+            val known = knownAttributes[id]
+            ExplorerAttributeUiItem(
+              id = id,
+              name = known?.name,
+              type = known?.type ?: DataType.UNKNOWN,
+              readPrivilege = known?.readPrivilege ?: Privilege.NONE,
+              writePrivilege = known?.writePrivilege ?: Privilege.NONE,
+              isSupported = id in supportedAttributeIds,
+            )
+          }
         val commands =
-            (supportedCommandIds + knownCommands.keys).toList().sorted().map { id ->
-              val known = knownCommands[id]
-              ExplorerCommandUiItem(
-                  id = id,
-                  name = known?.name,
-                  arguments = known?.arguments.orEmpty(),
-                  isSupported = id in supportedCommandIds,
-              )
-            }
+          (supportedCommandIds + knownCommands.keys).toList().sorted().map { id ->
+            val known = knownCommands[id]
+            ExplorerCommandUiItem(
+              id = id,
+              name = known?.name,
+              arguments = known?.arguments.orEmpty(),
+              isSupported = id in supportedCommandIds,
+            )
+          }
         val events =
-            (eventsFromDevice + knownEvents.keys).toSet().sorted().map { id ->
-              val known = knownEvents[id]
-              ExplorerEventUiItem(id = id, name = known?.name)
-            }
+          (eventsFromDevice + knownEvents.keys).toSet().sorted().map { id ->
+            val known = knownEvents[id]
+            ExplorerEventUiItem(id = id, name = known?.name)
+          }
 
         _clusterDetailsByKey.update { current ->
           current + (key to ExplorerClusterDetails(attributes, commands, events))
@@ -473,10 +470,10 @@ constructor(
   }
 
   fun readAttribute(
-      nodeId: NodeId,
-      endpointId: EndpointId,
-      clusterId: ClusterId,
-      attributeId: AttributeId,
+    nodeId: NodeId,
+    endpointId: EndpointId,
+    clusterId: ClusterId,
+    attributeId: AttributeId,
   ) {
     viewModelScope.launch {
       try {
@@ -488,47 +485,47 @@ constructor(
       } catch (e: Exception) {
         Timber.e(e, "readAttribute failed")
         showMsgDialog(
-            R.string.device_settings_admin_explorer,
-            R.string.device_explorer_error_action_failed,
+          R.string.device_settings_admin_explorer,
+          R.string.device_explorer_error_action_failed,
         )
       }
     }
   }
 
   fun writeAttribute(
-      nodeId: NodeId,
-      endpointId: EndpointId,
-      clusterId: ClusterId,
-      attributeId: AttributeId,
-      value: String,
+    nodeId: NodeId,
+    endpointId: EndpointId,
+    clusterId: ClusterId,
+    attributeId: AttributeId,
+    value: String,
   ) {
     viewModelScope.launch {
       try {
         val attributeType =
-            _knownClustersById.value[clusterId]
-                ?.attributes
-                ?.firstOrNull { it.id == attributeId }
-                ?.type ?: DataType.UNKNOWN
+          _knownClustersById.value[clusterId]
+            ?.attributes
+            ?.firstOrNull { it.id == attributeId }
+            ?.type ?: DataType.UNKNOWN
         val payload =
-            ExplorerTlvCodec.encodeAnonymousValue(
-                type = attributeType,
-                rawValue = value,
-                invalidNumberMessageRes = R.string.device_explorer_error_invalid_number,
-            )
-                ?: run {
-                  showMsgDialog(
-                      R.string.device_settings_admin_explorer,
-                      R.string.device_explorer_error_unsupported_attribute_write,
-                  )
-                  return@launch
-                }
+          ExplorerTlvCodec.encodeAnonymousValue(
+            type = attributeType,
+            rawValue = value,
+            invalidNumberMessageRes = R.string.device_explorer_error_invalid_number,
+          )
+            ?: run {
+              showMsgDialog(
+                R.string.device_settings_admin_explorer,
+                R.string.device_explorer_error_unsupported_attribute_write,
+              )
+              return@launch
+            }
 
         clustersHelper.writeGenericAttribute(
-            nodeId,
-            endpointId,
-            clusterId,
-            attributeId,
-            payload,
+          nodeId,
+          endpointId,
+          clusterId,
+          attributeId,
+          payload,
         )
         _attributeValueByKey.update {
           it + (attributeKey(endpointId, clusterId, attributeId) to value)
@@ -539,35 +536,35 @@ constructor(
       } catch (e: Exception) {
         Timber.e(e, "writeAttribute failed")
         showMsgDialog(
-            R.string.device_settings_admin_explorer,
-            R.string.device_explorer_error_action_failed,
+          R.string.device_settings_admin_explorer,
+          R.string.device_explorer_error_action_failed,
         )
       }
     }
   }
 
   fun invokeCommand(
-      nodeId: NodeId,
-      endpointId: EndpointId,
-      clusterId: ClusterId,
-      commandId: CommandId,
-      argumentValues: Map<String, String>,
+    nodeId: NodeId,
+    endpointId: EndpointId,
+    clusterId: ClusterId,
+    commandId: CommandId,
+    argumentValues: Map<String, String>,
   ) {
     viewModelScope.launch {
       try {
         val arguments =
-            _knownClustersById.value[clusterId]
-                ?.commands
-                ?.firstOrNull { it.id == commandId }
-                ?.arguments
-                .orEmpty()
+          _knownClustersById.value[clusterId]
+            ?.commands
+            ?.firstOrNull { it.id == commandId }
+            ?.arguments
+            .orEmpty()
         val payload = ExplorerTlvCodec.encodeCommandPayload(arguments, argumentValues)
         clustersHelper.invokeGenericCommand(
-            nodeId,
-            endpointId,
-            clusterId,
-            commandId,
-            payload,
+          nodeId,
+          endpointId,
+          clusterId,
+          commandId,
+          payload,
         )
         _commandInvokeSuccessCount.update { it + 1 }
       } catch (e: ExplorerInputValidationException) {
@@ -575,17 +572,17 @@ constructor(
       } catch (e: Exception) {
         Timber.e(e, "invokeCommand failed")
         showMsgDialog(
-            R.string.device_settings_admin_explorer,
-            R.string.device_explorer_error_action_failed,
+          R.string.device_settings_admin_explorer,
+          R.string.device_explorer_error_action_failed,
         )
       }
     }
   }
 
   internal fun attributeKey(
-      endpointId: EndpointId,
-      clusterId: ClusterId,
-      attributeId: AttributeId,
+    endpointId: EndpointId,
+    clusterId: ClusterId,
+    attributeId: AttributeId,
   ): String = "$endpointId-$clusterId-$attributeId"
 
   fun dismissMsgDialog() {

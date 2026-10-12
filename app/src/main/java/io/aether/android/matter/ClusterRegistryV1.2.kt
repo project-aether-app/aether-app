@@ -6,1756 +6,1606 @@
 package io.aether.android.matter
 
 val CLUSTERS_1_2 =
-    mapOf<ClusterId, ClusterInfo>(
-        Clusters.ICDManagement.ID to
-            ClusterInfo(
-                name = "ICD Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ICDManagement.Attributes.IdleModeDuration.ID to
-                            AttributeInfo(
-                                name = "IdleModeDuration",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.ActiveModeDuration.ID to
-                            AttributeInfo(
-                                name = "ActiveModeDuration",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.ActiveModeThreshold.ID to
-                            AttributeInfo(
-                                name = "ActiveModeThreshold",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.RegisteredClients.ID to
-                            AttributeInfo(
-                                name = "RegisteredClients",
-                                type = DataType.LIST_MONITORING_REGISTRATION_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.ICDManagement.Attributes.ICDCounter.ID to
-                            AttributeInfo(
-                                name = "ICDCounter",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.ICDManagement.Attributes.ClientsSupportedPerFabric.ID to
-                            AttributeInfo(
-                                name = "ClientsSupportedPerFabric",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.UserActiveModeTriggerHint.ID to
-                            AttributeInfo(
-                                name = "UserActiveModeTriggerHint",
-                                type = DataType.USER_ACTIVE_MODE_TRIGGER_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.UserActiveModeTriggerInstruction.ID to
-                            AttributeInfo(
-                                name = "UserActiveModeTriggerInstruction",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.OperatingMode.ID to
-                            AttributeInfo(
-                                name = "OperatingMode",
-                                type = DataType.ICD_MANAGEMENT_CLUSTER_OPERATING_MODE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ICDManagement.Attributes.MaximumCheckInBackoff.ID to
-                            AttributeInfo(
-                                name = "MaximumCheckInBackoff",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ICDManagement.CommandsIncoming.RegisterClient.ID to
-                            CommandInfo(
-                                name = "RegisterClient",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CheckInNodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "MonitoredSubject",
-                                                type = DataType.SUBJECT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Key",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "VerificationKey",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "ClientType",
-                                                type =
-                                                    DataType
-                                                        .ICD_MANAGEMENT_CLUSTER_CLIENT_TYPE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ICDManagement.CommandsIncoming.UnregisterClient.ID to
-                            CommandInfo(
-                                name = "UnregisterClient",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CheckInNodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "VerificationKey",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ICDManagement.CommandsIncoming.StayActiveRequest.ID to
-                            CommandInfo(
-                                name = "StayActiveRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StayActiveDuration",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ICDManagement.CommandsOutgoing.RegisterClientResponse.ID to
-                            CommandInfo(
-                                name = "RegisterClientResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ICDCounter",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ICDManagement.CommandsOutgoing.StayActiveResponse.ID to
-                            CommandInfo(
-                                name = "StayActiveResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PromisedActiveDuration",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.LaundryWasherMode.ID to
-            ClusterInfo(
-                name = "Laundry Washer Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.LaundryWasherMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.LaundryWasherMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.LaundryWasherMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.LaundryWasherMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.RefrigeratorAndTemperatureControlledCabinetMode.ID to
-            ClusterInfo(
-                name = "Refrigerator And Temperature Controlled Cabinet Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes
-                            .SupportedModes
-                            .ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes
-                            .CurrentMode
-                            .ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes
-                            .StartUpMode
-                            .ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes.OnMode
-                            .ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.LaundryWasherControls.ID to
-            ClusterInfo(
-                name = "Laundry Washer Controls",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.LaundryWasherControls.Attributes.SpinSpeeds.ID to
-                            AttributeInfo(
-                                name = "SpinSpeeds",
-                                type = DataType.LIST_STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.LaundryWasherControls.Attributes.SpinSpeedCurrent.ID to
-                            AttributeInfo(
-                                name = "SpinSpeedCurrent",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.LaundryWasherControls.Attributes.NumberOfRinses.ID to
-                            AttributeInfo(
-                                name = "NumberOfRinses",
-                                type =
-                                    DataType.LAUNDRY_WASHER_CONTROLS_CLUSTER_NUMBER_OF_RINSES_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.LaundryWasherControls.Attributes.SupportedRinses.ID to
-                            AttributeInfo(
-                                name = "SupportedRinses",
-                                type =
-                                    DataType
-                                        .LIST_LAUNDRY_WASHER_CONTROLS_CLUSTER_NUMBER_OF_RINSES_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.RVCRunMode.ID to
-            ClusterInfo(
-                name = "RVC Run Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.RVCRunMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RVCRunMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RVCRunMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RVCRunMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.RVCCleanMode.ID to
-            ClusterInfo(
-                name = "RVC Clean Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.RVCCleanMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RVCCleanMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RVCCleanMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.RVCCleanMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.TemperatureControl.ID to
-            ClusterInfo(
-                name = "Temperature Control",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.TemperatureControl.Attributes.TemperatureSetpoint.ID to
-                            AttributeInfo(
-                                name = "TemperatureSetpoint",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureControl.Attributes.MinTemperature.ID to
-                            AttributeInfo(
-                                name = "MinTemperature",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureControl.Attributes.MaxTemperature.ID to
-                            AttributeInfo(
-                                name = "MaxTemperature",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureControl.Attributes.Step.ID to
-                            AttributeInfo(
-                                name = "Step",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureControl.Attributes.SelectedTemperatureLevel.ID to
-                            AttributeInfo(
-                                name = "SelectedTemperatureLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureControl.Attributes.SupportedTemperatureLevels.ID to
-                            AttributeInfo(
-                                name = "SupportedTemperatureLevels",
-                                type = DataType.LIST_STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.TemperatureControl.CommandsIncoming.SetTemperature.ID to
-                            CommandInfo(
-                                name = "SetTemperature",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TargetTemperature",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "TargetTemperatureLevel",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.RefrigeratorAlarm.ID to
-            ClusterInfo(
-                name = "Refrigerator Alarm",
-                attributes = mapOf<AttributeId, AttributeInfo>(),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.RefrigeratorAlarm.CommandsOutgoing.ModifyEnabledAlarms.ID to
-                            CommandInfo(
-                                name = "ModifyEnabledAlarms",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.DishwasherMode.ID to
-            ClusterInfo(
-                name = "Dishwasher Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.DishwasherMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.DishwasherMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.DishwasherMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.DishwasherMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.AirQuality.ID to
-            ClusterInfo(
-                name = "Air Quality",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.AirQuality.Attributes.AirQuality.ID to
-                            AttributeInfo(
-                                name = "AirQuality",
-                                type = DataType.AIR_QUALITY_CLUSTER_AIR_QUALITY_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.SmokeCOAlarm.ID to
-            ClusterInfo(
-                name = "Smoke CO Alarm",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.SmokeCOAlarm.Attributes.ExpressedState.ID to
-                            AttributeInfo(
-                                name = "ExpressedState",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_EXPRESSED_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.SmokeState.ID to
-                            AttributeInfo(
-                                name = "SmokeState",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.COState.ID to
-                            AttributeInfo(
-                                name = "COState",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.BatteryAlert.ID to
-                            AttributeInfo(
-                                name = "BatteryAlert",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.DeviceMuted.ID to
-                            AttributeInfo(
-                                name = "DeviceMuted",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_MUTE_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.TestInProgress.ID to
-                            AttributeInfo(
-                                name = "TestInProgress",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.HardwareFaultAlert.ID to
-                            AttributeInfo(
-                                name = "HardwareFaultAlert",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.EndOfServiceAlert.ID to
-                            AttributeInfo(
-                                name = "EndOfServiceAlert",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_END_OF_SERVICE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.InterconnectSmokeAlarm.ID to
-                            AttributeInfo(
-                                name = "InterconnectSmokeAlarm",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.InterconnectCOAlarm.ID to
-                            AttributeInfo(
-                                name = "InterconnectCOAlarm",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.ContaminationState.ID to
-                            AttributeInfo(
-                                name = "ContaminationState",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_CONTAMINATION_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.SmokeSensitivityLevel.ID to
-                            AttributeInfo(
-                                name = "SmokeSensitivityLevel",
-                                type = DataType.SMOKE_CO_ALARM_CLUSTER_SENSITIVITY_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.ExpiryDate.ID to
-                            AttributeInfo(
-                                name = "ExpiryDate",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SmokeCOAlarm.Attributes.Unmounted.ID to
-                            AttributeInfo(
-                                name = "Unmounted",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.SmokeCOAlarm.CommandsIncoming.SelfTestRequest.ID to
-                            CommandInfo(
-                                name = "SelfTestRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.SmokeCOAlarm.Events.SmokeAlarm.ID to
-                            EventInfo(
-                                name = "SmokeAlarm",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.COAlarm.ID to
-                            EventInfo(
-                                name = "COAlarm",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.LowBattery.ID to
-                            EventInfo(
-                                name = "LowBattery",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.HardwareFault.ID to
-                            EventInfo(
-                                name = "HardwareFault",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.EndOfService.ID to
-                            EventInfo(
-                                name = "EndOfService",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.SelfTestComplete.ID to
-                            EventInfo(
-                                name = "SelfTestComplete",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.AlarmMuted.ID to
-                            EventInfo(
-                                name = "AlarmMuted",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.MuteEnded.ID to
-                            EventInfo(
-                                name = "MuteEnded",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.InterconnectSmokeAlarm.ID to
-                            EventInfo(
-                                name = "InterconnectSmokeAlarm",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.InterconnectCOAlarm.ID to
-                            EventInfo(
-                                name = "InterconnectCOAlarm",
-                            ),
-                        Clusters.SmokeCOAlarm.Events.AllClear.ID to
-                            EventInfo(
-                                name = "AllClear",
-                            ),
-                    ),
-            ),
-        Clusters.DishwasherAlarm.ID to
-            ClusterInfo(
-                name = "Dishwasher Alarm",
-                attributes = mapOf<AttributeId, AttributeInfo>(),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.OperationalState.ID to
-            ClusterInfo(
-                name = "Operational State",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.OperationalState.Attributes.PhaseList.ID to
-                            AttributeInfo(
-                                name = "PhaseList",
-                                type = DataType.LIST_STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OperationalState.Attributes.CurrentPhase.ID to
-                            AttributeInfo(
-                                name = "CurrentPhase",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OperationalState.Attributes.CountdownTime.ID to
-                            AttributeInfo(
-                                name = "CountdownTime",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OperationalState.Attributes.OperationalStateList.ID to
-                            AttributeInfo(
-                                name = "OperationalStateList",
-                                type = DataType.LIST_OPERATIONAL_STATE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OperationalState.Attributes.OperationalState.ID to
-                            AttributeInfo(
-                                name = "OperationalState",
-                                type = DataType.OPERATIONAL_STATE_CLUSTER_OPERATIONAL_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OperationalState.Attributes.OperationalError.ID to
-                            AttributeInfo(
-                                name = "OperationalError",
-                                type = DataType.ERROR_STATE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.OperationalState.CommandsIncoming.Pause.ID to
-                            CommandInfo(
-                                name = "Pause",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OperationalState.CommandsIncoming.Stop.ID to
-                            CommandInfo(
-                                name = "Stop",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OperationalState.CommandsIncoming.Start.ID to
-                            CommandInfo(
-                                name = "Start",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.OperationalState.CommandsIncoming.Resume.ID to
-                            CommandInfo(
-                                name = "Resume",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.OperationalState.CommandsOutgoing.OperationalCommandResponse.ID to
-                            CommandInfo(
-                                name = "OperationalCommandResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CommandResponseState",
-                                                type = DataType.ERROR_STATE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.OperationalState.Events.OperationalError.ID to
-                            EventInfo(
-                                name = "OperationalError",
-                            ),
-                        Clusters.OperationalState.Events.OperationCompletion.ID to
-                            EventInfo(
-                                name = "OperationCompletion",
-                            ),
-                    ),
-            ),
-        Clusters.RVCOperationalState.ID to
-            ClusterInfo(
-                name = "RVC Operational State",
-                attributes = mapOf<AttributeId, AttributeInfo>(),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.RVCOperationalState.CommandsIncoming.GoHome.ID to
-                            CommandInfo(
-                                name = "GoHome",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.RVCOperationalState.CommandsOutgoing.Pause.ID to
-                            CommandInfo(
-                                name = "Pause",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.RVCOperationalState.CommandsOutgoing.Stop.ID to
-                            CommandInfo(
-                                name = "Stop",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.RVCOperationalState.CommandsOutgoing.Start.ID to
-                            CommandInfo(
-                                name = "Start",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.RVCOperationalState.CommandsOutgoing.Resume.ID to
-                            CommandInfo(
-                                name = "Resume",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.RVCOperationalState.CommandsOutgoing.OperationalCommandResponse
-                            .ID to
-                            CommandInfo(
-                                name = "OperationalCommandResponse",
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.HEPAFilterMonitoring.ID to
-            ClusterInfo(
-                name = "HEPA Filter Monitoring",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.HEPAFilterMonitoring.Attributes.Condition.ID to
-                            AttributeInfo(
-                                name = "Condition",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.HEPAFilterMonitoring.Attributes.DegradationDirection.ID to
-                            AttributeInfo(
-                                name = "DegradationDirection",
-                                type =
-                                    DataType.RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.HEPAFilterMonitoring.Attributes.ChangeIndication.ID to
-                            AttributeInfo(
-                                name = "ChangeIndication",
-                                type = DataType.RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.HEPAFilterMonitoring.Attributes.InPlaceIndicator.ID to
-                            AttributeInfo(
-                                name = "InPlaceIndicator",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.HEPAFilterMonitoring.Attributes.LastChangedTime.ID to
-                            AttributeInfo(
-                                name = "LastChangedTime",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.HEPAFilterMonitoring.Attributes.ReplacementProductList.ID to
-                            AttributeInfo(
-                                name = "ReplacementProductList",
-                                type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.HEPAFilterMonitoring.CommandsIncoming.ResetCondition.ID to
-                            CommandInfo(
-                                name = "ResetCondition",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ActivatedCarbonFilterMonitoring.ID to
-            ClusterInfo(
-                name = "Activated Carbon Filter Monitoring",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.Condition.ID to
-                            AttributeInfo(
-                                name = "Condition",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.DegradationDirection
-                            .ID to
-                            AttributeInfo(
-                                name = "DegradationDirection",
-                                type =
-                                    DataType.RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.ChangeIndication.ID to
-                            AttributeInfo(
-                                name = "ChangeIndication",
-                                type = DataType.RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.InPlaceIndicator.ID to
-                            AttributeInfo(
-                                name = "InPlaceIndicator",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.LastChangedTime.ID to
-                            AttributeInfo(
-                                name = "LastChangedTime",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.ActivatedCarbonFilterMonitoring.Attributes.ReplacementProductList
-                            .ID to
-                            AttributeInfo(
-                                name = "ReplacementProductList",
-                                type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ActivatedCarbonFilterMonitoring.CommandsIncoming.ResetCondition
-                            .ID to
-                            CommandInfo(
-                                name = "ResetCondition",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.CarbonMonoxideConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Carbon Monoxide Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MinMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MaxMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.PeakMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes
-                            .PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes
-                            .AverageMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes
-                            .AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MeasurementUnit
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MeasurementMedium
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.CarbonDioxideConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Carbon Dioxide Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MinMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MaxMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.PeakMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes
-                            .PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes
-                            .AverageMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes
-                            .AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MeasurementUnit
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MeasurementMedium
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CarbonDioxideConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.NitrogenDioxideConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Nitrogen Dioxide Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MinMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MaxMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes
-                            .PeakMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes
-                            .PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes
-                            .AverageMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes
-                            .AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.Uncertainty
-                            .ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MeasurementUnit
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes
-                            .MeasurementMedium
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.OzoneConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Ozone Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.OzoneConcentrationMeasurement.Attributes.MeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.MeasurementUnit.ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.MeasurementMedium.ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.OzoneConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.PM25ConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "PM2.5 Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.PM25ConcentrationMeasurement.Attributes.MeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.MeasurementUnit.ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.MeasurementMedium.ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM25ConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.FormaldehydeConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Formaldehyde Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.MeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.MinMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.MaxMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.PeakMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes
-                            .PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes
-                            .AverageMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes
-                            .AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.MeasurementUnit
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.MeasurementMedium
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.FormaldehydeConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.PM1ConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "PM1 Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.PM1ConcentrationMeasurement.Attributes.MeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.MeasurementUnit.ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.MeasurementMedium.ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM1ConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.PM10ConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "PM10 Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.PM10ConcentrationMeasurement.Attributes.MeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.MeasurementUnit.ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.MeasurementMedium.ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PM10ConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Total Volatile Organic Compounds Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .MeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .MinMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .MaxMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .PeakMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .AverageMeasuredValue
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .Uncertainty
-                            .ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .MeasurementUnit
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .MeasurementMedium
-                            .ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
-                            .LevelValue
-                            .ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.RadonConcentrationMeasurement.ID to
-            ClusterInfo(
-                name = "Radon Concentration Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.RadonConcentrationMeasurement.Attributes.MeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MinMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "MaxMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.PeakMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "PeakMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValue",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
-                            .ID to
-                            AttributeInfo(
-                                name = "AverageMeasuredValueWindow",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.Uncertainty.ID to
-                            AttributeInfo(
-                                name = "Uncertainty",
-                                type = DataType.SINGLE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.MeasurementUnit.ID to
-                            AttributeInfo(
-                                name = "MeasurementUnit",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.MeasurementMedium.ID to
-                            AttributeInfo(
-                                name = "MeasurementMedium",
-                                type =
-                                    DataType
-                                        .CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.RadonConcentrationMeasurement.Attributes.LevelValue.ID to
-                            AttributeInfo(
-                                name = "LevelValue",
-                                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-    )
+  mapOf<ClusterId, ClusterInfo>(
+    Clusters.ICDManagement.ID to
+      ClusterInfo(
+        name = "ICD Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ICDManagement.Attributes.IdleModeDuration.ID to
+              AttributeInfo(
+                name = "IdleModeDuration",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.ActiveModeDuration.ID to
+              AttributeInfo(
+                name = "ActiveModeDuration",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.ActiveModeThreshold.ID to
+              AttributeInfo(
+                name = "ActiveModeThreshold",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.RegisteredClients.ID to
+              AttributeInfo(
+                name = "RegisteredClients",
+                type = DataType.LIST_MONITORING_REGISTRATION_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.ICDManagement.Attributes.ICDCounter.ID to
+              AttributeInfo(
+                name = "ICDCounter",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.ICDManagement.Attributes.ClientsSupportedPerFabric.ID to
+              AttributeInfo(
+                name = "ClientsSupportedPerFabric",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.UserActiveModeTriggerHint.ID to
+              AttributeInfo(
+                name = "UserActiveModeTriggerHint",
+                type = DataType.USER_ACTIVE_MODE_TRIGGER_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.UserActiveModeTriggerInstruction.ID to
+              AttributeInfo(
+                name = "UserActiveModeTriggerInstruction",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.OperatingMode.ID to
+              AttributeInfo(
+                name = "OperatingMode",
+                type = DataType.ICD_MANAGEMENT_CLUSTER_OPERATING_MODE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ICDManagement.Attributes.MaximumCheckInBackoff.ID to
+              AttributeInfo(
+                name = "MaximumCheckInBackoff",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ICDManagement.CommandsIncoming.RegisterClient.ID to
+              CommandInfo(
+                name = "RegisterClient",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CheckInNodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "MonitoredSubject",
+                        type = DataType.SUBJECT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Key",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "VerificationKey",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "ClientType",
+                        type = DataType.ICD_MANAGEMENT_CLUSTER_CLIENT_TYPE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.ICDManagement.CommandsIncoming.UnregisterClient.ID to
+              CommandInfo(
+                name = "UnregisterClient",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CheckInNodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "VerificationKey",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ICDManagement.CommandsIncoming.StayActiveRequest.ID to
+              CommandInfo(
+                name = "StayActiveRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StayActiveDuration",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ICDManagement.CommandsOutgoing.RegisterClientResponse.ID to
+              CommandInfo(
+                name = "RegisterClientResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ICDCounter",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+            Clusters.ICDManagement.CommandsOutgoing.StayActiveResponse.ID to
+              CommandInfo(
+                name = "StayActiveResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PromisedActiveDuration",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.LaundryWasherMode.ID to
+      ClusterInfo(
+        name = "Laundry Washer Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.LaundryWasherMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.LaundryWasherMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.LaundryWasherMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.LaundryWasherMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.RefrigeratorAndTemperatureControlledCabinetMode.ID to
+      ClusterInfo(
+        name = "Refrigerator And Temperature Controlled Cabinet Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RefrigeratorAndTemperatureControlledCabinetMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.LaundryWasherControls.ID to
+      ClusterInfo(
+        name = "Laundry Washer Controls",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.LaundryWasherControls.Attributes.SpinSpeeds.ID to
+              AttributeInfo(
+                name = "SpinSpeeds",
+                type = DataType.LIST_STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.LaundryWasherControls.Attributes.SpinSpeedCurrent.ID to
+              AttributeInfo(
+                name = "SpinSpeedCurrent",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.LaundryWasherControls.Attributes.NumberOfRinses.ID to
+              AttributeInfo(
+                name = "NumberOfRinses",
+                type = DataType.LAUNDRY_WASHER_CONTROLS_CLUSTER_NUMBER_OF_RINSES_ENUM,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.LaundryWasherControls.Attributes.SupportedRinses.ID to
+              AttributeInfo(
+                name = "SupportedRinses",
+                type = DataType.LIST_LAUNDRY_WASHER_CONTROLS_CLUSTER_NUMBER_OF_RINSES_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.RVCRunMode.ID to
+      ClusterInfo(
+        name = "RVC Run Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.RVCRunMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RVCRunMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RVCRunMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RVCRunMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.RVCCleanMode.ID to
+      ClusterInfo(
+        name = "RVC Clean Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.RVCCleanMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RVCCleanMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RVCCleanMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.RVCCleanMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.TemperatureControl.ID to
+      ClusterInfo(
+        name = "Temperature Control",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.TemperatureControl.Attributes.TemperatureSetpoint.ID to
+              AttributeInfo(
+                name = "TemperatureSetpoint",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureControl.Attributes.MinTemperature.ID to
+              AttributeInfo(
+                name = "MinTemperature",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureControl.Attributes.MaxTemperature.ID to
+              AttributeInfo(
+                name = "MaxTemperature",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureControl.Attributes.Step.ID to
+              AttributeInfo(
+                name = "Step",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureControl.Attributes.SelectedTemperatureLevel.ID to
+              AttributeInfo(
+                name = "SelectedTemperatureLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureControl.Attributes.SupportedTemperatureLevels.ID to
+              AttributeInfo(
+                name = "SupportedTemperatureLevels",
+                type = DataType.LIST_STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.TemperatureControl.CommandsIncoming.SetTemperature.ID to
+              CommandInfo(
+                name = "SetTemperature",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TargetTemperature",
+                        type = DataType.TEMPERATURE,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "TargetTemperatureLevel",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.RefrigeratorAlarm.ID to
+      ClusterInfo(
+        name = "Refrigerator Alarm",
+        attributes = mapOf<AttributeId, AttributeInfo>(),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.RefrigeratorAlarm.CommandsOutgoing.ModifyEnabledAlarms.ID to
+              CommandInfo(
+                name = "ModifyEnabledAlarms",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.DishwasherMode.ID to
+      ClusterInfo(
+        name = "Dishwasher Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.DishwasherMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.DishwasherMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.DishwasherMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.DishwasherMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.AirQuality.ID to
+      ClusterInfo(
+        name = "Air Quality",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.AirQuality.Attributes.AirQuality.ID to
+              AttributeInfo(
+                name = "AirQuality",
+                type = DataType.AIR_QUALITY_CLUSTER_AIR_QUALITY_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.SmokeCOAlarm.ID to
+      ClusterInfo(
+        name = "Smoke CO Alarm",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.SmokeCOAlarm.Attributes.ExpressedState.ID to
+              AttributeInfo(
+                name = "ExpressedState",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_EXPRESSED_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.SmokeState.ID to
+              AttributeInfo(
+                name = "SmokeState",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.COState.ID to
+              AttributeInfo(
+                name = "COState",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.BatteryAlert.ID to
+              AttributeInfo(
+                name = "BatteryAlert",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.DeviceMuted.ID to
+              AttributeInfo(
+                name = "DeviceMuted",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_MUTE_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.TestInProgress.ID to
+              AttributeInfo(
+                name = "TestInProgress",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.HardwareFaultAlert.ID to
+              AttributeInfo(
+                name = "HardwareFaultAlert",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.EndOfServiceAlert.ID to
+              AttributeInfo(
+                name = "EndOfServiceAlert",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_END_OF_SERVICE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.InterconnectSmokeAlarm.ID to
+              AttributeInfo(
+                name = "InterconnectSmokeAlarm",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.InterconnectCOAlarm.ID to
+              AttributeInfo(
+                name = "InterconnectCOAlarm",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_ALARM_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.ContaminationState.ID to
+              AttributeInfo(
+                name = "ContaminationState",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_CONTAMINATION_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.SmokeSensitivityLevel.ID to
+              AttributeInfo(
+                name = "SmokeSensitivityLevel",
+                type = DataType.SMOKE_CO_ALARM_CLUSTER_SENSITIVITY_ENUM,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.ExpiryDate.ID to
+              AttributeInfo(
+                name = "ExpiryDate",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SmokeCOAlarm.Attributes.Unmounted.ID to
+              AttributeInfo(
+                name = "Unmounted",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.SmokeCOAlarm.CommandsIncoming.SelfTestRequest.ID to
+              CommandInfo(
+                name = "SelfTestRequest",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.SmokeCOAlarm.Events.SmokeAlarm.ID to EventInfo(name = "SmokeAlarm"),
+            Clusters.SmokeCOAlarm.Events.COAlarm.ID to EventInfo(name = "COAlarm"),
+            Clusters.SmokeCOAlarm.Events.LowBattery.ID to EventInfo(name = "LowBattery"),
+            Clusters.SmokeCOAlarm.Events.HardwareFault.ID to EventInfo(name = "HardwareFault"),
+            Clusters.SmokeCOAlarm.Events.EndOfService.ID to EventInfo(name = "EndOfService"),
+            Clusters.SmokeCOAlarm.Events.SelfTestComplete.ID to
+              EventInfo(name = "SelfTestComplete"),
+            Clusters.SmokeCOAlarm.Events.AlarmMuted.ID to EventInfo(name = "AlarmMuted"),
+            Clusters.SmokeCOAlarm.Events.MuteEnded.ID to EventInfo(name = "MuteEnded"),
+            Clusters.SmokeCOAlarm.Events.InterconnectSmokeAlarm.ID to
+              EventInfo(name = "InterconnectSmokeAlarm"),
+            Clusters.SmokeCOAlarm.Events.InterconnectCOAlarm.ID to
+              EventInfo(name = "InterconnectCOAlarm"),
+            Clusters.SmokeCOAlarm.Events.AllClear.ID to EventInfo(name = "AllClear"),
+          ),
+      ),
+    Clusters.DishwasherAlarm.ID to
+      ClusterInfo(
+        name = "Dishwasher Alarm",
+        attributes = mapOf<AttributeId, AttributeInfo>(),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.OperationalState.ID to
+      ClusterInfo(
+        name = "Operational State",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.OperationalState.Attributes.PhaseList.ID to
+              AttributeInfo(
+                name = "PhaseList",
+                type = DataType.LIST_STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OperationalState.Attributes.CurrentPhase.ID to
+              AttributeInfo(
+                name = "CurrentPhase",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OperationalState.Attributes.CountdownTime.ID to
+              AttributeInfo(
+                name = "CountdownTime",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OperationalState.Attributes.OperationalStateList.ID to
+              AttributeInfo(
+                name = "OperationalStateList",
+                type = DataType.LIST_OPERATIONAL_STATE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OperationalState.Attributes.OperationalState.ID to
+              AttributeInfo(
+                name = "OperationalState",
+                type = DataType.OPERATIONAL_STATE_CLUSTER_OPERATIONAL_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OperationalState.Attributes.OperationalError.ID to
+              AttributeInfo(
+                name = "OperationalError",
+                type = DataType.ERROR_STATE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.OperationalState.CommandsIncoming.Pause.ID to
+              CommandInfo(
+                name = "Pause",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OperationalState.CommandsIncoming.Stop.ID to
+              CommandInfo(
+                name = "Stop",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OperationalState.CommandsIncoming.Start.ID to
+              CommandInfo(
+                name = "Start",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.OperationalState.CommandsIncoming.Resume.ID to
+              CommandInfo(
+                name = "Resume",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.OperationalState.CommandsOutgoing.OperationalCommandResponse.ID to
+              CommandInfo(
+                name = "OperationalCommandResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CommandResponseState",
+                        type = DataType.ERROR_STATE_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.OperationalState.Events.OperationalError.ID to
+              EventInfo(name = "OperationalError"),
+            Clusters.OperationalState.Events.OperationCompletion.ID to
+              EventInfo(name = "OperationCompletion"),
+          ),
+      ),
+    Clusters.RVCOperationalState.ID to
+      ClusterInfo(
+        name = "RVC Operational State",
+        attributes = mapOf<AttributeId, AttributeInfo>(),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.RVCOperationalState.CommandsIncoming.GoHome.ID to
+              CommandInfo(
+                name = "GoHome",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.RVCOperationalState.CommandsOutgoing.Pause.ID to
+              CommandInfo(
+                name = "Pause",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.RVCOperationalState.CommandsOutgoing.Stop.ID to
+              CommandInfo(
+                name = "Stop",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.RVCOperationalState.CommandsOutgoing.Start.ID to
+              CommandInfo(
+                name = "Start",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.RVCOperationalState.CommandsOutgoing.Resume.ID to
+              CommandInfo(
+                name = "Resume",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.RVCOperationalState.CommandsOutgoing.OperationalCommandResponse.ID to
+              CommandInfo(
+                name = "OperationalCommandResponse",
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.HEPAFilterMonitoring.ID to
+      ClusterInfo(
+        name = "HEPA Filter Monitoring",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.HEPAFilterMonitoring.Attributes.Condition.ID to
+              AttributeInfo(
+                name = "Condition",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.HEPAFilterMonitoring.Attributes.DegradationDirection.ID to
+              AttributeInfo(
+                name = "DegradationDirection",
+                type = DataType.RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.HEPAFilterMonitoring.Attributes.ChangeIndication.ID to
+              AttributeInfo(
+                name = "ChangeIndication",
+                type = DataType.RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.HEPAFilterMonitoring.Attributes.InPlaceIndicator.ID to
+              AttributeInfo(
+                name = "InPlaceIndicator",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.HEPAFilterMonitoring.Attributes.LastChangedTime.ID to
+              AttributeInfo(
+                name = "LastChangedTime",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.HEPAFilterMonitoring.Attributes.ReplacementProductList.ID to
+              AttributeInfo(
+                name = "ReplacementProductList",
+                type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.HEPAFilterMonitoring.CommandsIncoming.ResetCondition.ID to
+              CommandInfo(
+                name = "ResetCondition",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ActivatedCarbonFilterMonitoring.ID to
+      ClusterInfo(
+        name = "Activated Carbon Filter Monitoring",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ActivatedCarbonFilterMonitoring.Attributes.Condition.ID to
+              AttributeInfo(
+                name = "Condition",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ActivatedCarbonFilterMonitoring.Attributes.DegradationDirection.ID to
+              AttributeInfo(
+                name = "DegradationDirection",
+                type = DataType.RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ActivatedCarbonFilterMonitoring.Attributes.ChangeIndication.ID to
+              AttributeInfo(
+                name = "ChangeIndication",
+                type = DataType.RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ActivatedCarbonFilterMonitoring.Attributes.InPlaceIndicator.ID to
+              AttributeInfo(
+                name = "InPlaceIndicator",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ActivatedCarbonFilterMonitoring.Attributes.LastChangedTime.ID to
+              AttributeInfo(
+                name = "LastChangedTime",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.ActivatedCarbonFilterMonitoring.Attributes.ReplacementProductList.ID to
+              AttributeInfo(
+                name = "ReplacementProductList",
+                type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ActivatedCarbonFilterMonitoring.CommandsIncoming.ResetCondition.ID to
+              CommandInfo(
+                name = "ResetCondition",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.CarbonMonoxideConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Carbon Monoxide Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonMonoxideConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.CarbonDioxideConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Carbon Dioxide Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CarbonDioxideConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.NitrogenDioxideConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Nitrogen Dioxide Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.PeakMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.NitrogenDioxideConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.OzoneConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Ozone Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.OzoneConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.AverageMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.OzoneConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.PM25ConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "PM2.5 Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.PM25ConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.AverageMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM25ConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.FormaldehydeConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Formaldehyde Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.AverageMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.FormaldehydeConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.PM1ConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "PM1 Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.PM1ConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.AverageMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM1ConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.PM10ConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "PM10 Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.PM10ConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.AverageMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PM10ConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Total Volatile Organic Compounds Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes.MeasuredValue
+              .ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .MinMeasuredValue
+              .ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .MaxMeasuredValue
+              .ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .PeakMeasuredValue
+              .ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .PeakMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .AverageMeasuredValue
+              .ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .AverageMeasuredValueWindow
+              .ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes.Uncertainty
+              .ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .MeasurementUnit
+              .ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes
+              .MeasurementMedium
+              .ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes.LevelValue
+              .ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.RadonConcentrationMeasurement.ID to
+      ClusterInfo(
+        name = "Radon Concentration Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.RadonConcentrationMeasurement.Attributes.MeasuredValue.ID to
+              AttributeInfo(
+                name = "MeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.MinMeasuredValue.ID to
+              AttributeInfo(
+                name = "MinMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.MaxMeasuredValue.ID to
+              AttributeInfo(
+                name = "MaxMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.PeakMeasuredValue.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.PeakMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "PeakMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.AverageMeasuredValue.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValue",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.AverageMeasuredValueWindow.ID to
+              AttributeInfo(
+                name = "AverageMeasuredValueWindow",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.Uncertainty.ID to
+              AttributeInfo(
+                name = "Uncertainty",
+                type = DataType.SINGLE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.MeasurementUnit.ID to
+              AttributeInfo(
+                name = "MeasurementUnit",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.MeasurementMedium.ID to
+              AttributeInfo(
+                name = "MeasurementMedium",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_MEASUREMENT_MEDIUM_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.RadonConcentrationMeasurement.Attributes.LevelValue.ID to
+              AttributeInfo(
+                name = "LevelValue",
+                type = DataType.CONCENTRATION_MEASUREMENT_CLUSTER_LEVEL_VALUE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+  )

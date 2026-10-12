@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
 
 - **Atomic:** One self-contained change per commit. Separate side-quests.
 - **Patches:** No indentation/formatting when creating patches. Output raw code.
-- **Formatting:** Run `ktfmt` before every commit.
+- **Formatting:** Run `ktfmt --google-style` before every commit.
 - **Exclusions:** Never modify/review Gradle wrapper files.
 
 ## Interaction Style

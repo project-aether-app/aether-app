@@ -26,38 +26,38 @@ import io.aether.android.spacing
 
 @Composable
 fun GroupBox(
-    title: String,
-    modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit,
+  title: String,
+  modifier: Modifier = Modifier,
+  content: @Composable ColumnScope.() -> Unit,
 ) {
   val shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner)
   val labelFontSize = MaterialTheme.typography.labelMedium.fontSize
   val labelOffsetY = with(LocalDensity.current) { -(labelFontSize.toDp() / 2) }
   Box(
-      modifier =
-          modifier.padding(top = MaterialTheme.spacing.paddingSmall).semantics(
-              mergeDescendants = true,
-          ) {
-            contentDescription = title
-          },
+    modifier =
+      modifier.padding(top = MaterialTheme.spacing.paddingSmall).semantics(
+        mergeDescendants = true,
+      ) {
+        contentDescription = title
+      },
   ) {
     Column(
-        modifier =
-            Modifier.fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, shape)
-                .padding(MaterialTheme.spacing.paddingNormal),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingSmall),
-        content = content,
+      modifier =
+        Modifier.fillMaxWidth()
+          .border(1.dp, MaterialTheme.colorScheme.outlineVariant, shape)
+          .padding(MaterialTheme.spacing.paddingNormal),
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingSmall),
+      content = content,
     )
     Text(
-        text = title,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier =
-            Modifier.align(Alignment.TopStart)
-                .offset(x = MaterialTheme.spacing.paddingNormal, y = labelOffsetY)
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 4.dp),
+      text = title,
+      style = MaterialTheme.typography.labelMedium,
+      color = MaterialTheme.colorScheme.primary,
+      modifier =
+        Modifier.align(Alignment.TopStart)
+          .offset(x = MaterialTheme.spacing.paddingNormal, y = labelOffsetY)
+          .background(MaterialTheme.colorScheme.surface)
+          .padding(horizontal = 4.dp),
     )
   }
 }

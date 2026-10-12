@@ -17,21 +17,21 @@ import java.util.*
  * @param transport the transport information on which this device was discovered
  */
 data class MatterBeacon(
-    val name: String,
-    val vendorId: VendorId,
-    val productId: ProductId,
-    val discriminator: Int,
-    val transport: Transport,
+  val name: String,
+  val vendorId: VendorId,
+  val productId: ProductId,
+  val discriminator: Int,
+  val transport: Transport,
 ) {
   override fun toString(): String {
     return String.format(
-        Locale.ROOT,
-        "MatterBeacon([%s] VID=%04X, PID=%04X, Discriminator=%03X, Transport=%s",
-        name,
-        vendorId.toInt(),
-        productId.toInt(),
-        discriminator,
-        transport,
+      Locale.ROOT,
+      "MatterBeacon([%s] VID=%04X, PID=%04X, Discriminator=%03X, Transport=%s",
+      name,
+      vendorId.toInt(),
+      productId.toInt(),
+      discriminator,
+      transport,
     )
   }
 }

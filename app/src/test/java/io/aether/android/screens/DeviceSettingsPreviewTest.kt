@@ -23,123 +23,117 @@ import org.junit.Test
 
 class DeviceSettingsPreviewTest {
 
-  @get:Rule
-  val paparazzi =
-      Paparazzi(
-          theme = "android:Theme.Material.Light.NoActionBar",
-      )
+  @get:Rule val paparazzi = Paparazzi(theme = "android:Theme.Material.Light.NoActionBar")
 
   private val testDevice =
-      Device(
-          id = NodeId(0x1234u),
-          vendor = Vendor(id = VendorId(0x1135u)),
-          product = Product(id = ProductId(0x1234u)),
-          name = "Test Plug-in Device",
-          isOnline = true,
-          endpoints =
-              listOf(
-                  Endpoint(
-                      id = io.aether.android.matter.EndpointId(1u),
-                      deviceTypes = listOf(Devices.OnOffPluginUnit.ID).map { DeviceType(id = it) },
-                  ),
-              ),
-      )
+    Device(
+      id = NodeId(0x1234u),
+      vendor = Vendor(id = VendorId(0x1135u)),
+      product = Product(id = ProductId(0x1234u)),
+      name = "Test Plug-in Device",
+      isOnline = true,
+      endpoints =
+        listOf(
+          Endpoint(
+            id = io.aether.android.matter.EndpointId(1u),
+            deviceTypes = listOf(Devices.OnOffPluginUnit.ID).map { DeviceType(id = it) },
+          ),
+        ),
+    )
 
   private val testDeviceBasicInformation =
-      BasicInformationAttributes(
-          vendorId = VendorId(0x1135u),
-          productId = ProductId(0x1234u),
-          hardwareVersion = "2.4",
-          softwareVersion = "1.31.42",
-      )
+    BasicInformationAttributes(
+      vendorId = VendorId(0x1135u),
+      productId = ProductId(0x1234u),
+      hardwareVersion = "2.4",
+      softwareVersion = "1.31.42",
+    )
 
   private fun snapshotDeviceSettingsScreen(uiState: DeviceSettingsUiState) {
     paparazzi.snapshot {
       DeviceSettingsScreen(
-          uiState = uiState,
-          onBackClick = {},
-          onDismissMsgDialog = {},
-          onDeviceNameChange = {},
-          onDeviceTypeChange = {},
-          onManageFabricsClick = {},
-          onDataModelExplorerClick = {},
-          onDiagnosticsClick = {},
-          onShareDeviceClick = {},
-          onShareDeviceResult = {},
-          onRemoveDeviceClick = {},
-          onRemoveDeviceResult = {},
-          onForceRemoveDeviceResult = {},
+        uiState = uiState,
+        onBackClick = {},
+        onDismissMsgDialog = {},
+        onDeviceNameChange = {},
+        onDeviceTypeChange = {},
+        onManageFabricsClick = {},
+        onDataModelExplorerClick = {},
+        onDiagnosticsClick = {},
+        onShareDeviceClick = {},
+        onShareDeviceResult = {},
+        onRemoveDeviceClick = {},
+        onRemoveDeviceResult = {},
+        onForceRemoveDeviceResult = {},
       )
     }
   }
 
   @Test
   fun previewLoading() {
-    snapshotDeviceSettingsScreen(
-        uiState = DeviceSettingsUiState(isFirstTimeLoading = true),
-    )
+    snapshotDeviceSettingsScreen(uiState = DeviceSettingsUiState(isFirstTimeLoading = true))
   }
 
   @Test
   fun previewDeviceSettings() {
     snapshotDeviceSettingsScreen(
-        uiState =
-            DeviceSettingsUiState(
-                isFirstTimeLoading = false,
-                device = testDevice,
-                basicInformation = testDeviceBasicInformation,
-                dateCommissioned = Instant.ofEpochSecond(1680000000L),
-            ),
+      uiState =
+        DeviceSettingsUiState(
+          isFirstTimeLoading = false,
+          device = testDevice,
+          basicInformation = testDeviceBasicInformation,
+          dateCommissioned = Instant.ofEpochSecond(1680000000L),
+        ),
     )
   }
 
   @Test
   fun previewDeviceSettingsShowShareDialog() {
     snapshotDeviceSettingsScreen(
-        uiState =
-            DeviceSettingsUiState(
-                isFirstTimeLoading = false,
-                device = testDevice,
-                dateCommissioned = Instant.ofEpochSecond(1680000000L),
-                showShareDeviceAlertDialog = true,
-            ),
+      uiState =
+        DeviceSettingsUiState(
+          isFirstTimeLoading = false,
+          device = testDevice,
+          dateCommissioned = Instant.ofEpochSecond(1680000000L),
+          showShareDeviceAlertDialog = true,
+        ),
     )
   }
 
   @Test
   fun previewDeviceSettingsShowRemoveDialog() {
     snapshotDeviceSettingsScreen(
-        uiState =
-            DeviceSettingsUiState(
-                isFirstTimeLoading = false,
-                device = testDevice,
-                dateCommissioned = Instant.ofEpochSecond(1680000000L),
-                showRemoveDeviceAlertDialog = true,
-            ),
+      uiState =
+        DeviceSettingsUiState(
+          isFirstTimeLoading = false,
+          device = testDevice,
+          dateCommissioned = Instant.ofEpochSecond(1680000000L),
+          showRemoveDeviceAlertDialog = true,
+        ),
     )
   }
 
   @Test
   fun previewDeviceSettingsShowLocalRemoveDialog() {
     snapshotDeviceSettingsScreen(
-        uiState =
-            DeviceSettingsUiState(
-                isFirstTimeLoading = false,
-                device = testDevice,
-                dateCommissioned = Instant.ofEpochSecond(1680000000L),
-                showLocalRemoveDeviceAlertDialog = true,
-            ),
+      uiState =
+        DeviceSettingsUiState(
+          isFirstTimeLoading = false,
+          device = testDevice,
+          dateCommissioned = Instant.ofEpochSecond(1680000000L),
+          showLocalRemoveDeviceAlertDialog = true,
+        ),
     )
   }
 
   @Test
   fun previewErrorMessage() {
     snapshotDeviceSettingsScreen(
-        uiState =
-            DeviceSettingsUiState(
-                isFirstTimeLoading = false,
-                errorMessageRes = R.string.controllers_offline,
-            ),
+      uiState =
+        DeviceSettingsUiState(
+          isFirstTimeLoading = false,
+          errorMessageRes = R.string.controllers_offline,
+        ),
     )
   }
 }

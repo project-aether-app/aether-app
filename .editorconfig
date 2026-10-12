@@ -6,12 +6,14 @@ root = true
 [*]
 end_of_line = lf
 insert_final_newline = true
+trim_trailing_whitespace = true
 
 [*.{kt,kts}]
 indent_style = space
 indent_size = 2
-ktlint_function_naming_ignore_when_annotated_with=Composable
-ij_kotlin_function_naming_allow_pascal_case_for_composables = true
+
+# JetBrains / IntelliJ IDEA server configurations
+kotlin_function_naming_allow_pascal_case_for_composables = true
 
 [*.py]
 indent_style = space

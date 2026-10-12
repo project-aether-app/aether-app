@@ -27,85 +27,84 @@ import io.aether.android.matter.DEVICES
 
 @Composable
 internal fun ChangeDeviceNameDialog(
-    currentName: String,
-    onConfirm: (String) -> Unit,
-    onDismissRequest: () -> Unit,
+  currentName: String,
+  onConfirm: (String) -> Unit,
+  onDismissRequest: () -> Unit,
 ) {
   var inputText by remember(currentName) { mutableStateOf(currentName) }
   AlertDialog(
-      title = { Text(stringResource(R.string.rename_device)) },
-      text = {
-        OutlinedTextField(
-            value = inputText,
-            onValueChange = { inputText = it },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-        )
-      },
-      confirmButton = {
-        Button(
-            onClick = { onConfirm(inputText.trim()) },
-            enabled = inputText.trim().isNotBlank(),
-        ) {
-          Text(stringResource(R.string.ok))
-        }
-      },
-      dismissButton = {
-        TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
-      },
-      onDismissRequest = onDismissRequest,
+    title = { Text(stringResource(R.string.rename_device)) },
+    text = {
+      OutlinedTextField(
+        value = inputText,
+        onValueChange = { inputText = it },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+      )
+    },
+    confirmButton = {
+      Button(
+        onClick = { onConfirm(inputText.trim()) },
+        enabled = inputText.trim().isNotBlank(),
+      ) {
+        Text(stringResource(R.string.ok))
+      }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
+    },
+    onDismissRequest = onDismissRequest,
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChangeDeviceTypeDialog(
-    currentType: DeviceType,
-    onConfirm: (DeviceType) -> Unit,
-    onDismissRequest: () -> Unit,
+  currentType: DeviceType,
+  onConfirm: (DeviceType) -> Unit,
+  onDismissRequest: () -> Unit,
 ) {
   var expanded by remember { mutableStateOf(false) }
   var selectedType by remember(currentType) { mutableStateOf(currentType) }
   AlertDialog(
-      title = { Text(stringResource(R.string.device_type_dialog_title)) },
-      text = {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
+    title = { Text(stringResource(R.string.device_type_dialog_title)) },
+    text = {
+      ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+      ) {
+        OutlinedTextField(
+          value = selectedType.name,
+          onValueChange = {},
+          readOnly = true,
+          trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+          modifier =
+            Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
+        )
+        ExposedDropdownMenu(
+          expanded = expanded,
+          onDismissRequest = { expanded = false },
         ) {
-          OutlinedTextField(
-              value = selectedType.name,
-              onValueChange = {},
-              readOnly = true,
-              trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-              modifier =
-                  Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                      .fillMaxWidth(),
-          )
-          ExposedDropdownMenu(
-              expanded = expanded,
-              onDismissRequest = { expanded = false },
-          ) {
-            DEVICES.toList()
-                .sortedBy { it.second }
-                .forEach { (typeId, typeName) ->
-                  DropdownMenuItem(
-                      text = { Text(typeName) },
-                      onClick = {
-                        selectedType = DeviceType(typeId)
-                        expanded = false
-                      },
-                  )
-                }
-          }
+          DEVICES.toList()
+            .sortedBy { it.second }
+            .forEach { (typeId, typeName) ->
+              DropdownMenuItem(
+                text = { Text(typeName) },
+                onClick = {
+                  selectedType = DeviceType(typeId)
+                  expanded = false
+                },
+              )
+            }
         }
-      },
-      confirmButton = {
-        Button(onClick = { onConfirm(selectedType) }) { Text(stringResource(R.string.ok)) }
-      },
-      dismissButton = {
-        TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
-      },
-      onDismissRequest = onDismissRequest,
+      }
+    },
+    confirmButton = {
+      Button(onClick = { onConfirm(selectedType) }) { Text(stringResource(R.string.ok)) }
+    },
+    dismissButton = {
+      TextButton(onClick = onDismissRequest) { Text(stringResource(R.string.cancel)) }
+    },
+    onDismissRequest = onDismissRequest,
   )
 }

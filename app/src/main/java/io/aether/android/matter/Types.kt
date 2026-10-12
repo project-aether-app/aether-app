@@ -50,10 +50,10 @@ value class EndpointId(val value: UShort) : Comparable<EndpointId> {
 @JvmInline
 value class ClusterId(val value: UInt) : Comparable<ClusterId> {
   override fun toString(): String =
-      when {
-        value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
-        else -> value.toHexString(hexFormat)
-      }
+    when {
+      value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
+      else -> value.toHexString(hexFormat)
+    }
 
   override fun compareTo(other: ClusterId): Int = value.compareTo(other.value)
 
@@ -66,10 +66,10 @@ value class ClusterId(val value: UInt) : Comparable<ClusterId> {
 @JvmInline
 value class AttributeId(val value: UInt) : Comparable<AttributeId> {
   override fun toString(): String =
-      when {
-        value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
-        else -> value.toHexString(hexFormat)
-      }
+    when {
+      value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
+      else -> value.toHexString(hexFormat)
+    }
 
   override fun compareTo(other: AttributeId): Int = value.compareTo(other.value)
 
@@ -82,10 +82,10 @@ value class AttributeId(val value: UInt) : Comparable<AttributeId> {
 @JvmInline
 value class CommandId(val value: UInt) : Comparable<CommandId> {
   override fun toString(): String =
-      when {
-        value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
-        else -> value.toHexString(hexFormat)
-      }
+    when {
+      value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
+      else -> value.toHexString(hexFormat)
+    }
 
   override fun compareTo(other: CommandId): Int = value.compareTo(other.value)
 
@@ -98,10 +98,10 @@ value class CommandId(val value: UInt) : Comparable<CommandId> {
 @JvmInline
 value class EventId(val value: UInt) : Comparable<EventId> {
   override fun toString(): String =
-      when {
-        value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
-        else -> value.toHexString(hexFormat)
-      }
+    when {
+      value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
+      else -> value.toHexString(hexFormat)
+    }
 
   override fun compareTo(other: EventId): Int = value.compareTo(other.value)
 
@@ -114,10 +114,10 @@ value class EventId(val value: UInt) : Comparable<EventId> {
 @JvmInline
 value class DeviceTypeId(val value: UInt) : Comparable<DeviceTypeId> {
   override fun toString(): String =
-      when {
-        value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
-        else -> value.toHexString(hexFormat)
-      }
+    when {
+      value <= 0xFFFFu -> value.toUShort().toHexString(hexFormat)
+      else -> value.toHexString(hexFormat)
+    }
 
   override fun compareTo(other: DeviceTypeId): Int = value.compareTo(other.value)
 
@@ -176,35 +176,33 @@ fun Int.toProductId(): ProductId = ProductId(toUShort())
 
 /** Data class representing Matter cluster from data model. */
 data class ClusterInfo(
-    val name: String,
-    val attributes: Map<AttributeId, AttributeInfo>,
-    val commandsIncoming: Map<CommandId, CommandInfo>,
-    val commandsOutgoing: Map<CommandId, CommandInfo>,
-    val events: Map<EventId, EventInfo>,
+  val name: String,
+  val attributes: Map<AttributeId, AttributeInfo>,
+  val commandsIncoming: Map<CommandId, CommandInfo>,
+  val commandsOutgoing: Map<CommandId, CommandInfo>,
+  val events: Map<EventId, EventInfo>,
 )
 
 /** Data class representing Matter attribute from data model. */
 data class AttributeInfo(
-    val name: String,
-    val type: DataType,
-    val readPrivilege: Privilege = Privilege.NONE,
-    val writePrivilege: Privilege = Privilege.NONE,
+  val name: String,
+  val type: DataType,
+  val readPrivilege: Privilege = Privilege.NONE,
+  val writePrivilege: Privilege = Privilege.NONE,
 )
 
 data class ParameterInfo(
-    val name: String,
-    val type: DataType,
+  val name: String,
+  val type: DataType,
 )
 
 data class CommandInfo(
-    val name: String,
-    val parameters: Map<UInt, ParameterInfo>,
-    val privilege: Privilege = Privilege.NONE,
+  val name: String,
+  val parameters: Map<UInt, ParameterInfo>,
+  val privilege: Privilege = Privilege.NONE,
 )
 
-data class EventInfo(
-    val name: String,
-)
+data class EventInfo(val name: String)
 
 /** Matter data model access privilege for attributes and commands. */
 enum class Privilege(val label: UInt) {

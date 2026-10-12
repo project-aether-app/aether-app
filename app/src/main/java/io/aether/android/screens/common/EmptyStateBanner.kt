@@ -25,58 +25,58 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EmptyState(
-    message: String,
-    modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Default.Info,
+  message: String,
+  modifier: Modifier = Modifier,
+  icon: ImageVector = Icons.Default.Info,
 ) {
   Column(
-      modifier = modifier.fillMaxSize().padding(24.dp),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = modifier.fillMaxSize().padding(24.dp),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.secondary)
     Text(
-        text = message,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      text = message,
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
   }
 }
 
 @Composable
 fun EmptyStateBanner(
-    message: String,
-    icon: ImageVector,
-    modifier: Modifier = Modifier,
-    iconColor: Color = MaterialTheme.colorScheme.secondary,
-    textColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+  message: String,
+  icon: ImageVector,
+  modifier: Modifier = Modifier,
+  iconColor: Color = MaterialTheme.colorScheme.secondary,
+  textColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
   Column(
-      modifier = modifier.fillMaxSize().padding(24.dp),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = modifier.fillMaxSize().padding(24.dp),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Icon(
-        imageVector = icon,
-        contentDescription = null,
-        tint = iconColor,
-        modifier = Modifier.size(40.dp),
+      imageVector = icon,
+      contentDescription = null,
+      tint = iconColor,
+      modifier = Modifier.size(40.dp),
     )
     Spacer(modifier = Modifier.height(8.dp))
     Text(
-        text = message,
-        style = MaterialTheme.typography.bodyMedium,
-        color = textColor,
+      text = message,
+      style = MaterialTheme.typography.bodyMedium,
+      color = textColor,
     )
   }
 }
 
 @Composable
 fun EmptyStateErrorBanner(message: String, modifier: Modifier = Modifier) =
-    EmptyStateBanner(
-        message = message,
-        icon = Icons.Default.Warning,
-        modifier = modifier,
-        iconColor = MaterialTheme.colorScheme.error,
-        textColor = MaterialTheme.colorScheme.error,
-    )
+  EmptyStateBanner(
+    message = message,
+    icon = Icons.Default.Warning,
+    modifier = modifier,
+    iconColor = MaterialTheme.colorScheme.error,
+    textColor = MaterialTheme.colorScheme.error,
+  )

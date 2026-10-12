@@ -24,7 +24,7 @@ import timber.log.Timber
 private const val SCAN_QUERY_DELAY_MILLIS = 30_000L
 // See section 5.4.2.6 "Using Wi-Fi Temporary Access Points (Soft-AP)" of the Matter Specification.
 private val MATTER_SSID_PATTERN =
-    """MATTER-(\p{XDigit}{3})-(\p{XDigit}{4})-(\p{XDigit}{4})""".toRegex()
+  """MATTER-(\p{XDigit}{3})-(\p{XDigit}{4})-(\p{XDigit}{4})""".toRegex()
 
 /**
  * [MatterBeaconProducer] that looks for Wi-Fi Soft AP advertisements matching a Matter scanner
@@ -36,21 +36,19 @@ private val MATTER_SSID_PATTERN =
  */
 class MatterBeaconProducerWifi
 @Inject
-constructor(
-    @param:MatterBeaconInject private val wifiManager: WifiManager,
-) : MatterBeaconProducer {
+constructor(@param:MatterBeaconInject private val wifiManager: WifiManager) : MatterBeaconProducer {
   @SuppressLint("MissingPermission")
   override fun getBeaconsFlow(): Flow<MatterBeacon> = flow {
     while (coroutineContext.isActive) {
       val scanResults = wifiManager.scanResults
       Timber.d("WiFi scan results=${scanResults.size}")
       scanResults
-          .orEmpty()
-          .mapNotNull { scanResult -> scanResult.toMatterBeaconOrNull() }
-          .forEach { beacon ->
-            Timber.d("Emitting Matter hotspot beacon=$beacon")
-            emit(beacon)
-          }
+        .orEmpty()
+        .mapNotNull { scanResult -> scanResult.toMatterBeaconOrNull() }
+        .forEach { beacon ->
+          Timber.d("Emitting Matter hotspot beacon=$beacon")
+          emit(beacon)
+        }
 
       requestScan()
       delay(SCAN_QUERY_DELAY_MILLIS)
@@ -67,19 +65,19 @@ constructor(
 
 private fun ScanResult.toMatterBeaconOrNull(): MatterBeacon? {
   val ssid =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        wifiSsid?.toString().orEmpty().stripSurroundingQuotes()
-      } else {
-        @Suppress("DEPRECATION") SSID.stripSurroundingQuotes()
-      }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      wifiSsid?.toString().orEmpty().stripSurroundingQuotes()
+    } else {
+      @Suppress("DEPRECATION") SSID.stripSurroundingQuotes()
+    }
   return MATTER_SSID_PATTERN.find(ssid)?.let { result ->
     val (discriminator, vid, pid) = result.destructured
     MatterBeacon(
-        ssid,
-        VendorId(vid.toInt(16).toUShort()),
-        ProductId(pid.toInt(16).toUShort()),
-        discriminator.toInt(16),
-        Transport.Hotspot(ssid),
+      ssid,
+      VendorId(vid.toInt(16).toUShort()),
+      ProductId(pid.toInt(16).toUShort()),
+      discriminator.toInt(16),
+      Transport.Hotspot(ssid),
     )
   }
 }

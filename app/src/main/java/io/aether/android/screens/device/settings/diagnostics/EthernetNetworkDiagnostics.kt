@@ -23,7 +23,7 @@ fun EthernetNetworkDiagnostics(data: EthernetNetworkDiagnosticsData) {
       add(stringResource(R.string.device_diagnostics_network_tx, it.toString()))
     }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
 
   val linkQuality = buildList {
     data.txErrCount?.let {
@@ -36,18 +36,18 @@ fun EthernetNetworkDiagnostics(data: EthernetNetworkDiagnosticsData) {
       add(stringResource(R.string.device_diagnostics_network_drops, it.toString()))
     }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
 
   val linkProperties = buildList {
     data.phyRate?.let { add(it.name) }
     data.fullDuplex
-        ?.takeIf { it }
-        ?.let { add(stringResource(R.string.device_diagnostics_network_full_duplex)) }
+      ?.takeIf { it }
+      ?.let { add(stringResource(R.string.device_diagnostics_network_full_duplex)) }
     data.carrierDetect
-        ?.takeIf { !it }
-        ?.let { add(stringResource(R.string.device_diagnostics_network_no_carrier)) }
+      ?.takeIf { !it }
+      ?.let { add(stringResource(R.string.device_diagnostics_network_no_carrier)) }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
 
   DiagnosticsSection(stringResource(R.string.device_diagnostics_section_ethernet_network)) {
     if (networkTraffic.isNotEmpty()) {
@@ -62,7 +62,7 @@ fun EthernetNetworkDiagnostics(data: EthernetNetworkDiagnosticsData) {
     }
     if (linkProperties.isNotEmpty()) {
       DiagnosticsInfoRow(
-          stringResource(R.string.device_diagnostics_label_network_link_properties),
+        stringResource(R.string.device_diagnostics_label_network_link_properties),
       ) {
         Text(linkProperties)
       }

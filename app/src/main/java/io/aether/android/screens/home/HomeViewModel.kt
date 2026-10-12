@@ -47,16 +47,16 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class HomeUiState(
-    // Core Screen Data
-    val devices: List<Device> = emptyList(),
-    val showOfflineDevices: Boolean = true,
-    val multiadminCommissionDeviceTaskStatus: TaskStatus = TaskStatus.NotStarted,
-    val deviceAttestationFailureIgnored: Boolean = true,
+  // Core Screen Data
+  val devices: List<Device> = emptyList(),
+  val showOfflineDevices: Boolean = true,
+  val multiadminCommissionDeviceTaskStatus: TaskStatus = TaskStatus.NotStarted,
+  val deviceAttestationFailureIgnored: Boolean = true,
 
-    // UI Overlay / Dialog States
-    val msgDialogInfo: DialogInfo? = null,
-    val showNewDeviceNameAlertDialog: Boolean = false,
-    val showUpdatePlayServicesDialog: Boolean = false,
+  // UI Overlay / Dialog States
+  val msgDialogInfo: DialogInfo? = null,
+  val showNewDeviceNameAlertDialog: Boolean = false,
+  val showUpdatePlayServicesDialog: Boolean = false,
 )
 
 sealed interface HomeEffect {
@@ -67,47 +67,47 @@ sealed interface HomeEffect {
 class HomeViewModel
 @Inject
 constructor(
-    private val fabricRepository: FabricRepository,
-    private val devicesRepository: DeviceRepository,
-    private val userPreferencesRepository: UserPreferencesRepository,
-    private val clustersHelper: ClustersHelper,
-    private val chipClient: ChipClient,
-    private val subscriptionHelper: SubscriptionHelper,
-    private val deviceCommissioner: DeviceCommissioner,
-    private val playServices: PlayServices,
+  private val fabricRepository: FabricRepository,
+  private val devicesRepository: DeviceRepository,
+  private val userPreferencesRepository: UserPreferencesRepository,
+  private val clustersHelper: ClustersHelper,
+  private val chipClient: ChipClient,
+  private val subscriptionHelper: SubscriptionHelper,
+  private val deviceCommissioner: DeviceCommissioner,
+  private val playServices: PlayServices,
 ) : ViewModel() {
   private val _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
   private val _showNewDeviceNameAlertDialog = MutableStateFlow(false)
   private val _multiadminCommissionDeviceTaskStatus =
-      MutableStateFlow<TaskStatus>(TaskStatus.NotStarted)
+    MutableStateFlow<TaskStatus>(TaskStatus.NotStarted)
   private val _showUpdatePlayServicesDialog = MutableStateFlow(false)
   private var commissionedDevice: CommissionedDevice? = null
   private val _effects = Channel<HomeEffect>(Channel.BUFFERED)
   val effects: Flow<HomeEffect> = _effects.receiveAsFlow()
 
   val uiState: StateFlow<HomeUiState> =
-      combine(
-              fabricRepository.devicesFlow,
-              userPreferencesRepository.userPreferencesFlow,
-              combine(
-                  _msgDialogInfo,
-                  _showNewDeviceNameAlertDialog,
-                  _showUpdatePlayServicesDialog,
-              ) { dialog, showNameDialog, showUpdate ->
-                Triple(dialog, showNameDialog, showUpdate)
-              },
-              _multiadminCommissionDeviceTaskStatus,
-          ) { devices, preferences, (dialog, showNameDialog, showUpdate), status ->
-            HomeUiState(
-                devices = devices.filter { !preferences.hideOfflineDevices || it.isOnline },
-                showOfflineDevices = !preferences.hideOfflineDevices,
-                multiadminCommissionDeviceTaskStatus = status,
-                msgDialogInfo = dialog,
-                showNewDeviceNameAlertDialog = showNameDialog,
-                showUpdatePlayServicesDialog = showUpdate,
-            )
-          }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
+    combine(
+        fabricRepository.devicesFlow,
+        userPreferencesRepository.userPreferencesFlow,
+        combine(
+          _msgDialogInfo,
+          _showNewDeviceNameAlertDialog,
+          _showUpdatePlayServicesDialog,
+        ) { dialog, showNameDialog, showUpdate ->
+          Triple(dialog, showNameDialog, showUpdate)
+        },
+        _multiadminCommissionDeviceTaskStatus,
+      ) { devices, preferences, (dialog, showNameDialog, showUpdate), status ->
+        HomeUiState(
+          devices = devices.filter { !preferences.hideOfflineDevices || it.isOnline },
+          showOfflineDevices = !preferences.hideOfflineDevices,
+          multiadminCommissionDeviceTaskStatus = status,
+          msgDialogInfo = dialog,
+          showNewDeviceNameAlertDialog = showNameDialog,
+          showUpdatePlayServicesDialog = showUpdate,
+        )
+      }
+      .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
 
   fun onResume(intent: Intent) {
     _showUpdatePlayServicesDialog.value = playServices.isUpdateRequired()
@@ -131,22 +131,22 @@ constructor(
   private fun launchCommissioning(createIntentSender: suspend () -> IntentSender) {
     viewModelScope.launch {
       runCatching { createIntentSender() }
-          .onSuccess { _effects.send(HomeEffect.LaunchCommissioning(it)) }
-          .onFailure {
-            Timber.e(it)
-            if (it is CommissioningWindowExpiringException) {
-              showMsgDialog(
-                  titleRes = R.string.home_device_add_commissioning_window_expiration_title,
-                  messageRes = R.string.home_device_add_commissioning_window_expiration_message,
-                  messageArgs = listOf(it.secondsLeft),
-              )
-            } else {
-              showMsgDialog(
-                  R.string.home_device_add_intent_sender_failed_title,
-                  it.toString(),
-              )
-            }
+        .onSuccess { _effects.send(HomeEffect.LaunchCommissioning(it)) }
+        .onFailure {
+          Timber.e(it)
+          if (it is CommissioningWindowExpiringException) {
+            showMsgDialog(
+              titleRes = R.string.home_device_add_commissioning_window_expiration_title,
+              messageRes = R.string.home_device_add_commissioning_window_expiration_message,
+              messageArgs = listOf(it.secondsLeft),
+            )
+          } else {
+            showMsgDialog(
+              R.string.home_device_add_intent_sender_failed_title,
+              it.toString(),
+            )
           }
+        }
     }
   }
 
@@ -156,9 +156,9 @@ constructor(
       _showNewDeviceNameAlertDialog.value = true
     } else if (resultCode != 0) {
       showMsgDialog(
-          titleRes = R.string.home_device_add_commissioning_failed_title,
-          messageRes = R.string.home_device_add_commissioning_failed_message,
-          messageArgs = listOf(resultCode),
+        titleRes = R.string.home_device_add_commissioning_failed_title,
+        messageRes = R.string.home_device_add_commissioning_failed_message,
+        messageArgs = listOf(resultCode),
       )
     }
   }
@@ -172,58 +172,56 @@ constructor(
         val vendorName = clustersHelper.readBasicClusterVendorNameAttribute(nodeId.toLong())
         val productName = clustersHelper.readBasicClusterProductNameAttribute(nodeId.toLong())
         val endpoints =
-            clustersHelper
-                .fetchDeviceMatterInfo(nodeId)
-                .filter {
-                  it.endpointId != EndpointId(0u) && it.serverClusters.contains(Clusters.OnOff.ID)
-                }
-                .ifEmpty {
-                  clustersHelper.fetchDeviceMatterInfo(nodeId).filter {
-                    it.endpointId != EndpointId(0u)
-                  }
-                }
-                .map { info ->
-                  Endpoint(
-                      id = info.endpointId,
-                      label = deviceName,
-                      deviceTypes = info.types.map { DeviceType(it) },
-                      supportsLevelControl = info.serverClusters.contains(Clusters.LevelControl.ID),
-                      supportsColorTemperature =
-                          info.serverClusters.contains(Clusters.ColorControl.ID) &&
-                              clustersHelper
-                                  .readColorControlClusterAttributeList(
-                                      nodeId,
-                                      info.endpointId,
-                                  )
-                                  .contains(
-                                      Clusters.ColorControl.Attributes.ColorTemperatureMireds.ID,
-                                  ),
-                  )
-                }
+          clustersHelper
+            .fetchDeviceMatterInfo(nodeId)
+            .filter {
+              it.endpointId != EndpointId(0u) && it.serverClusters.contains(Clusters.OnOff.ID)
+            }
+            .ifEmpty {
+              clustersHelper.fetchDeviceMatterInfo(nodeId).filter {
+                it.endpointId != EndpointId(0u)
+              }
+            }
+            .map { info ->
+              Endpoint(
+                id = info.endpointId,
+                label = deviceName,
+                deviceTypes = info.types.map { DeviceType(it) },
+                supportsLevelControl = info.serverClusters.contains(Clusters.LevelControl.ID),
+                supportsColorTemperature =
+                  info.serverClusters.contains(Clusters.ColorControl.ID) &&
+                    clustersHelper
+                      .readColorControlClusterAttributeList(
+                        nodeId,
+                        info.endpointId,
+                      )
+                      .contains(Clusters.ColorControl.Attributes.ColorTemperatureMireds.ID),
+              )
+            }
         devicesRepository.addOrUpdateDevice(
-            Device(
-                id = nodeId,
-                vendor =
-                    Vendor(
-                        id = result.vendorId,
-                        name = vendorName,
-                    ),
-                product =
-                    Product(
-                        id = result.productId,
-                        name = productName,
-                    ),
-                name = deviceName,
-                isOnline = true,
-                endpoints = endpoints,
-            ),
+          Device(
+            id = nodeId,
+            vendor =
+              Vendor(
+                id = result.vendorId,
+                name = vendorName,
+              ),
+            product =
+              Product(
+                id = result.productId,
+                name = productName,
+              ),
+            name = deviceName,
+            isOnline = true,
+            endpoints = endpoints,
+          ),
         )
         clustersHelper.writeBasicClusterNodeLabelAttribute(nodeId.toLong(), deviceName)
       }
-          .onFailure {
-            Timber.e(it, "Failed to add commissioned nodeId=$nodeId")
-            showMsgDialog(R.string.add_device_to_repository_failed, it.message)
-          }
+        .onFailure {
+          Timber.e(it, "Failed to add commissioned nodeId=$nodeId")
+          showMsgDialog(R.string.add_device_to_repository_failed, it.message)
+        }
     }
   }
 
@@ -233,24 +231,24 @@ constructor(
         val device = devicesRepository.getDevice(nodeId)
         val primaryEndpoint = device.primaryEndpoint
         clustersHelper.setOnOffDeviceStateOnOffCluster(
-            nodeId.toLong(),
-            isOn,
-            primaryEndpoint.id,
+          nodeId.toLong(),
+          isOn,
+          primaryEndpoint.id,
         )
         devicesRepository.upsertEndpointState(
-            nodeId,
-            primaryEndpoint.id,
-            true,
-            isOn,
-            primaryEndpoint.level,
-            primaryEndpoint.colorTemperature,
+          nodeId,
+          primaryEndpoint.id,
+          true,
+          isOn,
+          primaryEndpoint.level,
+          primaryEndpoint.colorTemperature,
         )
       }
-          .onFailure {
-            if (it.isCommunicationTimeoutError())
-                devicesRepository.updateNodeOnlineState(nodeId, false)
-            Timber.e(it, "Failed to update device power nodeId=$nodeId")
-          }
+        .onFailure {
+          if (it.isCommunicationTimeoutError())
+            devicesRepository.updateNodeOnlineState(nodeId, false)
+          Timber.e(it, "Failed to update device power nodeId=$nodeId")
+        }
     }
   }
 
@@ -258,52 +256,47 @@ constructor(
     viewModelScope.launch {
       fabricRepository.getDevices().forEach { basicDevice ->
         val device =
-            runCatching { devicesRepository.getDevice(basicDevice.id) }.getOrNull()
-                ?: return@forEach
+          runCatching { devicesRepository.getDevice(basicDevice.id) }.getOrNull() ?: return@forEach
         runCatching {
           subscriptionHelper.awaitSubscribeToPeriodicUpdates(
-              chipClient.getConnectedDevicePointer(device.id),
-              object : SubscriptionHelper.SubscriptionEstablishedCallbackForDevice(device.id) {
-                override fun onSubscriptionEstablished(subscriptionId: Long) {
-                  viewModelScope.launch {
-                    devicesRepository.updateNodeOnlineState(device.id, true)
-                  }
-                }
-              },
-              object : SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(device.id) {
-                override fun onResubscriptionAttempt(
-                    terminationCause: Int,
-                    nextResubscribeIntervalMsec: Int,
-                ) {
-                  super.onResubscriptionAttempt(
-                      terminationCause,
-                      nextResubscribeIntervalMsec,
-                  )
+            chipClient.getConnectedDevicePointer(device.id),
+            object : SubscriptionHelper.SubscriptionEstablishedCallbackForDevice(device.id) {
+              override fun onSubscriptionEstablished(subscriptionId: Long) {
+                viewModelScope.launch { devicesRepository.updateNodeOnlineState(device.id, true) }
+              }
+            },
+            object : SubscriptionHelper.ResubscriptionAttemptCallbackForDevice(device.id) {
+              override fun onResubscriptionAttempt(
+                terminationCause: Int,
+                nextResubscribeIntervalMsec: Int,
+              ) {
+                super.onResubscriptionAttempt(
+                  terminationCause,
+                  nextResubscribeIntervalMsec,
+                )
+                viewModelScope.launch { devicesRepository.updateNodeOnlineState(device.id, false) }
+              }
+            },
+            object : SubscriptionHelper.ReportCallbackForDevice(device.id) {
+              override fun onError(
+                attributePath: chip.devicecontroller.model.ChipAttributePath?,
+                eventPath: chip.devicecontroller.model.ChipEventPath?,
+                ex: Exception,
+              ) {
+                if (ex.isCommunicationTimeoutError()) {
                   viewModelScope.launch {
                     devicesRepository.updateNodeOnlineState(device.id, false)
                   }
                 }
-              },
-              object : SubscriptionHelper.ReportCallbackForDevice(device.id) {
-                override fun onError(
-                    attributePath: chip.devicecontroller.model.ChipAttributePath?,
-                    eventPath: chip.devicecontroller.model.ChipEventPath?,
-                    ex: Exception,
-                ) {
-                  if (ex.isCommunicationTimeoutError()) {
-                    viewModelScope.launch {
-                      devicesRepository.updateNodeOnlineState(device.id, false)
-                    }
-                  }
-                }
+              }
 
-                override fun onReport(nodeState: NodeState) {
-                  updateEndpointFromReport(device.id, nodeState)
-                }
-              },
+              override fun onReport(nodeState: NodeState) {
+                updateEndpointFromReport(device.id, nodeState)
+              }
+            },
           )
         }
-            .onFailure { Timber.w(it, "Failed to subscribe nodeId=${device.id}") }
+          .onFailure { Timber.w(it, "Failed to subscribe nodeId=${device.id}") }
       }
     }
   }
@@ -313,10 +306,10 @@ constructor(
       fabricRepository.getDevices().forEach { device ->
         runCatching {
           subscriptionHelper.awaitUnsubscribeToPeriodicUpdates(
-              chipClient.getConnectedDevicePointer(device.id),
+            chipClient.getConnectedDevicePointer(device.id),
           )
         }
-            .onFailure { Timber.w(it, "Failed to unsubscribe nodeId=${device.id}") }
+          .onFailure { Timber.w(it, "Failed to unsubscribe nodeId=${device.id}") }
       }
     }
   }
@@ -324,22 +317,22 @@ constructor(
   private fun updateEndpointFromReport(nodeId: NodeId, nodeState: NodeState) {
     viewModelScope.launch {
       val endpoint =
-          runCatching { devicesRepository.getDevice(nodeId).primaryEndpoint }.getOrNull()
-              ?: return@launch
+        runCatching { devicesRepository.getDevice(nodeId).primaryEndpoint }.getOrNull()
+          ?: return@launch
       val on =
-          subscriptionHelper.extractAttribute(
-              nodeState,
-              endpoint.id,
-              Clusters.OnOff.ID,
-              Clusters.OnOff.Attributes.OnOff.ID.toLong(),
-          ) as Boolean? ?: return@launch
-      devicesRepository.upsertEndpointState(
-          nodeId,
+        subscriptionHelper.extractAttribute(
+          nodeState,
           endpoint.id,
-          true,
-          on,
-          endpoint.level,
-          endpoint.colorTemperature,
+          Clusters.OnOff.ID,
+          Clusters.OnOff.Attributes.OnOff.ID.toLong(),
+        ) as Boolean? ?: return@launch
+      devicesRepository.upsertEndpointState(
+        nodeId,
+        endpoint.id,
+        true,
+        on,
+        endpoint.level,
+        endpoint.colorTemperature,
       )
     }
   }
@@ -349,12 +342,12 @@ constructor(
   }
 
   fun showMsgDialog(
-      @StringRes titleRes: Int,
-      @StringRes messageRes: Int,
-      messageArgs: List<Any> = emptyList(),
+    @StringRes titleRes: Int,
+    @StringRes messageRes: Int,
+    messageArgs: List<Any> = emptyList(),
   ) {
     _msgDialogInfo.value =
-        DialogInfo(titleRes = titleRes, messageRes = messageRes, messageArgs = messageArgs)
+      DialogInfo(titleRes = titleRes, messageRes = messageRes, messageArgs = messageArgs)
   }
 
   fun dismissMsgDialog() {

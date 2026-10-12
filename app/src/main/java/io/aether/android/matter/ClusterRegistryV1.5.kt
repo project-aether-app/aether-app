@@ -6,2627 +6,2515 @@
 package io.aether.android.matter
 
 val CLUSTERS_1_5 =
-    mapOf<ClusterId, ClusterInfo>(
-        Clusters.CommodityPrice.ID to
-            ClusterInfo(
-                name = "Commodity Price",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CommodityPrice.Attributes.TariffUnit.ID to
-                            AttributeInfo(
-                                name = "TariffUnit",
-                                type = DataType.TARIFF_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityPrice.Attributes.Currency.ID to
-                            AttributeInfo(
-                                name = "Currency",
-                                type = DataType.CURRENCY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityPrice.Attributes.CurrentPrice.ID to
-                            AttributeInfo(
-                                name = "CurrentPrice",
-                                type = DataType.COMMODITY_PRICE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityPrice.Attributes.PriceForecast.ID to
-                            AttributeInfo(
-                                name = "PriceForecast",
-                                type = DataType.LIST_COMMODITY_PRICE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CommodityPrice.CommandsIncoming.GetDetailedPriceRequest.ID to
-                            CommandInfo(
-                                name = "GetDetailedPriceRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Details",
-                                                type = DataType.COMMODITY_PRICE_DETAIL_BITMAP,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CommodityPrice.CommandsIncoming.GetDetailedForecastRequest.ID to
-                            CommandInfo(
-                                name = "GetDetailedForecastRequest",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Details",
-                                                type = DataType.COMMODITY_PRICE_DETAIL_BITMAP,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CommodityPrice.CommandsOutgoing.GetDetailedPriceResponse.ID to
-                            CommandInfo(
-                                name = "GetDetailedPriceResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CurrentPrice",
-                                                type = DataType.COMMODITY_PRICE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CommodityPrice.CommandsOutgoing.GetDetailedForecastResponse.ID to
-                            CommandInfo(
-                                name = "GetDetailedForecastResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PriceForecast",
-                                                type = DataType.LIST_COMMODITY_PRICE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.CommodityPrice.Events.PriceChange.ID to
-                            EventInfo(
-                                name = "PriceChange",
-                            ),
-                    ),
-            ),
-        Clusters.ElectricalGridConditions.ID to
-            ClusterInfo(
-                name = "Electrical Grid Conditions",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ElectricalGridConditions.Attributes.LocalGenerationAvailable.ID to
-                            AttributeInfo(
-                                name = "LocalGenerationAvailable",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.ElectricalGridConditions.Attributes.CurrentConditions.ID to
-                            AttributeInfo(
-                                name = "CurrentConditions",
-                                type = DataType.ELECTRICAL_GRID_CONDITIONS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ElectricalGridConditions.Attributes.ForecastConditions.ID to
-                            AttributeInfo(
-                                name = "ForecastConditions",
-                                type = DataType.LIST_ELECTRICAL_GRID_CONDITIONS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ElectricalGridConditions.Events.CurrentConditionsChanged.ID to
-                            EventInfo(
-                                name = "CurrentConditionsChanged",
-                            ),
-                    ),
-            ),
-        Clusters.ClosureControl.ID to
-            ClusterInfo(
-                name = "Closure Control",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ClosureControl.Attributes.CountdownTime.ID to
-                            AttributeInfo(
-                                name = "CountdownTime",
-                                type = DataType.ELAPSED_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureControl.Attributes.MainState.ID to
-                            AttributeInfo(
-                                name = "MainState",
-                                type = DataType.CLOSURE_CONTROL_CLUSTER_MAIN_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureControl.Attributes.CurrentErrorList.ID to
-                            AttributeInfo(
-                                name = "CurrentErrorList",
-                                type = DataType.LIST_CLOSURE_CONTROL_CLUSTER_CLOSURE_ERROR_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureControl.Attributes.OverallCurrentState.ID to
-                            AttributeInfo(
-                                name = "OverallCurrentState",
-                                type = DataType.OVERALL_CURRENT_STATE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureControl.Attributes.OverallTargetState.ID to
-                            AttributeInfo(
-                                name = "OverallTargetState",
-                                type = DataType.OVERALL_TARGET_STATE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureControl.Attributes.LatchControlModes.ID to
-                            AttributeInfo(
-                                name = "LatchControlModes",
-                                type = DataType.LATCH_CONTROL_MODES_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ClosureControl.CommandsIncoming.Stop.ID to
-                            CommandInfo(
-                                name = "Stop",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ClosureControl.CommandsIncoming.MoveTo.ID to
-                            CommandInfo(
-                                name = "MoveTo",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Position",
-                                                type =
-                                                    DataType
-                                                        .CLOSURE_CONTROL_CLUSTER_TARGET_POSITION_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Latch",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Speed",
-                                                type = DataType.THREE_LEVEL_AUTO_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ClosureControl.CommandsIncoming.Calibrate.ID to
-                            CommandInfo(
-                                name = "Calibrate",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ClosureControl.Events.OperationalError.ID to
-                            EventInfo(
-                                name = "OperationalError",
-                            ),
-                        Clusters.ClosureControl.Events.MovementCompleted.ID to
-                            EventInfo(
-                                name = "MovementCompleted",
-                            ),
-                        Clusters.ClosureControl.Events.EngageStateChanged.ID to
-                            EventInfo(
-                                name = "EngageStateChanged",
-                            ),
-                        Clusters.ClosureControl.Events.SecureStateChanged.ID to
-                            EventInfo(
-                                name = "SecureStateChanged",
-                            ),
-                    ),
-            ),
-        Clusters.ClosureDimension.ID to
-            ClusterInfo(
-                name = "Closure Dimension",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ClosureDimension.Attributes.CurrentState.ID to
-                            AttributeInfo(
-                                name = "CurrentState",
-                                type = DataType.DIMENSION_STATE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.TargetState.ID to
-                            AttributeInfo(
-                                name = "TargetState",
-                                type = DataType.DIMENSION_STATE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.Resolution.ID to
-                            AttributeInfo(
-                                name = "Resolution",
-                                type = DataType.PERCENT100THS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.StepValue.ID to
-                            AttributeInfo(
-                                name = "StepValue",
-                                type = DataType.PERCENT100THS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.Unit.ID to
-                            AttributeInfo(
-                                name = "Unit",
-                                type = DataType.CLOSURE_DIMENSION_CLUSTER_CLOSURE_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.UnitRange.ID to
-                            AttributeInfo(
-                                name = "UnitRange",
-                                type = DataType.UNIT_RANGE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.LimitRange.ID to
-                            AttributeInfo(
-                                name = "LimitRange",
-                                type = DataType.RANGE_PERCENT100THS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.TranslationDirection.ID to
-                            AttributeInfo(
-                                name = "TranslationDirection",
-                                type =
-                                    DataType.CLOSURE_DIMENSION_CLUSTER_TRANSLATION_DIRECTION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.RotationAxis.ID to
-                            AttributeInfo(
-                                name = "RotationAxis",
-                                type = DataType.CLOSURE_DIMENSION_CLUSTER_ROTATION_AXIS_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.Overflow.ID to
-                            AttributeInfo(
-                                name = "Overflow",
-                                type = DataType.CLOSURE_DIMENSION_CLUSTER_OVERFLOW_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.ModulationType.ID to
-                            AttributeInfo(
-                                name = "ModulationType",
-                                type = DataType.CLOSURE_DIMENSION_CLUSTER_MODULATION_TYPE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ClosureDimension.Attributes.LatchControlModes.ID to
-                            AttributeInfo(
-                                name = "LatchControlModes",
-                                type = DataType.LATCH_CONTROL_MODES_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ClosureDimension.CommandsIncoming.SetTarget.ID to
-                            CommandInfo(
-                                name = "SetTarget",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Position",
-                                                type = DataType.PERCENT100THS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Latch",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Speed",
-                                                type = DataType.THREE_LEVEL_AUTO_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ClosureDimension.CommandsIncoming.Step.ID to
-                            CommandInfo(
-                                name = "Step",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Direction",
-                                                type =
-                                                    DataType
-                                                        .CLOSURE_DIMENSION_CLUSTER_STEP_DIRECTION_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "NumberOfSteps",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Speed",
-                                                type = DataType.THREE_LEVEL_AUTO_ENUM,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.SoilMeasurement.ID to
-            ClusterInfo(
-                name = "Soil Measurement",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.SoilMeasurement.Attributes.SoilMoistureMeasurementLimits.ID to
-                            AttributeInfo(
-                                name = "SoilMoistureMeasurementLimits",
-                                type = DataType.MEASUREMENT_ACCURACY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.SoilMeasurement.Attributes.SoilMoistureMeasuredValue.ID to
-                            AttributeInfo(
-                                name = "SoilMoistureMeasuredValue",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ZoneManagement.ID to
-            ClusterInfo(
-                name = "Zone Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ZoneManagement.Attributes.MaxUserDefinedZones.ID to
-                            AttributeInfo(
-                                name = "MaxUserDefinedZones",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ZoneManagement.Attributes.MaxZones.ID to
-                            AttributeInfo(
-                                name = "MaxZones",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ZoneManagement.Attributes.Zones.ID to
-                            AttributeInfo(
-                                name = "Zones",
-                                type = DataType.LIST_ZONE_INFORMATION_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ZoneManagement.Attributes.Triggers.ID to
-                            AttributeInfo(
-                                name = "Triggers",
-                                type = DataType.LIST_ZONE_TRIGGER_CONTROL_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ZoneManagement.Attributes.SensitivityMax.ID to
-                            AttributeInfo(
-                                name = "SensitivityMax",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ZoneManagement.Attributes.Sensitivity.ID to
-                            AttributeInfo(
-                                name = "Sensitivity",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.ZoneManagement.Attributes.TwoDCartesianMax.ID to
-                            AttributeInfo(
-                                name = "TwoDCartesianMax",
-                                type = DataType.TWO_D_CARTESIAN_VERTEX_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ZoneManagement.CommandsIncoming.CreateTwoDCartesianZone.ID to
-                            CommandInfo(
-                                name = "CreateTwoDCartesianZone",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Zone",
-                                                type = DataType.TWO_D_CARTESIAN_ZONE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ZoneManagement.CommandsIncoming.UpdateTwoDCartesianZone.ID to
-                            CommandInfo(
-                                name = "UpdateTwoDCartesianZone",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ZoneID",
-                                                type = DataType.ZONE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Zone",
-                                                type = DataType.TWO_D_CARTESIAN_ZONE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ZoneManagement.CommandsIncoming.RemoveZone.ID to
-                            CommandInfo(
-                                name = "RemoveZone",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ZoneID",
-                                                type = DataType.ZONE_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ZoneManagement.CommandsIncoming.CreateOrUpdateTrigger.ID to
-                            CommandInfo(
-                                name = "CreateOrUpdateTrigger",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Trigger",
-                                                type = DataType.ZONE_TRIGGER_CONTROL_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ZoneManagement.CommandsIncoming.RemoveTrigger.ID to
-                            CommandInfo(
-                                name = "RemoveTrigger",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ZoneID",
-                                                type = DataType.ZONE_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ZoneManagement.CommandsOutgoing.CreateTwoDCartesianZoneResponse
-                            .ID to
-                            CommandInfo(
-                                name = "CreateTwoDCartesianZoneResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ZoneID",
-                                                type = DataType.ZONE_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.ZoneManagement.Events.ZoneTriggered.ID to
-                            EventInfo(
-                                name = "ZoneTriggered",
-                            ),
-                        Clusters.ZoneManagement.Events.ZoneStopped.ID to
-                            EventInfo(
-                                name = "ZoneStopped",
-                            ),
-                    ),
-            ),
-        Clusters.CameraAVStreamManagement.ID to
-            ClusterInfo(
-                name = "Camera AV Stream Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CameraAVStreamManagement.Attributes.MaxConcurrentEncoders.ID to
-                            AttributeInfo(
-                                name = "MaxConcurrentEncoders",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MaxEncodedPixelRate.ID to
-                            AttributeInfo(
-                                name = "MaxEncodedPixelRate",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.VideoSensorParams.ID to
-                            AttributeInfo(
-                                name = "VideoSensorParams",
-                                type = DataType.VIDEO_SENSOR_PARAMS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.NightVisionUsesInfrared.ID to
-                            AttributeInfo(
-                                name = "NightVisionUsesInfrared",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MinViewportResolution.ID to
-                            AttributeInfo(
-                                name = "MinViewportResolution",
-                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.RateDistortionTradeOffPoints
-                            .ID to
-                            AttributeInfo(
-                                name = "RateDistortionTradeOffPoints",
-                                type = DataType.LIST_RATE_DISTORTION_TRADE_OFF_POINTS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MaxContentBufferSize.ID to
-                            AttributeInfo(
-                                name = "MaxContentBufferSize",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MicrophoneCapabilities.ID to
-                            AttributeInfo(
-                                name = "MicrophoneCapabilities",
-                                type = DataType.AUDIO_CAPABILITIES_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SpeakerCapabilities.ID to
-                            AttributeInfo(
-                                name = "SpeakerCapabilities",
-                                type = DataType.AUDIO_CAPABILITIES_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.TwoWayTalkSupport.ID to
-                            AttributeInfo(
-                                name = "TwoWayTalkSupport",
-                                type =
-                                    DataType
-                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TWO_WAY_TALK_SUPPORT_TYPE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SnapshotCapabilities.ID to
-                            AttributeInfo(
-                                name = "SnapshotCapabilities",
-                                type = DataType.LIST_SNAPSHOT_CAPABILITIES_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MaxNetworkBandwidth.ID to
-                            AttributeInfo(
-                                name = "MaxNetworkBandwidth",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.CurrentFrameRate.ID to
-                            AttributeInfo(
-                                name = "CurrentFrameRate",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.HDRModeEnabled.ID to
-                            AttributeInfo(
-                                name = "HDRModeEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SupportedStreamUsages.ID to
-                            AttributeInfo(
-                                name = "SupportedStreamUsages",
-                                type = DataType.LIST_STREAM_USAGE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.AllocatedVideoStreams.ID to
-                            AttributeInfo(
-                                name = "AllocatedVideoStreams",
-                                type = DataType.LIST_VIDEO_STREAM_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.AllocatedAudioStreams.ID to
-                            AttributeInfo(
-                                name = "AllocatedAudioStreams",
-                                type = DataType.LIST_AUDIO_STREAM_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.AllocatedSnapshotStreams.ID to
-                            AttributeInfo(
-                                name = "AllocatedSnapshotStreams",
-                                type = DataType.LIST_SNAPSHOT_STREAM_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.StreamUsagePriorities.ID to
-                            AttributeInfo(
-                                name = "StreamUsagePriorities",
-                                type = DataType.LIST_STREAM_USAGE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SoftRecordingPrivacyModeEnabled
-                            .ID to
-                            AttributeInfo(
-                                name = "SoftRecordingPrivacyModeEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes
-                            .SoftLivestreamPrivacyModeEnabled
-                            .ID to
-                            AttributeInfo(
-                                name = "SoftLivestreamPrivacyModeEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.HardPrivacyModeOn.ID to
-                            AttributeInfo(
-                                name = "HardPrivacyModeOn",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.NightVision.ID to
-                            AttributeInfo(
-                                name = "NightVision",
-                                type =
-                                    DataType
-                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TRI_STATE_AUTO_ENUM,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.NightVisionIllum.ID to
-                            AttributeInfo(
-                                name = "NightVisionIllum",
-                                type =
-                                    DataType
-                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TRI_STATE_AUTO_ENUM,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.Viewport.ID to
-                            AttributeInfo(
-                                name = "Viewport",
-                                type = DataType.VIEWPORT_STRUCT,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SpeakerMuted.ID to
-                            AttributeInfo(
-                                name = "SpeakerMuted",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SpeakerVolumeLevel.ID to
-                            AttributeInfo(
-                                name = "SpeakerVolumeLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SpeakerMaxLevel.ID to
-                            AttributeInfo(
-                                name = "SpeakerMaxLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.SpeakerMinLevel.ID to
-                            AttributeInfo(
-                                name = "SpeakerMinLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MicrophoneMuted.ID to
-                            AttributeInfo(
-                                name = "MicrophoneMuted",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MicrophoneVolumeLevel.ID to
-                            AttributeInfo(
-                                name = "MicrophoneVolumeLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MicrophoneMaxLevel.ID to
-                            AttributeInfo(
-                                name = "MicrophoneMaxLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MicrophoneMinLevel.ID to
-                            AttributeInfo(
-                                name = "MicrophoneMinLevel",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.MicrophoneAGCEnabled.ID to
-                            AttributeInfo(
-                                name = "MicrophoneAGCEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.ImageRotation.ID to
-                            AttributeInfo(
-                                name = "ImageRotation",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.ImageFlipHorizontal.ID to
-                            AttributeInfo(
-                                name = "ImageFlipHorizontal",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.ImageFlipVertical.ID to
-                            AttributeInfo(
-                                name = "ImageFlipVertical",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.LocalVideoRecordingEnabled
-                            .ID to
-                            AttributeInfo(
-                                name = "LocalVideoRecordingEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.LocalSnapshotRecordingEnabled
-                            .ID to
-                            AttributeInfo(
-                                name = "LocalSnapshotRecordingEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.StatusLightEnabled.ID to
-                            AttributeInfo(
-                                name = "StatusLightEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.StatusLightBrightness.ID to
-                            AttributeInfo(
-                                name = "StatusLightBrightness",
-                                type = DataType.THREE_LEVEL_AUTO_ENUM,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.CameraAVStreamManagement.Attributes.ImageRotationDiscreteAngles
-                            .ID to
-                            AttributeInfo(
-                                name = "ImageRotationDiscreteAngles",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.MANAGE,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.AudioStreamAllocate.ID to
-                            CommandInfo(
-                                name = "AudioStreamAllocate",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StreamUsage",
-                                                type = DataType.STREAM_USAGE_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "AudioCodec",
-                                                type =
-                                                    DataType
-                                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_AUDIO_CODEC_ENUM,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "ChannelCount",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "SampleRate",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "BitRate",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "BitDepth",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.AudioStreamDeallocate
-                            .ID to
-                            CommandInfo(
-                                name = "AudioStreamDeallocate",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "AudioStreamID",
-                                                type = DataType.AUDIO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.VideoStreamAllocate.ID to
-                            CommandInfo(
-                                name = "VideoStreamAllocate",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StreamUsage",
-                                                type = DataType.STREAM_USAGE_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "VideoCodec",
-                                                type =
-                                                    DataType
-                                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_VIDEO_CODEC_ENUM,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "MinFrameRate",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "MaxFrameRate",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "MinResolution",
-                                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "MaxResolution",
-                                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                            ),
-                                        6u to
-                                            ParameterInfo(
-                                                name = "MinBitRate",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        7u to
-                                            ParameterInfo(
-                                                name = "MaxBitRate",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        8u to
-                                            ParameterInfo(
-                                                name = "KeyFrameInterval",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        9u to
-                                            ParameterInfo(
-                                                name = "WatermarkEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        10u to
-                                            ParameterInfo(
-                                                name = "OSDEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.VideoStreamModify.ID to
-                            CommandInfo(
-                                name = "VideoStreamModify",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "WatermarkEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "OSDEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.VideoStreamDeallocate
-                            .ID to
-                            CommandInfo(
-                                name = "VideoStreamDeallocate",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.SnapshotStreamAllocate
-                            .ID to
-                            CommandInfo(
-                                name = "SnapshotStreamAllocate",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ImageCodec",
-                                                type =
-                                                    DataType
-                                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_IMAGE_CODEC_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "MaxFrameRate",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "MinResolution",
-                                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "MaxResolution",
-                                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "Quality",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "WatermarkEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        6u to
-                                            ParameterInfo(
-                                                name = "OSDEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.SnapshotStreamModify
-                            .ID to
-                            CommandInfo(
-                                name = "SnapshotStreamModify",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "SnapshotStreamID",
-                                                type = DataType.SNAPSHOT_STREAM_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "WatermarkEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "OSDEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.SnapshotStreamDeallocate
-                            .ID to
-                            CommandInfo(
-                                name = "SnapshotStreamDeallocate",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "SnapshotStreamID",
-                                                type = DataType.SNAPSHOT_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.SetStreamPriorities.ID to
-                            CommandInfo(
-                                name = "SetStreamPriorities",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StreamPriorities",
-                                                type = DataType.LIST_STREAM_USAGE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsIncoming.CaptureSnapshot.ID to
-                            CommandInfo(
-                                name = "CaptureSnapshot",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "SnapshotStreamID",
-                                                type = DataType.SNAPSHOT_STREAM_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "RequestedResolution",
-                                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CameraAVStreamManagement.CommandsOutgoing
-                            .AudioStreamAllocateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "AudioStreamAllocateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "AudioStreamID",
-                                                type = DataType.AUDIO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsOutgoing
-                            .VideoStreamAllocateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "VideoStreamAllocateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsOutgoing
-                            .SnapshotStreamAllocateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "SnapshotStreamAllocateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "SnapshotStreamID",
-                                                type = DataType.SNAPSHOT_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVStreamManagement.CommandsOutgoing.CaptureSnapshotResponse
-                            .ID to
-                            CommandInfo(
-                                name = "CaptureSnapshotResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Data",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ImageCodec",
-                                                type =
-                                                    DataType
-                                                        .CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_IMAGE_CODEC_ENUM,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Resolution",
-                                                type = DataType.VIDEO_RESOLUTION_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.CameraAVSettingsUserLevelManagement.ID to
-            ClusterInfo(
-                name = "Camera AV Settings User Level Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.MPTZPosition.ID to
-                            AttributeInfo(
-                                name = "MPTZPosition",
-                                type = DataType.MPTZ_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.MaxPresets.ID to
-                            AttributeInfo(
-                                name = "MaxPresets",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.MPTZPresets.ID to
-                            AttributeInfo(
-                                name = "MPTZPresets",
-                                type = DataType.LIST_MPTZ_PRESET_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.DPTZStreams.ID to
-                            AttributeInfo(
-                                name = "DPTZStreams",
-                                type = DataType.LIST_DPTZ_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.ZoomMax.ID to
-                            AttributeInfo(
-                                name = "ZoomMax",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.TiltMin.ID to
-                            AttributeInfo(
-                                name = "TiltMin",
-                                type = DataType.INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.TiltMax.ID to
-                            AttributeInfo(
-                                name = "TiltMax",
-                                type = DataType.INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.PanMin.ID to
-                            AttributeInfo(
-                                name = "PanMin",
-                                type = DataType.INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.PanMax.ID to
-                            AttributeInfo(
-                                name = "PanMax",
-                                type = DataType.INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.Attributes.MovementState.ID to
-                            AttributeInfo(
-                                name = "MovementState",
-                                type =
-                                    DataType
-                                        .CAMERA_AV_SETTINGS_USER_LEVEL_MANAGEMENT_CLUSTER_PHYSICAL_MOVEMENT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming
-                            .MPTZSetPosition
-                            .ID to
-                            CommandInfo(
-                                name = "MPTZSetPosition",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Pan",
-                                                type = DataType.INT16,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Tilt",
-                                                type = DataType.INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Zoom",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming
-                            .MPTZRelativeMove
-                            .ID to
-                            CommandInfo(
-                                name = "MPTZRelativeMove",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PanDelta",
-                                                type = DataType.INT16,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "TiltDelta",
-                                                type = DataType.INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "ZoomDelta",
-                                                type = DataType.INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming
-                            .MPTZMoveToPreset
-                            .ID to
-                            CommandInfo(
-                                name = "MPTZMoveToPreset",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PresetID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.MPTZSavePreset
-                            .ID to
-                            CommandInfo(
-                                name = "MPTZSavePreset",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PresetID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Name",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming
-                            .MPTZRemovePreset
-                            .ID to
-                            CommandInfo(
-                                name = "MPTZRemovePreset",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PresetID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming
-                            .DPTZSetViewport
-                            .ID to
-                            CommandInfo(
-                                name = "DPTZSetViewport",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Viewport",
-                                                type = DataType.VIEWPORT_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming
-                            .DPTZRelativeMove
-                            .ID to
-                            CommandInfo(
-                                name = "DPTZRelativeMove",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "DeltaX",
-                                                type = DataType.INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "DeltaY",
-                                                type = DataType.INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "ZoomDelta",
-                                                type = DataType.INT8,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.WebRTCTransportProvider.ID to
-            ClusterInfo(
-                name = "WebRTC Transport Provider",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.WebRTCTransportProvider.Attributes.CurrentSessions.ID to
-                            AttributeInfo(
-                                name = "CurrentSessions",
-                                type = DataType.LIST_WEB_RTC_SESSION_STRUCT,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WebRTCTransportProvider.CommandsIncoming.SolicitOffer.ID to
-                            CommandInfo(
-                                name = "SolicitOffer",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StreamUsage",
-                                                type = DataType.STREAM_USAGE_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "OriginatingEndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "AudioStreamID",
-                                                type = DataType.AUDIO_STREAM_ID,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "ICEServers",
-                                                type = DataType.LIST_ICE_SERVER_STRUCT,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "ICETransportPolicy",
-                                                type = DataType.STRING,
-                                            ),
-                                        6u to
-                                            ParameterInfo(
-                                                name = "MetadataEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        7u to
-                                            ParameterInfo(
-                                                name = "SFrameConfig",
-                                                type = DataType.S_FRAME_STRUCT,
-                                            ),
-                                        8u to
-                                            ParameterInfo(
-                                                name = "VideoStreams",
-                                                type = DataType.LIST_VIDEO_STREAM_ID,
-                                            ),
-                                        9u to
-                                            ParameterInfo(
-                                                name = "AudioStreams",
-                                                type = DataType.LIST_AUDIO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportProvider.CommandsIncoming.ProvideOffer.ID to
-                            CommandInfo(
-                                name = "ProvideOffer",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SDP",
-                                                type = DataType.STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "StreamUsage",
-                                                type = DataType.STREAM_USAGE_ENUM,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "OriginatingEndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "AudioStreamID",
-                                                type = DataType.AUDIO_STREAM_ID,
-                                            ),
-                                        6u to
-                                            ParameterInfo(
-                                                name = "ICEServers",
-                                                type = DataType.LIST_ICE_SERVER_STRUCT,
-                                            ),
-                                        7u to
-                                            ParameterInfo(
-                                                name = "ICETransportPolicy",
-                                                type = DataType.STRING,
-                                            ),
-                                        8u to
-                                            ParameterInfo(
-                                                name = "MetadataEnabled",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        9u to
-                                            ParameterInfo(
-                                                name = "SFrameConfig",
-                                                type = DataType.S_FRAME_STRUCT,
-                                            ),
-                                        10u to
-                                            ParameterInfo(
-                                                name = "VideoStreams",
-                                                type = DataType.LIST_VIDEO_STREAM_ID,
-                                            ),
-                                        11u to
-                                            ParameterInfo(
-                                                name = "AudioStreams",
-                                                type = DataType.LIST_AUDIO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportProvider.CommandsIncoming.ProvideAnswer.ID to
-                            CommandInfo(
-                                name = "ProvideAnswer",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SDP",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportProvider.CommandsIncoming.ProvideICECandidates.ID to
-                            CommandInfo(
-                                name = "ProvideICECandidates",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ICECandidates",
-                                                type = DataType.LIST_ICE_CANDIDATE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportProvider.CommandsIncoming.EndSession.ID to
-                            CommandInfo(
-                                name = "EndSession",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Reason",
-                                                type = DataType.WEB_RTC_END_REASON_ENUM,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WebRTCTransportProvider.CommandsOutgoing.SolicitOfferResponse.ID to
-                            CommandInfo(
-                                name = "SolicitOfferResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "DeferredOffer",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "AudioStreamID",
-                                                type = DataType.AUDIO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportProvider.CommandsOutgoing.ProvideOfferResponse.ID to
-                            CommandInfo(
-                                name = "ProvideOfferResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "VideoStreamID",
-                                                type = DataType.VIDEO_STREAM_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "AudioStreamID",
-                                                type = DataType.AUDIO_STREAM_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.WebRTCTransportRequestor.ID to
-            ClusterInfo(
-                name = "WebRTC Transport Requestor",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.WebRTCTransportRequestor.Attributes.CurrentSessions.ID to
-                            AttributeInfo(
-                                name = "CurrentSessions",
-                                type = DataType.LIST_WEB_RTC_SESSION_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WebRTCTransportRequestor.CommandsIncoming.Offer.ID to
-                            CommandInfo(
-                                name = "Offer",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SDP",
-                                                type = DataType.STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "ICEServers",
-                                                type = DataType.LIST_ICE_SERVER_STRUCT,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "ICETransportPolicy",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportRequestor.CommandsIncoming.Answer.ID to
-                            CommandInfo(
-                                name = "Answer",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "SDP",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportRequestor.CommandsIncoming.ICECandidates.ID to
-                            CommandInfo(
-                                name = "ICECandidates",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ICECandidates",
-                                                type = DataType.LIST_ICE_CANDIDATE_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WebRTCTransportRequestor.CommandsIncoming.End.ID to
-                            CommandInfo(
-                                name = "End",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "WebRTCSessionID",
-                                                type = DataType.WEB_RTC_SESSION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Reason",
-                                                type = DataType.WEB_RTC_END_REASON_ENUM,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.PushAVStreamTransport.ID to
-            ClusterInfo(
-                name = "Push AV Stream Transport",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.PushAVStreamTransport.Attributes.SupportedFormats.ID to
-                            AttributeInfo(
-                                name = "SupportedFormats",
-                                type = DataType.LIST_SUPPORTED_FORMAT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.PushAVStreamTransport.Attributes.CurrentConnections.ID to
-                            AttributeInfo(
-                                name = "CurrentConnections",
-                                type = DataType.LIST_TRANSPORT_CONFIGURATION_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.PushAVStreamTransport.CommandsIncoming.AllocatePushTransport.ID to
-                            CommandInfo(
-                                name = "AllocatePushTransport",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TransportOptions",
-                                                type = DataType.TRANSPORT_OPTIONS_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.PushAVStreamTransport.CommandsIncoming.DeallocatePushTransport
-                            .ID to
-                            CommandInfo(
-                                name = "DeallocatePushTransport",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ConnectionID",
-                                                type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.PushAVStreamTransport.CommandsIncoming.ModifyPushTransport.ID to
-                            CommandInfo(
-                                name = "ModifyPushTransport",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ConnectionID",
-                                                type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "TransportOptions",
-                                                type = DataType.TRANSPORT_OPTIONS_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.PushAVStreamTransport.CommandsIncoming.SetTransportStatus.ID to
-                            CommandInfo(
-                                name = "SetTransportStatus",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ConnectionID",
-                                                type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "TransportStatus",
-                                                type =
-                                                    DataType
-                                                        .PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRANSPORT_STATUS_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.PushAVStreamTransport.CommandsIncoming.ManuallyTriggerTransport
-                            .ID to
-                            CommandInfo(
-                                name = "ManuallyTriggerTransport",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ConnectionID",
-                                                type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ActivationReason",
-                                                type =
-                                                    DataType
-                                                        .PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRIGGER_ACTIVATION_REASON_ENUM,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "TimeControl",
-                                                type =
-                                                    DataType
-                                                        .TRANSPORT_MOTION_TRIGGER_TIME_CONTROL_STRUCT,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "UserDefined",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.PushAVStreamTransport.CommandsIncoming.FindTransport.ID to
-                            CommandInfo(
-                                name = "FindTransport",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ConnectionID",
-                                                type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.PushAVStreamTransport.CommandsOutgoing
-                            .AllocatePushTransportResponse
-                            .ID to
-                            CommandInfo(
-                                name = "AllocatePushTransportResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TransportConfiguration",
-                                                type = DataType.TRANSPORT_CONFIGURATION_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.PushAVStreamTransport.CommandsOutgoing.FindTransportResponse.ID to
-                            CommandInfo(
-                                name = "FindTransportResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TransportConfigurations",
-                                                type = DataType.LIST_TRANSPORT_CONFIGURATION_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.PushAVStreamTransport.Events.PushTransportBegin.ID to
-                            EventInfo(
-                                name = "PushTransportBegin",
-                            ),
-                        Clusters.PushAVStreamTransport.Events.PushTransportEnd.ID to
-                            EventInfo(
-                                name = "PushTransportEnd",
-                            ),
-                    ),
-            ),
-        Clusters.Chime.ID to
-            ClusterInfo(
-                name = "Chime",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.Chime.Attributes.InstalledChimeSounds.ID to
-                            AttributeInfo(
-                                name = "InstalledChimeSounds",
-                                type = DataType.LIST_CHIME_SOUND_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.Chime.Attributes.SelectedChime.ID to
-                            AttributeInfo(
-                                name = "SelectedChime",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.Chime.Attributes.Enabled.ID to
-                            AttributeInfo(
-                                name = "Enabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.Chime.CommandsIncoming.PlayChimeSound.ID to
-                            CommandInfo(
-                                name = "PlayChimeSound",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ChimeID",
-                                                type = DataType.U_INT8,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.Chime.Events.ChimeStartedPlaying.ID to
-                            EventInfo(
-                                name = "ChimeStartedPlaying",
-                            ),
-                    ),
-            ),
-        Clusters.CommodityTariff.ID to
-            ClusterInfo(
-                name = "Commodity Tariff",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CommodityTariff.Attributes.TariffInfo.ID to
-                            AttributeInfo(
-                                name = "TariffInfo",
-                                type = DataType.TARIFF_INFORMATION_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.TariffUnit.ID to
-                            AttributeInfo(
-                                name = "TariffUnit",
-                                type = DataType.TARIFF_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.StartDate.ID to
-                            AttributeInfo(
-                                name = "StartDate",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.DayEntries.ID to
-                            AttributeInfo(
-                                name = "DayEntries",
-                                type = DataType.LIST_DAY_ENTRY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.DayPatterns.ID to
-                            AttributeInfo(
-                                name = "DayPatterns",
-                                type = DataType.LIST_DAY_PATTERN_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.CalendarPeriods.ID to
-                            AttributeInfo(
-                                name = "CalendarPeriods",
-                                type = DataType.LIST_CALENDAR_PERIOD_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.IndividualDays.ID to
-                            AttributeInfo(
-                                name = "IndividualDays",
-                                type = DataType.LIST_DAY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.CurrentDay.ID to
-                            AttributeInfo(
-                                name = "CurrentDay",
-                                type = DataType.DAY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.NextDay.ID to
-                            AttributeInfo(
-                                name = "NextDay",
-                                type = DataType.DAY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.CurrentDayEntry.ID to
-                            AttributeInfo(
-                                name = "CurrentDayEntry",
-                                type = DataType.DAY_ENTRY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.CurrentDayEntryDate.ID to
-                            AttributeInfo(
-                                name = "CurrentDayEntryDate",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.NextDayEntry.ID to
-                            AttributeInfo(
-                                name = "NextDayEntry",
-                                type = DataType.DAY_ENTRY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.NextDayEntryDate.ID to
-                            AttributeInfo(
-                                name = "NextDayEntryDate",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.TariffComponents.ID to
-                            AttributeInfo(
-                                name = "TariffComponents",
-                                type = DataType.LIST_TARIFF_COMPONENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.TariffPeriods.ID to
-                            AttributeInfo(
-                                name = "TariffPeriods",
-                                type = DataType.LIST_TARIFF_PERIOD_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.CurrentTariffComponents.ID to
-                            AttributeInfo(
-                                name = "CurrentTariffComponents",
-                                type = DataType.LIST_TARIFF_COMPONENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.NextTariffComponents.ID to
-                            AttributeInfo(
-                                name = "NextTariffComponents",
-                                type = DataType.LIST_TARIFF_COMPONENT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.DefaultRandomizationOffset.ID to
-                            AttributeInfo(
-                                name = "DefaultRandomizationOffset",
-                                type = DataType.INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityTariff.Attributes.DefaultRandomizationType.ID to
-                            AttributeInfo(
-                                name = "DefaultRandomizationType",
-                                type =
-                                    DataType
-                                        .COMMODITY_TARIFF_CLUSTER_DAY_ENTRY_RANDOMIZATION_TYPE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CommodityTariff.CommandsIncoming.GetTariffComponent.ID to
-                            CommandInfo(
-                                name = "GetTariffComponent",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TariffComponentID",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CommodityTariff.CommandsIncoming.GetDayEntry.ID to
-                            CommandInfo(
-                                name = "GetDayEntry",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "DayEntryID",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CommodityTariff.CommandsOutgoing.GetTariffComponentResponse.ID to
-                            CommandInfo(
-                                name = "GetTariffComponentResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Label",
-                                                type = DataType.STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "DayEntryIDs",
-                                                type = DataType.LIST_U_INT32,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "TariffComponent",
-                                                type = DataType.TARIFF_COMPONENT_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CommodityTariff.CommandsOutgoing.GetDayEntryResponse.ID to
-                            CommandInfo(
-                                name = "GetDayEntryResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "DayEntry",
-                                                type = DataType.DAY_ENTRY_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.TLSCertificateManagement.ID to
-            ClusterInfo(
-                name = "TLS Certificate Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.TLSCertificateManagement.Attributes.MaxRootCertificates.ID to
-                            AttributeInfo(
-                                name = "MaxRootCertificates",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TLSCertificateManagement.Attributes.ProvisionedRootCertificates
-                            .ID to
-                            AttributeInfo(
-                                name = "ProvisionedRootCertificates",
-                                type = DataType.LIST_TLS_CERT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TLSCertificateManagement.Attributes.MaxClientCertificates.ID to
-                            AttributeInfo(
-                                name = "MaxClientCertificates",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TLSCertificateManagement.Attributes.ProvisionedClientCertificates
-                            .ID to
-                            AttributeInfo(
-                                name = "ProvisionedClientCertificates",
-                                type = DataType.LIST_TLS_CLIENT_CERTIFICATE_DETAIL_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.TLSCertificateManagement.CommandsIncoming.ProvisionRootCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "ProvisionRootCertificate",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Certificate",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "CAID",
-                                                type = DataType.TLSCAID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.FindRootCertificate.ID to
-                            CommandInfo(
-                                name = "FindRootCertificate",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CAID",
-                                                type = DataType.TLSCAID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.LookupRootCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "LookupRootCertificate",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Fingerprint",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.RemoveRootCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "RemoveRootCertificate",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CAID",
-                                                type = DataType.TLSCAID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.ClientCSR.ID to
-                            CommandInfo(
-                                name = "ClientCSR",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Nonce",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming
-                            .ProvisionClientCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "ProvisionClientCertificate",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ClientCertificate",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "IntermediateCertificates",
-                                                type = DataType.LIST_OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.FindClientCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "FindClientCertificate",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.LookupClientCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "LookupClientCertificate",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Fingerprint",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsIncoming.RemoveClientCertificate
-                            .ID to
-                            CommandInfo(
-                                name = "RemoveClientCertificate",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.TLSCertificateManagement.CommandsOutgoing
-                            .ProvisionRootCertificateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "ProvisionRootCertificateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CAID",
-                                                type = DataType.TLSCAID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsOutgoing
-                            .FindRootCertificateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "FindRootCertificateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CertificateDetails",
-                                                type = DataType.LIST_TLS_CERT_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsOutgoing
-                            .LookupRootCertificateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "LookupRootCertificateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CAID",
-                                                type = DataType.TLSCAID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsOutgoing.ClientCSRResponse.ID to
-                            CommandInfo(
-                                name = "ClientCSRResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "CSR",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "NonceSignature",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsOutgoing
-                            .FindClientCertificateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "FindClientCertificateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CertificateDetails",
-                                                type =
-                                                    DataType
-                                                        .LIST_TLS_CLIENT_CERTIFICATE_DETAIL_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSCertificateManagement.CommandsOutgoing
-                            .LookupClientCertificateResponse
-                            .ID to
-                            CommandInfo(
-                                name = "LookupClientCertificateResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.TLSClientManagement.ID to
-            ClusterInfo(
-                name = "TLS Client Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.TLSClientManagement.Attributes.MaxProvisioned.ID to
-                            AttributeInfo(
-                                name = "MaxProvisioned",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TLSClientManagement.Attributes.ProvisionedEndpoints.ID to
-                            AttributeInfo(
-                                name = "ProvisionedEndpoints",
-                                type = DataType.LIST_TLS_ENDPOINT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.TLSClientManagement.CommandsIncoming.ProvisionEndpoint.ID to
-                            CommandInfo(
-                                name = "ProvisionEndpoint",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Hostname",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Port",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "CAID",
-                                                type = DataType.TLSCAID,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "CCDID",
-                                                type = DataType.TLSCCDID,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.TLS_ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSClientManagement.CommandsIncoming.FindEndpoint.ID to
-                            CommandInfo(
-                                name = "FindEndpoint",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.TLS_ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSClientManagement.CommandsIncoming.RemoveEndpoint.ID to
-                            CommandInfo(
-                                name = "RemoveEndpoint",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.TLS_ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.TLSClientManagement.CommandsOutgoing.ProvisionEndpointResponse
-                            .ID to
-                            CommandInfo(
-                                name = "ProvisionEndpointResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.TLS_ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.TLSClientManagement.CommandsOutgoing.FindEndpointResponse.ID to
-                            CommandInfo(
-                                name = "FindEndpointResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Endpoint",
-                                                type = DataType.TLS_ENDPOINT_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.MeterIdentification.ID to
-            ClusterInfo(
-                name = "Meter Identification",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.MeterIdentification.Attributes.MeterType.ID to
-                            AttributeInfo(
-                                name = "MeterType",
-                                type = DataType.METER_IDENTIFICATION_CLUSTER_METER_TYPE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MeterIdentification.Attributes.PointOfDelivery.ID to
-                            AttributeInfo(
-                                name = "PointOfDelivery",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MeterIdentification.Attributes.MeterSerialNumber.ID to
-                            AttributeInfo(
-                                name = "MeterSerialNumber",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MeterIdentification.Attributes.ProtocolVersion.ID to
-                            AttributeInfo(
-                                name = "ProtocolVersion",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.MeterIdentification.Attributes.PowerThreshold.ID to
-                            AttributeInfo(
-                                name = "PowerThreshold",
-                                type = DataType.POWER_THRESHOLD_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.CommodityMetering.ID to
-            ClusterInfo(
-                name = "Commodity Metering",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CommodityMetering.Attributes.MeteredQuantity.ID to
-                            AttributeInfo(
-                                name = "MeteredQuantity",
-                                type = DataType.LIST_METERED_QUANTITY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityMetering.Attributes.MeteredQuantityTimestamp.ID to
-                            AttributeInfo(
-                                name = "MeteredQuantityTimestamp",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityMetering.Attributes.TariffUnit.ID to
-                            AttributeInfo(
-                                name = "TariffUnit",
-                                type = DataType.TARIFF_UNIT_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.CommodityMetering.Attributes.MaximumMeteredQuantities.ID to
-                            AttributeInfo(
-                                name = "MaximumMeteredQuantities",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-    )
+  mapOf<ClusterId, ClusterInfo>(
+    Clusters.CommodityPrice.ID to
+      ClusterInfo(
+        name = "Commodity Price",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CommodityPrice.Attributes.TariffUnit.ID to
+              AttributeInfo(
+                name = "TariffUnit",
+                type = DataType.TARIFF_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityPrice.Attributes.Currency.ID to
+              AttributeInfo(
+                name = "Currency",
+                type = DataType.CURRENCY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityPrice.Attributes.CurrentPrice.ID to
+              AttributeInfo(
+                name = "CurrentPrice",
+                type = DataType.COMMODITY_PRICE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityPrice.Attributes.PriceForecast.ID to
+              AttributeInfo(
+                name = "PriceForecast",
+                type = DataType.LIST_COMMODITY_PRICE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CommodityPrice.CommandsIncoming.GetDetailedPriceRequest.ID to
+              CommandInfo(
+                name = "GetDetailedPriceRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Details",
+                        type = DataType.COMMODITY_PRICE_DETAIL_BITMAP,
+                      ),
+                  ),
+              ),
+            Clusters.CommodityPrice.CommandsIncoming.GetDetailedForecastRequest.ID to
+              CommandInfo(
+                name = "GetDetailedForecastRequest",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Details",
+                        type = DataType.COMMODITY_PRICE_DETAIL_BITMAP,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CommodityPrice.CommandsOutgoing.GetDetailedPriceResponse.ID to
+              CommandInfo(
+                name = "GetDetailedPriceResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CurrentPrice",
+                        type = DataType.COMMODITY_PRICE_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.CommodityPrice.CommandsOutgoing.GetDetailedForecastResponse.ID to
+              CommandInfo(
+                name = "GetDetailedForecastResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PriceForecast",
+                        type = DataType.LIST_COMMODITY_PRICE_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.CommodityPrice.Events.PriceChange.ID to EventInfo(name = "PriceChange"),
+          ),
+      ),
+    Clusters.ElectricalGridConditions.ID to
+      ClusterInfo(
+        name = "Electrical Grid Conditions",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ElectricalGridConditions.Attributes.LocalGenerationAvailable.ID to
+              AttributeInfo(
+                name = "LocalGenerationAvailable",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.ElectricalGridConditions.Attributes.CurrentConditions.ID to
+              AttributeInfo(
+                name = "CurrentConditions",
+                type = DataType.ELECTRICAL_GRID_CONDITIONS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ElectricalGridConditions.Attributes.ForecastConditions.ID to
+              AttributeInfo(
+                name = "ForecastConditions",
+                type = DataType.LIST_ELECTRICAL_GRID_CONDITIONS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ElectricalGridConditions.Events.CurrentConditionsChanged.ID to
+              EventInfo(name = "CurrentConditionsChanged"),
+          ),
+      ),
+    Clusters.ClosureControl.ID to
+      ClusterInfo(
+        name = "Closure Control",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ClosureControl.Attributes.CountdownTime.ID to
+              AttributeInfo(
+                name = "CountdownTime",
+                type = DataType.ELAPSED_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureControl.Attributes.MainState.ID to
+              AttributeInfo(
+                name = "MainState",
+                type = DataType.CLOSURE_CONTROL_CLUSTER_MAIN_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureControl.Attributes.CurrentErrorList.ID to
+              AttributeInfo(
+                name = "CurrentErrorList",
+                type = DataType.LIST_CLOSURE_CONTROL_CLUSTER_CLOSURE_ERROR_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureControl.Attributes.OverallCurrentState.ID to
+              AttributeInfo(
+                name = "OverallCurrentState",
+                type = DataType.OVERALL_CURRENT_STATE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureControl.Attributes.OverallTargetState.ID to
+              AttributeInfo(
+                name = "OverallTargetState",
+                type = DataType.OVERALL_TARGET_STATE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureControl.Attributes.LatchControlModes.ID to
+              AttributeInfo(
+                name = "LatchControlModes",
+                type = DataType.LATCH_CONTROL_MODES_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ClosureControl.CommandsIncoming.Stop.ID to
+              CommandInfo(
+                name = "Stop",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ClosureControl.CommandsIncoming.MoveTo.ID to
+              CommandInfo(
+                name = "MoveTo",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Position",
+                        type = DataType.CLOSURE_CONTROL_CLUSTER_TARGET_POSITION_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Latch",
+                        type = DataType.BOOLEAN,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Speed",
+                        type = DataType.THREE_LEVEL_AUTO_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.ClosureControl.CommandsIncoming.Calibrate.ID to
+              CommandInfo(
+                name = "Calibrate",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ClosureControl.Events.OperationalError.ID to
+              EventInfo(name = "OperationalError"),
+            Clusters.ClosureControl.Events.MovementCompleted.ID to
+              EventInfo(name = "MovementCompleted"),
+            Clusters.ClosureControl.Events.EngageStateChanged.ID to
+              EventInfo(name = "EngageStateChanged"),
+            Clusters.ClosureControl.Events.SecureStateChanged.ID to
+              EventInfo(name = "SecureStateChanged"),
+          ),
+      ),
+    Clusters.ClosureDimension.ID to
+      ClusterInfo(
+        name = "Closure Dimension",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ClosureDimension.Attributes.CurrentState.ID to
+              AttributeInfo(
+                name = "CurrentState",
+                type = DataType.DIMENSION_STATE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.TargetState.ID to
+              AttributeInfo(
+                name = "TargetState",
+                type = DataType.DIMENSION_STATE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.Resolution.ID to
+              AttributeInfo(
+                name = "Resolution",
+                type = DataType.PERCENT100THS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.StepValue.ID to
+              AttributeInfo(
+                name = "StepValue",
+                type = DataType.PERCENT100THS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.Unit.ID to
+              AttributeInfo(
+                name = "Unit",
+                type = DataType.CLOSURE_DIMENSION_CLUSTER_CLOSURE_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.UnitRange.ID to
+              AttributeInfo(
+                name = "UnitRange",
+                type = DataType.UNIT_RANGE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.LimitRange.ID to
+              AttributeInfo(
+                name = "LimitRange",
+                type = DataType.RANGE_PERCENT100THS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.TranslationDirection.ID to
+              AttributeInfo(
+                name = "TranslationDirection",
+                type = DataType.CLOSURE_DIMENSION_CLUSTER_TRANSLATION_DIRECTION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.RotationAxis.ID to
+              AttributeInfo(
+                name = "RotationAxis",
+                type = DataType.CLOSURE_DIMENSION_CLUSTER_ROTATION_AXIS_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.Overflow.ID to
+              AttributeInfo(
+                name = "Overflow",
+                type = DataType.CLOSURE_DIMENSION_CLUSTER_OVERFLOW_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.ModulationType.ID to
+              AttributeInfo(
+                name = "ModulationType",
+                type = DataType.CLOSURE_DIMENSION_CLUSTER_MODULATION_TYPE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ClosureDimension.Attributes.LatchControlModes.ID to
+              AttributeInfo(
+                name = "LatchControlModes",
+                type = DataType.LATCH_CONTROL_MODES_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ClosureDimension.CommandsIncoming.SetTarget.ID to
+              CommandInfo(
+                name = "SetTarget",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Position",
+                        type = DataType.PERCENT100THS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Latch",
+                        type = DataType.BOOLEAN,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Speed",
+                        type = DataType.THREE_LEVEL_AUTO_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.ClosureDimension.CommandsIncoming.Step.ID to
+              CommandInfo(
+                name = "Step",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Direction",
+                        type = DataType.CLOSURE_DIMENSION_CLUSTER_STEP_DIRECTION_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "NumberOfSteps",
+                        type = DataType.U_INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Speed",
+                        type = DataType.THREE_LEVEL_AUTO_ENUM,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.SoilMeasurement.ID to
+      ClusterInfo(
+        name = "Soil Measurement",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.SoilMeasurement.Attributes.SoilMoistureMeasurementLimits.ID to
+              AttributeInfo(
+                name = "SoilMoistureMeasurementLimits",
+                type = DataType.MEASUREMENT_ACCURACY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.SoilMeasurement.Attributes.SoilMoistureMeasuredValue.ID to
+              AttributeInfo(
+                name = "SoilMoistureMeasuredValue",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ZoneManagement.ID to
+      ClusterInfo(
+        name = "Zone Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ZoneManagement.Attributes.MaxUserDefinedZones.ID to
+              AttributeInfo(
+                name = "MaxUserDefinedZones",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ZoneManagement.Attributes.MaxZones.ID to
+              AttributeInfo(
+                name = "MaxZones",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ZoneManagement.Attributes.Zones.ID to
+              AttributeInfo(
+                name = "Zones",
+                type = DataType.LIST_ZONE_INFORMATION_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ZoneManagement.Attributes.Triggers.ID to
+              AttributeInfo(
+                name = "Triggers",
+                type = DataType.LIST_ZONE_TRIGGER_CONTROL_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ZoneManagement.Attributes.SensitivityMax.ID to
+              AttributeInfo(
+                name = "SensitivityMax",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ZoneManagement.Attributes.Sensitivity.ID to
+              AttributeInfo(
+                name = "Sensitivity",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.ZoneManagement.Attributes.TwoDCartesianMax.ID to
+              AttributeInfo(
+                name = "TwoDCartesianMax",
+                type = DataType.TWO_D_CARTESIAN_VERTEX_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ZoneManagement.CommandsIncoming.CreateTwoDCartesianZone.ID to
+              CommandInfo(
+                name = "CreateTwoDCartesianZone",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Zone",
+                        type = DataType.TWO_D_CARTESIAN_ZONE_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ZoneManagement.CommandsIncoming.UpdateTwoDCartesianZone.ID to
+              CommandInfo(
+                name = "UpdateTwoDCartesianZone",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ZoneID",
+                        type = DataType.ZONE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Zone",
+                        type = DataType.TWO_D_CARTESIAN_ZONE_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ZoneManagement.CommandsIncoming.RemoveZone.ID to
+              CommandInfo(
+                name = "RemoveZone",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ZoneID",
+                        type = DataType.ZONE_ID,
+                      ),
+                  ),
+              ),
+            Clusters.ZoneManagement.CommandsIncoming.CreateOrUpdateTrigger.ID to
+              CommandInfo(
+                name = "CreateOrUpdateTrigger",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Trigger",
+                        type = DataType.ZONE_TRIGGER_CONTROL_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.ZoneManagement.CommandsIncoming.RemoveTrigger.ID to
+              CommandInfo(
+                name = "RemoveTrigger",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ZoneID",
+                        type = DataType.ZONE_ID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ZoneManagement.CommandsOutgoing.CreateTwoDCartesianZoneResponse.ID to
+              CommandInfo(
+                name = "CreateTwoDCartesianZoneResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ZoneID",
+                        type = DataType.ZONE_ID,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.ZoneManagement.Events.ZoneTriggered.ID to EventInfo(name = "ZoneTriggered"),
+            Clusters.ZoneManagement.Events.ZoneStopped.ID to EventInfo(name = "ZoneStopped"),
+          ),
+      ),
+    Clusters.CameraAVStreamManagement.ID to
+      ClusterInfo(
+        name = "Camera AV Stream Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CameraAVStreamManagement.Attributes.MaxConcurrentEncoders.ID to
+              AttributeInfo(
+                name = "MaxConcurrentEncoders",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MaxEncodedPixelRate.ID to
+              AttributeInfo(
+                name = "MaxEncodedPixelRate",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.VideoSensorParams.ID to
+              AttributeInfo(
+                name = "VideoSensorParams",
+                type = DataType.VIDEO_SENSOR_PARAMS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.NightVisionUsesInfrared.ID to
+              AttributeInfo(
+                name = "NightVisionUsesInfrared",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MinViewportResolution.ID to
+              AttributeInfo(
+                name = "MinViewportResolution",
+                type = DataType.VIDEO_RESOLUTION_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.RateDistortionTradeOffPoints.ID to
+              AttributeInfo(
+                name = "RateDistortionTradeOffPoints",
+                type = DataType.LIST_RATE_DISTORTION_TRADE_OFF_POINTS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MaxContentBufferSize.ID to
+              AttributeInfo(
+                name = "MaxContentBufferSize",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MicrophoneCapabilities.ID to
+              AttributeInfo(
+                name = "MicrophoneCapabilities",
+                type = DataType.AUDIO_CAPABILITIES_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SpeakerCapabilities.ID to
+              AttributeInfo(
+                name = "SpeakerCapabilities",
+                type = DataType.AUDIO_CAPABILITIES_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.TwoWayTalkSupport.ID to
+              AttributeInfo(
+                name = "TwoWayTalkSupport",
+                type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TWO_WAY_TALK_SUPPORT_TYPE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SnapshotCapabilities.ID to
+              AttributeInfo(
+                name = "SnapshotCapabilities",
+                type = DataType.LIST_SNAPSHOT_CAPABILITIES_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MaxNetworkBandwidth.ID to
+              AttributeInfo(
+                name = "MaxNetworkBandwidth",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.CurrentFrameRate.ID to
+              AttributeInfo(
+                name = "CurrentFrameRate",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.HDRModeEnabled.ID to
+              AttributeInfo(
+                name = "HDRModeEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SupportedStreamUsages.ID to
+              AttributeInfo(
+                name = "SupportedStreamUsages",
+                type = DataType.LIST_STREAM_USAGE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.AllocatedVideoStreams.ID to
+              AttributeInfo(
+                name = "AllocatedVideoStreams",
+                type = DataType.LIST_VIDEO_STREAM_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.AllocatedAudioStreams.ID to
+              AttributeInfo(
+                name = "AllocatedAudioStreams",
+                type = DataType.LIST_AUDIO_STREAM_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.AllocatedSnapshotStreams.ID to
+              AttributeInfo(
+                name = "AllocatedSnapshotStreams",
+                type = DataType.LIST_SNAPSHOT_STREAM_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.StreamUsagePriorities.ID to
+              AttributeInfo(
+                name = "StreamUsagePriorities",
+                type = DataType.LIST_STREAM_USAGE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SoftRecordingPrivacyModeEnabled.ID to
+              AttributeInfo(
+                name = "SoftRecordingPrivacyModeEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SoftLivestreamPrivacyModeEnabled.ID to
+              AttributeInfo(
+                name = "SoftLivestreamPrivacyModeEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.HardPrivacyModeOn.ID to
+              AttributeInfo(
+                name = "HardPrivacyModeOn",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.NightVision.ID to
+              AttributeInfo(
+                name = "NightVision",
+                type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TRI_STATE_AUTO_ENUM,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.NightVisionIllum.ID to
+              AttributeInfo(
+                name = "NightVisionIllum",
+                type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_TRI_STATE_AUTO_ENUM,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.Viewport.ID to
+              AttributeInfo(
+                name = "Viewport",
+                type = DataType.VIEWPORT_STRUCT,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SpeakerMuted.ID to
+              AttributeInfo(
+                name = "SpeakerMuted",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SpeakerVolumeLevel.ID to
+              AttributeInfo(
+                name = "SpeakerVolumeLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SpeakerMaxLevel.ID to
+              AttributeInfo(
+                name = "SpeakerMaxLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.SpeakerMinLevel.ID to
+              AttributeInfo(
+                name = "SpeakerMinLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MicrophoneMuted.ID to
+              AttributeInfo(
+                name = "MicrophoneMuted",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MicrophoneVolumeLevel.ID to
+              AttributeInfo(
+                name = "MicrophoneVolumeLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MicrophoneMaxLevel.ID to
+              AttributeInfo(
+                name = "MicrophoneMaxLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MicrophoneMinLevel.ID to
+              AttributeInfo(
+                name = "MicrophoneMinLevel",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.MicrophoneAGCEnabled.ID to
+              AttributeInfo(
+                name = "MicrophoneAGCEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.ImageRotation.ID to
+              AttributeInfo(
+                name = "ImageRotation",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.ImageFlipHorizontal.ID to
+              AttributeInfo(
+                name = "ImageFlipHorizontal",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.ImageFlipVertical.ID to
+              AttributeInfo(
+                name = "ImageFlipVertical",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.LocalVideoRecordingEnabled.ID to
+              AttributeInfo(
+                name = "LocalVideoRecordingEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.LocalSnapshotRecordingEnabled.ID to
+              AttributeInfo(
+                name = "LocalSnapshotRecordingEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.StatusLightEnabled.ID to
+              AttributeInfo(
+                name = "StatusLightEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.StatusLightBrightness.ID to
+              AttributeInfo(
+                name = "StatusLightBrightness",
+                type = DataType.THREE_LEVEL_AUTO_ENUM,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.CameraAVStreamManagement.Attributes.ImageRotationDiscreteAngles.ID to
+              AttributeInfo(
+                name = "ImageRotationDiscreteAngles",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.MANAGE,
+                writePrivilege = Privilege.MANAGE,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CameraAVStreamManagement.CommandsIncoming.AudioStreamAllocate.ID to
+              CommandInfo(
+                name = "AudioStreamAllocate",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StreamUsage",
+                        type = DataType.STREAM_USAGE_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "AudioCodec",
+                        type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_AUDIO_CODEC_ENUM,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "ChannelCount",
+                        type = DataType.U_INT8,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "SampleRate",
+                        type = DataType.U_INT32,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "BitRate",
+                        type = DataType.U_INT32,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "BitDepth",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.AudioStreamDeallocate.ID to
+              CommandInfo(
+                name = "AudioStreamDeallocate",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "AudioStreamID",
+                        type = DataType.AUDIO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.VideoStreamAllocate.ID to
+              CommandInfo(
+                name = "VideoStreamAllocate",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StreamUsage",
+                        type = DataType.STREAM_USAGE_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "VideoCodec",
+                        type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_VIDEO_CODEC_ENUM,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "MinFrameRate",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "MaxFrameRate",
+                        type = DataType.U_INT16,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "MinResolution",
+                        type = DataType.VIDEO_RESOLUTION_STRUCT,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "MaxResolution",
+                        type = DataType.VIDEO_RESOLUTION_STRUCT,
+                      ),
+                    6u to
+                      ParameterInfo(
+                        name = "MinBitRate",
+                        type = DataType.U_INT32,
+                      ),
+                    7u to
+                      ParameterInfo(
+                        name = "MaxBitRate",
+                        type = DataType.U_INT32,
+                      ),
+                    8u to
+                      ParameterInfo(
+                        name = "KeyFrameInterval",
+                        type = DataType.U_INT16,
+                      ),
+                    9u to
+                      ParameterInfo(
+                        name = "WatermarkEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                    10u to
+                      ParameterInfo(
+                        name = "OSDEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.VideoStreamModify.ID to
+              CommandInfo(
+                name = "VideoStreamModify",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "WatermarkEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "OSDEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.VideoStreamDeallocate.ID to
+              CommandInfo(
+                name = "VideoStreamDeallocate",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.SnapshotStreamAllocate.ID to
+              CommandInfo(
+                name = "SnapshotStreamAllocate",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ImageCodec",
+                        type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_IMAGE_CODEC_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "MaxFrameRate",
+                        type = DataType.U_INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "MinResolution",
+                        type = DataType.VIDEO_RESOLUTION_STRUCT,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "MaxResolution",
+                        type = DataType.VIDEO_RESOLUTION_STRUCT,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "Quality",
+                        type = DataType.U_INT8,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "WatermarkEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                    6u to
+                      ParameterInfo(
+                        name = "OSDEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.SnapshotStreamModify.ID to
+              CommandInfo(
+                name = "SnapshotStreamModify",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "SnapshotStreamID",
+                        type = DataType.SNAPSHOT_STREAM_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "WatermarkEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "OSDEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.SnapshotStreamDeallocate.ID to
+              CommandInfo(
+                name = "SnapshotStreamDeallocate",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "SnapshotStreamID",
+                        type = DataType.SNAPSHOT_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.SetStreamPriorities.ID to
+              CommandInfo(
+                name = "SetStreamPriorities",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StreamPriorities",
+                        type = DataType.LIST_STREAM_USAGE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsIncoming.CaptureSnapshot.ID to
+              CommandInfo(
+                name = "CaptureSnapshot",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "SnapshotStreamID",
+                        type = DataType.SNAPSHOT_STREAM_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "RequestedResolution",
+                        type = DataType.VIDEO_RESOLUTION_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CameraAVStreamManagement.CommandsOutgoing.AudioStreamAllocateResponse.ID to
+              CommandInfo(
+                name = "AudioStreamAllocateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "AudioStreamID",
+                        type = DataType.AUDIO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsOutgoing.VideoStreamAllocateResponse.ID to
+              CommandInfo(
+                name = "VideoStreamAllocateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsOutgoing.SnapshotStreamAllocateResponse.ID to
+              CommandInfo(
+                name = "SnapshotStreamAllocateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "SnapshotStreamID",
+                        type = DataType.SNAPSHOT_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVStreamManagement.CommandsOutgoing.CaptureSnapshotResponse.ID to
+              CommandInfo(
+                name = "CaptureSnapshotResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Data",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ImageCodec",
+                        type = DataType.CAMERA_AV_STREAM_MANAGEMENT_CLUSTER_IMAGE_CODEC_ENUM,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Resolution",
+                        type = DataType.VIDEO_RESOLUTION_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.CameraAVSettingsUserLevelManagement.ID to
+      ClusterInfo(
+        name = "Camera AV Settings User Level Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.MPTZPosition.ID to
+              AttributeInfo(
+                name = "MPTZPosition",
+                type = DataType.MPTZ_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.MaxPresets.ID to
+              AttributeInfo(
+                name = "MaxPresets",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.MPTZPresets.ID to
+              AttributeInfo(
+                name = "MPTZPresets",
+                type = DataType.LIST_MPTZ_PRESET_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.DPTZStreams.ID to
+              AttributeInfo(
+                name = "DPTZStreams",
+                type = DataType.LIST_DPTZ_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.ZoomMax.ID to
+              AttributeInfo(
+                name = "ZoomMax",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.TiltMin.ID to
+              AttributeInfo(
+                name = "TiltMin",
+                type = DataType.INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.TiltMax.ID to
+              AttributeInfo(
+                name = "TiltMax",
+                type = DataType.INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.PanMin.ID to
+              AttributeInfo(
+                name = "PanMin",
+                type = DataType.INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.PanMax.ID to
+              AttributeInfo(
+                name = "PanMax",
+                type = DataType.INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.Attributes.MovementState.ID to
+              AttributeInfo(
+                name = "MovementState",
+                type =
+                  DataType.CAMERA_AV_SETTINGS_USER_LEVEL_MANAGEMENT_CLUSTER_PHYSICAL_MOVEMENT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.MPTZSetPosition.ID to
+              CommandInfo(
+                name = "MPTZSetPosition",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Pan",
+                        type = DataType.INT16,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Tilt",
+                        type = DataType.INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Zoom",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.MPTZRelativeMove.ID to
+              CommandInfo(
+                name = "MPTZRelativeMove",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PanDelta",
+                        type = DataType.INT16,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "TiltDelta",
+                        type = DataType.INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "ZoomDelta",
+                        type = DataType.INT8,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.MPTZMoveToPreset.ID to
+              CommandInfo(
+                name = "MPTZMoveToPreset",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PresetID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.MPTZSavePreset.ID to
+              CommandInfo(
+                name = "MPTZSavePreset",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PresetID",
+                        type = DataType.U_INT8,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Name",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.MPTZRemovePreset.ID to
+              CommandInfo(
+                name = "MPTZRemovePreset",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PresetID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.DPTZSetViewport.ID to
+              CommandInfo(
+                name = "DPTZSetViewport",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Viewport",
+                        type = DataType.VIEWPORT_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.CameraAVSettingsUserLevelManagement.CommandsIncoming.DPTZRelativeMove.ID to
+              CommandInfo(
+                name = "DPTZRelativeMove",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "DeltaX",
+                        type = DataType.INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "DeltaY",
+                        type = DataType.INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "ZoomDelta",
+                        type = DataType.INT8,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.WebRTCTransportProvider.ID to
+      ClusterInfo(
+        name = "WebRTC Transport Provider",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.WebRTCTransportProvider.Attributes.CurrentSessions.ID to
+              AttributeInfo(
+                name = "CurrentSessions",
+                type = DataType.LIST_WEB_RTC_SESSION_STRUCT,
+                readPrivilege = Privilege.MANAGE,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WebRTCTransportProvider.CommandsIncoming.SolicitOffer.ID to
+              CommandInfo(
+                name = "SolicitOffer",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StreamUsage",
+                        type = DataType.STREAM_USAGE_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "OriginatingEndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "AudioStreamID",
+                        type = DataType.AUDIO_STREAM_ID,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "ICEServers",
+                        type = DataType.LIST_ICE_SERVER_STRUCT,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "ICETransportPolicy",
+                        type = DataType.STRING,
+                      ),
+                    6u to
+                      ParameterInfo(
+                        name = "MetadataEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                    7u to
+                      ParameterInfo(
+                        name = "SFrameConfig",
+                        type = DataType.S_FRAME_STRUCT,
+                      ),
+                    8u to
+                      ParameterInfo(
+                        name = "VideoStreams",
+                        type = DataType.LIST_VIDEO_STREAM_ID,
+                      ),
+                    9u to
+                      ParameterInfo(
+                        name = "AudioStreams",
+                        type = DataType.LIST_AUDIO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportProvider.CommandsIncoming.ProvideOffer.ID to
+              CommandInfo(
+                name = "ProvideOffer",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SDP",
+                        type = DataType.STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "StreamUsage",
+                        type = DataType.STREAM_USAGE_ENUM,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "OriginatingEndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "AudioStreamID",
+                        type = DataType.AUDIO_STREAM_ID,
+                      ),
+                    6u to
+                      ParameterInfo(
+                        name = "ICEServers",
+                        type = DataType.LIST_ICE_SERVER_STRUCT,
+                      ),
+                    7u to
+                      ParameterInfo(
+                        name = "ICETransportPolicy",
+                        type = DataType.STRING,
+                      ),
+                    8u to
+                      ParameterInfo(
+                        name = "MetadataEnabled",
+                        type = DataType.BOOLEAN,
+                      ),
+                    9u to
+                      ParameterInfo(
+                        name = "SFrameConfig",
+                        type = DataType.S_FRAME_STRUCT,
+                      ),
+                    10u to
+                      ParameterInfo(
+                        name = "VideoStreams",
+                        type = DataType.LIST_VIDEO_STREAM_ID,
+                      ),
+                    11u to
+                      ParameterInfo(
+                        name = "AudioStreams",
+                        type = DataType.LIST_AUDIO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportProvider.CommandsIncoming.ProvideAnswer.ID to
+              CommandInfo(
+                name = "ProvideAnswer",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SDP",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportProvider.CommandsIncoming.ProvideICECandidates.ID to
+              CommandInfo(
+                name = "ProvideICECandidates",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ICECandidates",
+                        type = DataType.LIST_ICE_CANDIDATE_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportProvider.CommandsIncoming.EndSession.ID to
+              CommandInfo(
+                name = "EndSession",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Reason",
+                        type = DataType.WEB_RTC_END_REASON_ENUM,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WebRTCTransportProvider.CommandsOutgoing.SolicitOfferResponse.ID to
+              CommandInfo(
+                name = "SolicitOfferResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "DeferredOffer",
+                        type = DataType.BOOLEAN,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "AudioStreamID",
+                        type = DataType.AUDIO_STREAM_ID,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportProvider.CommandsOutgoing.ProvideOfferResponse.ID to
+              CommandInfo(
+                name = "ProvideOfferResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "VideoStreamID",
+                        type = DataType.VIDEO_STREAM_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "AudioStreamID",
+                        type = DataType.AUDIO_STREAM_ID,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.WebRTCTransportRequestor.ID to
+      ClusterInfo(
+        name = "WebRTC Transport Requestor",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.WebRTCTransportRequestor.Attributes.CurrentSessions.ID to
+              AttributeInfo(
+                name = "CurrentSessions",
+                type = DataType.LIST_WEB_RTC_SESSION_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WebRTCTransportRequestor.CommandsIncoming.Offer.ID to
+              CommandInfo(
+                name = "Offer",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SDP",
+                        type = DataType.STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "ICEServers",
+                        type = DataType.LIST_ICE_SERVER_STRUCT,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "ICETransportPolicy",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportRequestor.CommandsIncoming.Answer.ID to
+              CommandInfo(
+                name = "Answer",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "SDP",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportRequestor.CommandsIncoming.ICECandidates.ID to
+              CommandInfo(
+                name = "ICECandidates",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ICECandidates",
+                        type = DataType.LIST_ICE_CANDIDATE_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.WebRTCTransportRequestor.CommandsIncoming.End.ID to
+              CommandInfo(
+                name = "End",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "WebRTCSessionID",
+                        type = DataType.WEB_RTC_SESSION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Reason",
+                        type = DataType.WEB_RTC_END_REASON_ENUM,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.PushAVStreamTransport.ID to
+      ClusterInfo(
+        name = "Push AV Stream Transport",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.PushAVStreamTransport.Attributes.SupportedFormats.ID to
+              AttributeInfo(
+                name = "SupportedFormats",
+                type = DataType.LIST_SUPPORTED_FORMAT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.PushAVStreamTransport.Attributes.CurrentConnections.ID to
+              AttributeInfo(
+                name = "CurrentConnections",
+                type = DataType.LIST_TRANSPORT_CONFIGURATION_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.PushAVStreamTransport.CommandsIncoming.AllocatePushTransport.ID to
+              CommandInfo(
+                name = "AllocatePushTransport",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TransportOptions",
+                        type = DataType.TRANSPORT_OPTIONS_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.PushAVStreamTransport.CommandsIncoming.DeallocatePushTransport.ID to
+              CommandInfo(
+                name = "DeallocatePushTransport",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ConnectionID",
+                        type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
+                      ),
+                  ),
+              ),
+            Clusters.PushAVStreamTransport.CommandsIncoming.ModifyPushTransport.ID to
+              CommandInfo(
+                name = "ModifyPushTransport",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ConnectionID",
+                        type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "TransportOptions",
+                        type = DataType.TRANSPORT_OPTIONS_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.PushAVStreamTransport.CommandsIncoming.SetTransportStatus.ID to
+              CommandInfo(
+                name = "SetTransportStatus",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ConnectionID",
+                        type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "TransportStatus",
+                        type = DataType.PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRANSPORT_STATUS_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.PushAVStreamTransport.CommandsIncoming.ManuallyTriggerTransport.ID to
+              CommandInfo(
+                name = "ManuallyTriggerTransport",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ConnectionID",
+                        type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ActivationReason",
+                        type =
+                          DataType.PUSH_AV_STREAM_TRANSPORT_CLUSTER_TRIGGER_ACTIVATION_REASON_ENUM,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "TimeControl",
+                        type = DataType.TRANSPORT_MOTION_TRIGGER_TIME_CONTROL_STRUCT,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "UserDefined",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.PushAVStreamTransport.CommandsIncoming.FindTransport.ID to
+              CommandInfo(
+                name = "FindTransport",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ConnectionID",
+                        type = DataType.PUSH_TRANSPORT_CONNECTION_ID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.PushAVStreamTransport.CommandsOutgoing.AllocatePushTransportResponse.ID to
+              CommandInfo(
+                name = "AllocatePushTransportResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TransportConfiguration",
+                        type = DataType.TRANSPORT_CONFIGURATION_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.PushAVStreamTransport.CommandsOutgoing.FindTransportResponse.ID to
+              CommandInfo(
+                name = "FindTransportResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TransportConfigurations",
+                        type = DataType.LIST_TRANSPORT_CONFIGURATION_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.PushAVStreamTransport.Events.PushTransportBegin.ID to
+              EventInfo(name = "PushTransportBegin"),
+            Clusters.PushAVStreamTransport.Events.PushTransportEnd.ID to
+              EventInfo(name = "PushTransportEnd"),
+          ),
+      ),
+    Clusters.Chime.ID to
+      ClusterInfo(
+        name = "Chime",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.Chime.Attributes.InstalledChimeSounds.ID to
+              AttributeInfo(
+                name = "InstalledChimeSounds",
+                type = DataType.LIST_CHIME_SOUND_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.Chime.Attributes.SelectedChime.ID to
+              AttributeInfo(
+                name = "SelectedChime",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.Chime.Attributes.Enabled.ID to
+              AttributeInfo(
+                name = "Enabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.Chime.CommandsIncoming.PlayChimeSound.ID to
+              CommandInfo(
+                name = "PlayChimeSound",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ChimeID",
+                        type = DataType.U_INT8,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.Chime.Events.ChimeStartedPlaying.ID to EventInfo(name = "ChimeStartedPlaying"),
+          ),
+      ),
+    Clusters.CommodityTariff.ID to
+      ClusterInfo(
+        name = "Commodity Tariff",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CommodityTariff.Attributes.TariffInfo.ID to
+              AttributeInfo(
+                name = "TariffInfo",
+                type = DataType.TARIFF_INFORMATION_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.TariffUnit.ID to
+              AttributeInfo(
+                name = "TariffUnit",
+                type = DataType.TARIFF_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.StartDate.ID to
+              AttributeInfo(
+                name = "StartDate",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.DayEntries.ID to
+              AttributeInfo(
+                name = "DayEntries",
+                type = DataType.LIST_DAY_ENTRY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.DayPatterns.ID to
+              AttributeInfo(
+                name = "DayPatterns",
+                type = DataType.LIST_DAY_PATTERN_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.CalendarPeriods.ID to
+              AttributeInfo(
+                name = "CalendarPeriods",
+                type = DataType.LIST_CALENDAR_PERIOD_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.IndividualDays.ID to
+              AttributeInfo(
+                name = "IndividualDays",
+                type = DataType.LIST_DAY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.CurrentDay.ID to
+              AttributeInfo(
+                name = "CurrentDay",
+                type = DataType.DAY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.NextDay.ID to
+              AttributeInfo(
+                name = "NextDay",
+                type = DataType.DAY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.CurrentDayEntry.ID to
+              AttributeInfo(
+                name = "CurrentDayEntry",
+                type = DataType.DAY_ENTRY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.CurrentDayEntryDate.ID to
+              AttributeInfo(
+                name = "CurrentDayEntryDate",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.NextDayEntry.ID to
+              AttributeInfo(
+                name = "NextDayEntry",
+                type = DataType.DAY_ENTRY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.NextDayEntryDate.ID to
+              AttributeInfo(
+                name = "NextDayEntryDate",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.TariffComponents.ID to
+              AttributeInfo(
+                name = "TariffComponents",
+                type = DataType.LIST_TARIFF_COMPONENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.TariffPeriods.ID to
+              AttributeInfo(
+                name = "TariffPeriods",
+                type = DataType.LIST_TARIFF_PERIOD_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.CurrentTariffComponents.ID to
+              AttributeInfo(
+                name = "CurrentTariffComponents",
+                type = DataType.LIST_TARIFF_COMPONENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.NextTariffComponents.ID to
+              AttributeInfo(
+                name = "NextTariffComponents",
+                type = DataType.LIST_TARIFF_COMPONENT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.DefaultRandomizationOffset.ID to
+              AttributeInfo(
+                name = "DefaultRandomizationOffset",
+                type = DataType.INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityTariff.Attributes.DefaultRandomizationType.ID to
+              AttributeInfo(
+                name = "DefaultRandomizationType",
+                type = DataType.COMMODITY_TARIFF_CLUSTER_DAY_ENTRY_RANDOMIZATION_TYPE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CommodityTariff.CommandsIncoming.GetTariffComponent.ID to
+              CommandInfo(
+                name = "GetTariffComponent",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TariffComponentID",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+            Clusters.CommodityTariff.CommandsIncoming.GetDayEntry.ID to
+              CommandInfo(
+                name = "GetDayEntry",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "DayEntryID",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CommodityTariff.CommandsOutgoing.GetTariffComponentResponse.ID to
+              CommandInfo(
+                name = "GetTariffComponentResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Label",
+                        type = DataType.STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "DayEntryIDs",
+                        type = DataType.LIST_U_INT32,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "TariffComponent",
+                        type = DataType.TARIFF_COMPONENT_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.CommodityTariff.CommandsOutgoing.GetDayEntryResponse.ID to
+              CommandInfo(
+                name = "GetDayEntryResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "DayEntry",
+                        type = DataType.DAY_ENTRY_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.TLSCertificateManagement.ID to
+      ClusterInfo(
+        name = "TLS Certificate Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.TLSCertificateManagement.Attributes.MaxRootCertificates.ID to
+              AttributeInfo(
+                name = "MaxRootCertificates",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TLSCertificateManagement.Attributes.ProvisionedRootCertificates.ID to
+              AttributeInfo(
+                name = "ProvisionedRootCertificates",
+                type = DataType.LIST_TLS_CERT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TLSCertificateManagement.Attributes.MaxClientCertificates.ID to
+              AttributeInfo(
+                name = "MaxClientCertificates",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TLSCertificateManagement.Attributes.ProvisionedClientCertificates.ID to
+              AttributeInfo(
+                name = "ProvisionedClientCertificates",
+                type = DataType.LIST_TLS_CLIENT_CERTIFICATE_DETAIL_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.TLSCertificateManagement.CommandsIncoming.ProvisionRootCertificate.ID to
+              CommandInfo(
+                name = "ProvisionRootCertificate",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Certificate",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "CAID",
+                        type = DataType.TLSCAID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.FindRootCertificate.ID to
+              CommandInfo(
+                name = "FindRootCertificate",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CAID",
+                        type = DataType.TLSCAID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.LookupRootCertificate.ID to
+              CommandInfo(
+                name = "LookupRootCertificate",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Fingerprint",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.RemoveRootCertificate.ID to
+              CommandInfo(
+                name = "RemoveRootCertificate",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CAID",
+                        type = DataType.TLSCAID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.ClientCSR.ID to
+              CommandInfo(
+                name = "ClientCSR",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Nonce",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.ProvisionClientCertificate.ID to
+              CommandInfo(
+                name = "ProvisionClientCertificate",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ClientCertificate",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "IntermediateCertificates",
+                        type = DataType.LIST_OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.FindClientCertificate.ID to
+              CommandInfo(
+                name = "FindClientCertificate",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.LookupClientCertificate.ID to
+              CommandInfo(
+                name = "LookupClientCertificate",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Fingerprint",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsIncoming.RemoveClientCertificate.ID to
+              CommandInfo(
+                name = "RemoveClientCertificate",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.TLSCertificateManagement.CommandsOutgoing.ProvisionRootCertificateResponse
+              .ID to
+              CommandInfo(
+                name = "ProvisionRootCertificateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CAID",
+                        type = DataType.TLSCAID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsOutgoing.FindRootCertificateResponse.ID to
+              CommandInfo(
+                name = "FindRootCertificateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CertificateDetails",
+                        type = DataType.LIST_TLS_CERT_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsOutgoing.LookupRootCertificateResponse.ID to
+              CommandInfo(
+                name = "LookupRootCertificateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CAID",
+                        type = DataType.TLSCAID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsOutgoing.ClientCSRResponse.ID to
+              CommandInfo(
+                name = "ClientCSRResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "CSR",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "NonceSignature",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsOutgoing.FindClientCertificateResponse.ID to
+              CommandInfo(
+                name = "FindClientCertificateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CertificateDetails",
+                        type = DataType.LIST_TLS_CLIENT_CERTIFICATE_DETAIL_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.TLSCertificateManagement.CommandsOutgoing.LookupClientCertificateResponse.ID to
+              CommandInfo(
+                name = "LookupClientCertificateResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.TLSClientManagement.ID to
+      ClusterInfo(
+        name = "TLS Client Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.TLSClientManagement.Attributes.MaxProvisioned.ID to
+              AttributeInfo(
+                name = "MaxProvisioned",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TLSClientManagement.Attributes.ProvisionedEndpoints.ID to
+              AttributeInfo(
+                name = "ProvisionedEndpoints",
+                type = DataType.LIST_TLS_ENDPOINT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.TLSClientManagement.CommandsIncoming.ProvisionEndpoint.ID to
+              CommandInfo(
+                name = "ProvisionEndpoint",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Hostname",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Port",
+                        type = DataType.U_INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "CAID",
+                        type = DataType.TLSCAID,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "CCDID",
+                        type = DataType.TLSCCDID,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.TLS_ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSClientManagement.CommandsIncoming.FindEndpoint.ID to
+              CommandInfo(
+                name = "FindEndpoint",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.TLS_ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSClientManagement.CommandsIncoming.RemoveEndpoint.ID to
+              CommandInfo(
+                name = "RemoveEndpoint",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.TLS_ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.TLSClientManagement.CommandsOutgoing.ProvisionEndpointResponse.ID to
+              CommandInfo(
+                name = "ProvisionEndpointResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.TLS_ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+            Clusters.TLSClientManagement.CommandsOutgoing.FindEndpointResponse.ID to
+              CommandInfo(
+                name = "FindEndpointResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Endpoint",
+                        type = DataType.TLS_ENDPOINT_STRUCT,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.MeterIdentification.ID to
+      ClusterInfo(
+        name = "Meter Identification",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.MeterIdentification.Attributes.MeterType.ID to
+              AttributeInfo(
+                name = "MeterType",
+                type = DataType.METER_IDENTIFICATION_CLUSTER_METER_TYPE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MeterIdentification.Attributes.PointOfDelivery.ID to
+              AttributeInfo(
+                name = "PointOfDelivery",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MeterIdentification.Attributes.MeterSerialNumber.ID to
+              AttributeInfo(
+                name = "MeterSerialNumber",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MeterIdentification.Attributes.ProtocolVersion.ID to
+              AttributeInfo(
+                name = "ProtocolVersion",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.MeterIdentification.Attributes.PowerThreshold.ID to
+              AttributeInfo(
+                name = "PowerThreshold",
+                type = DataType.POWER_THRESHOLD_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.CommodityMetering.ID to
+      ClusterInfo(
+        name = "Commodity Metering",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CommodityMetering.Attributes.MeteredQuantity.ID to
+              AttributeInfo(
+                name = "MeteredQuantity",
+                type = DataType.LIST_METERED_QUANTITY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityMetering.Attributes.MeteredQuantityTimestamp.ID to
+              AttributeInfo(
+                name = "MeteredQuantityTimestamp",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityMetering.Attributes.TariffUnit.ID to
+              AttributeInfo(
+                name = "TariffUnit",
+                type = DataType.TARIFF_UNIT_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.CommodityMetering.Attributes.MaximumMeteredQuantities.ID to
+              AttributeInfo(
+                name = "MaximumMeteredQuantities",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+  )

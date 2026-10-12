@@ -20,21 +20,18 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 data class FabricsUiState(
-    // Lifecycle Flags
-    val isFirstTimeLoading: Boolean = true,
-    val isBackgroundRefreshing: Boolean = false,
-    @field:StringRes val errorMessageRes: Int? = null,
+  // Lifecycle Flags
+  val isFirstTimeLoading: Boolean = true,
+  val isBackgroundRefreshing: Boolean = false,
+  @field:StringRes val errorMessageRes: Int? = null,
 
-    // Core Screen Data
-    val fabrics: List<ManagedFabric> = emptyList(),
+  // Core Screen Data
+  val fabrics: List<ManagedFabric> = emptyList(),
 )
 
 @HiltViewModel
-class FabricsViewModel
-@Inject
-constructor(
-    private val repository: FabricsRepository,
-) : ViewModel() {
+class FabricsViewModel @Inject constructor(private val repository: FabricsRepository) :
+  ViewModel() {
 
   private val _uiState = MutableStateFlow(FabricsUiState())
   val uiState: StateFlow<FabricsUiState> = _uiState.asStateFlow()
@@ -43,32 +40,32 @@ constructor(
     viewModelScope.launch {
       _uiState.update {
         it.copy(
-            isFirstTimeLoading = _uiState.value.isFirstTimeLoading,
-            isBackgroundRefreshing = !_uiState.value.isFirstTimeLoading,
-            errorMessageRes = null,
+          isFirstTimeLoading = _uiState.value.isFirstTimeLoading,
+          isBackgroundRefreshing = !_uiState.value.isFirstTimeLoading,
+          errorMessageRes = null,
         )
       }
       runCatching {
         val fabrics = repository.readManagedFabrics(nodeId)
         _uiState.update {
           it.copy(
-              fabrics = fabrics,
-              isFirstTimeLoading = false,
-              isBackgroundRefreshing = false,
-              errorMessageRes = if (fabrics.isEmpty()) R.string.device_fabrics_error else null,
+            fabrics = fabrics,
+            isFirstTimeLoading = false,
+            isBackgroundRefreshing = false,
+            errorMessageRes = if (fabrics.isEmpty()) R.string.device_fabrics_error else null,
           )
         }
       }
-          .onFailure { e ->
-            Timber.e(e, "Error loading fabrics")
-            _uiState.update {
-              it.copy(
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                  errorMessageRes = R.string.device_fabrics_error,
-              )
-            }
+        .onFailure { e ->
+          Timber.e(e, "Error loading fabrics")
+          _uiState.update {
+            it.copy(
+              isFirstTimeLoading = false,
+              isBackgroundRefreshing = false,
+              errorMessageRes = R.string.device_fabrics_error,
+            )
           }
+        }
     }
   }
 
@@ -80,7 +77,7 @@ constructor(
         repository.removeFabric(nodeId, fabricIndex)
         loadFabrics(nodeId)
       }
-          .onFailure { e -> Timber.e(e, "Error removing fabric") }
+        .onFailure { e -> Timber.e(e, "Error removing fabric") }
     }
   }
 }

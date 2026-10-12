@@ -19,8 +19,8 @@ import timber.log.Timber
 class HalfSheetSuppressionObserver
 @Inject
 internal constructor(
-    @param:ApplicationContext private val context: Context,
-    private val preferencesRepository: UserPreferencesRepository,
+  @param:ApplicationContext private val context: Context,
+  private val preferencesRepository: UserPreferencesRepository,
 ) : AppLifecycleObserver {
 
   private val scope = CoroutineScope(Dispatchers.Main)
@@ -34,7 +34,7 @@ internal constructor(
     Timber.d("onStart()")
     scope.launch {
       val suppressHalfSheetNotification =
-          !preferencesRepository.shouldShowGpsMatterDiscoveryNotification()
+        !preferencesRepository.shouldShowGpsMatterDiscoveryNotification()
       if (suppressHalfSheetNotification) {
         try {
           Matter.getCommissioningClient(context).suppressHalfSheetNotification().await()
