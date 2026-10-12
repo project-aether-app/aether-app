@@ -16,76 +16,70 @@ import org.junit.Test
 
 class DeviceSettingsFabricsPreviewTest {
 
-  @get:Rule
-  val paparazzi =
-      Paparazzi(
-          theme = "android:Theme.Material.Light.NoActionBar",
-      )
+  @get:Rule val paparazzi = Paparazzi(theme = "android:Theme.Material.Light.NoActionBar")
 
   private val testRootFabricKey = List(64) { it.toByte() }
 
   private fun snapshotFabricsScreen(uiState: FabricsUiState) {
     paparazzi.snapshot {
       FabricsScreen(
-          uiState = uiState,
-          onBackClick = {},
-          onRefresh = {},
-          onRemoveController = {},
+        uiState = uiState,
+        onBackClick = {},
+        onRefresh = {},
+        onRemoveController = {},
       )
     }
   }
 
   @Test
   fun previewLoading() {
-    snapshotFabricsScreen(
-        uiState = FabricsUiState(isFirstTimeLoading = true),
-    )
+    snapshotFabricsScreen(uiState = FabricsUiState(isFirstTimeLoading = true))
   }
 
   @Test
   fun previewFabrics() {
     snapshotFabricsScreen(
-        uiState =
-            FabricsUiState(
-                isFirstTimeLoading = false,
-                fabrics =
-                    listOf(
-                        ManagedFabric(
-                            fabricIndex = 1,
-                            rootPublicKey = testRootFabricKey,
-                            vendorId = VendorId(0x1349u),
-                            fabricId = FabricId(0x123456u),
-                            nodeId = NodeId(0x42u),
-                            isCurrentFabric = true,
-                        ),
-                        ManagedFabric(
-                            fabricIndex = 2,
-                            rootPublicKey = testRootFabricKey,
-                            vendorId = VendorId(0x100Cu),
-                            fabricId = FabricId(0xABCDEu),
-                            nodeId = NodeId(0x42u),
-                        ),
-                        ManagedFabric(
-                            fabricIndex = 3,
-                            rootPublicKey = testRootFabricKey,
-                            vendorId = VendorId(0x1234u),
-                            fabricId = FabricId(0xABCDEu),
-                            nodeId = NodeId(0x42u),
-                            label = "Home Assistant - Living Room",
-                        ),
-                    ),
+      uiState =
+        FabricsUiState(
+          isFirstTimeLoading = false,
+          fabrics =
+            listOf(
+              ManagedFabric(
+                fabricIndex = 1,
+                rootPublicKey = testRootFabricKey,
+                vendorId = VendorId(0x1349u),
+                fabricId = FabricId(0x123456u),
+                nodeId = NodeId(0x42u),
+                isCurrentFabric = true,
+              ),
+              ManagedFabric(
+                fabricIndex = 2,
+                rootPublicKey = testRootFabricKey,
+                vendorId = VendorId(0x100Cu),
+                fabricId = FabricId(0xABCDEu),
+                nodeId = NodeId(0x42u),
+              ),
+              ManagedFabric(
+                fabricIndex = 3,
+                rootPublicKey = testRootFabricKey,
+                vendorId = VendorId(0x1234u),
+                fabricId = FabricId(0xABCDEu),
+                nodeId = NodeId(0x42u),
+                label = "Home Assistant - Living Room",
+              ),
             ),
+        ),
     )
   }
 
   @Test
   fun previewErrorMessage() {
     snapshotFabricsScreen(
-        uiState =
-            FabricsUiState(
-                isFirstTimeLoading = false,
-                errorMessageRes = R.string.device_fabrics_error,
-            ),
+      uiState =
+        FabricsUiState(
+          isFirstTimeLoading = false,
+          errorMessageRes = R.string.device_fabrics_error,
+        ),
     )
   }
 }

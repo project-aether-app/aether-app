@@ -46,38 +46,38 @@ internal fun highlightedFieldColors(highlight: FieldHighlight): TextFieldColors 
   val durationMs = if (highlight == FieldHighlight.STANDARD) 500 else 150
   val animSpec = tween<Color>(durationMillis = durationMs)
   val targetFocused =
-      when (highlight) {
-        FieldHighlight.SUCCESS -> successColor
-        FieldHighlight.EDITED -> editedColor
-        FieldHighlight.STANDARD -> standardFocused
-      }
+    when (highlight) {
+      FieldHighlight.SUCCESS -> successColor
+      FieldHighlight.EDITED -> editedColor
+      FieldHighlight.STANDARD -> standardFocused
+    }
   val targetUnfocused =
-      when (highlight) {
-        FieldHighlight.SUCCESS -> successColor
-        FieldHighlight.EDITED -> editedColor
-        FieldHighlight.STANDARD -> standardUnfocused
-      }
+    when (highlight) {
+      FieldHighlight.SUCCESS -> successColor
+      FieldHighlight.EDITED -> editedColor
+      FieldHighlight.STANDARD -> standardUnfocused
+    }
   val focusedColor by
-      animateColorAsState(
-          targetValue = targetFocused,
-          animationSpec = animSpec,
-          label = "focusedBorderColor",
-      )
+    animateColorAsState(
+      targetValue = targetFocused,
+      animationSpec = animSpec,
+      label = "focusedBorderColor",
+    )
   val unfocusedColor by
-      animateColorAsState(
-          targetValue = targetUnfocused,
-          animationSpec = animSpec,
-          label = "unfocusedBorderColor",
-      )
+    animateColorAsState(
+      targetValue = targetUnfocused,
+      animationSpec = animSpec,
+      label = "unfocusedBorderColor",
+    )
   return OutlinedTextFieldDefaults.colors(
-      focusedBorderColor = focusedColor,
-      unfocusedBorderColor = unfocusedColor,
+    focusedBorderColor = focusedColor,
+    unfocusedBorderColor = unfocusedColor,
   )
 }
 
 internal data class HighlightedOutlinedComboOption(
-    val value: String,
-    val label: String,
+  val value: String,
+  val label: String,
 )
 
 /**
@@ -92,14 +92,14 @@ internal data class HighlightedOutlinedComboOption(
  */
 @Composable
 fun HighlightedOutlinedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    successTrigger: Int,
-    resetKey: Any,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null,
-    enabled: Boolean = true,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  value: String,
+  onValueChange: (String) -> Unit,
+  successTrigger: Int,
+  resetKey: Any,
+  modifier: Modifier = Modifier,
+  label: @Composable (() -> Unit)? = null,
+  enabled: Boolean = true,
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
   var lastSeen by remember(resetKey) { mutableIntStateOf(successTrigger) }
   var highlight by remember(resetKey) { mutableStateOf(FieldHighlight.STANDARD) }
@@ -114,30 +114,30 @@ fun HighlightedOutlinedTextField(
   }
 
   OutlinedTextField(
-      value = value,
-      onValueChange = {
-        onValueChange(it)
-        highlight = FieldHighlight.EDITED
-      },
-      modifier = modifier,
-      label = label,
-      enabled = enabled,
-      keyboardOptions = keyboardOptions,
-      colors = highlightedFieldColors(highlight),
+    value = value,
+    onValueChange = {
+      onValueChange(it)
+      highlight = FieldHighlight.EDITED
+    },
+    modifier = modifier,
+    label = label,
+    enabled = enabled,
+    keyboardOptions = keyboardOptions,
+    colors = highlightedFieldColors(highlight),
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HighlightedOutlinedComboField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    options: List<HighlightedOutlinedComboOption>,
-    successTrigger: Int,
-    resetKey: Any,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null,
-    enabled: Boolean = true,
+  value: String,
+  onValueChange: (String) -> Unit,
+  options: List<HighlightedOutlinedComboOption>,
+  successTrigger: Int,
+  resetKey: Any,
+  modifier: Modifier = Modifier,
+  label: @Composable (() -> Unit)? = null,
+  enabled: Boolean = true,
 ) {
   var expanded by remember(resetKey) { mutableStateOf(false) }
   var lastSeen by remember(resetKey) { mutableIntStateOf(successTrigger) }
@@ -155,33 +155,33 @@ internal fun HighlightedOutlinedComboField(
   val displayedValue = options.firstOrNull { it.value == value }?.label ?: value
 
   ExposedDropdownMenuBox(
-      expanded = expanded,
-      onExpandedChange = { if (enabled) expanded = it },
+    expanded = expanded,
+    onExpandedChange = { if (enabled) expanded = it },
   ) {
     OutlinedTextField(
-        value = displayedValue,
-        onValueChange = {},
-        readOnly = true,
-        enabled = enabled,
-        modifier =
-            modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
-        label = label,
-        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-        colors = highlightedFieldColors(highlight),
+      value = displayedValue,
+      onValueChange = {},
+      readOnly = true,
+      enabled = enabled,
+      modifier =
+        modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
+      label = label,
+      trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+      colors = highlightedFieldColors(highlight),
     )
 
     ExposedDropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
+      expanded = expanded,
+      onDismissRequest = { expanded = false },
     ) {
       options.forEach { option ->
         DropdownMenuItem(
-            text = { Text(option.label) },
-            onClick = {
-              onValueChange(option.value)
-              highlight = FieldHighlight.EDITED
-              expanded = false
-            },
+          text = { Text(option.label) },
+          onClick = {
+            onValueChange(option.value)
+            highlight = FieldHighlight.EDITED
+            expanded = false
+          },
         )
       }
     }

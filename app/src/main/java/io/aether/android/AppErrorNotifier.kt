@@ -20,10 +20,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 @Singleton
 class AppErrorNotifier @Inject constructor() {
   private val _errors =
-      MutableSharedFlow<DialogInfo>(
-          extraBufferCapacity = 16,
-          onBufferOverflow = BufferOverflow.DROP_OLDEST,
-      )
+    MutableSharedFlow<DialogInfo>(
+      extraBufferCapacity = 16,
+      onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
   val errors: SharedFlow<DialogInfo> = _errors.asSharedFlow()
 
   fun notify(error: DialogInfo) {

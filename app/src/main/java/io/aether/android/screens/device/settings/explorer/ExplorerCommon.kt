@@ -26,31 +26,31 @@ import io.aether.android.matter.EventId
 
 @Composable
 internal fun ExplorerRow(
-    text: String,
-    secondaryText: String? = null,
-    isDimmed: Boolean = false,
-    onClick: (() -> Unit)? = null,
+  text: String,
+  secondaryText: String? = null,
+  isDimmed: Boolean = false,
+  onClick: (() -> Unit)? = null,
 ) {
   val primaryColor =
-      if (isDimmed) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.9f)
-      else MaterialTheme.colorScheme.onSurface
+    if (isDimmed) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.9f)
+    else MaterialTheme.colorScheme.onSurface
   val secondaryColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
 
   Row(
-      modifier =
-          Modifier.fillMaxWidth()
-              .clickable(enabled = onClick != null) { onClick?.invoke() }
-              .padding(horizontal = 8.dp, vertical = 8.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically,
+    modifier =
+      Modifier.fillMaxWidth()
+        .clickable(enabled = onClick != null) { onClick?.invoke() }
+        .padding(horizontal = 8.dp, vertical = 8.dp),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
       Text(text = text, style = MaterialTheme.typography.bodyLarge, color = primaryColor)
       if (!secondaryText.isNullOrBlank()) {
         Text(
-            text = secondaryText,
-            style = MaterialTheme.typography.bodySmall,
-            color = secondaryColor,
+          text = secondaryText,
+          style = MaterialTheme.typography.bodySmall,
+          color = secondaryColor,
         )
       }
     }
@@ -58,11 +58,11 @@ internal fun ExplorerRow(
 }
 
 internal fun formatEndpointLabel(endpointId: EndpointId, name: String?): String =
-    if (name.isNullOrBlank()) {
-      "[${formatEndpointId(endpointId)}]"
-    } else {
-      "[${formatEndpointId(endpointId)}] $name"
-    }
+  if (name.isNullOrBlank()) {
+    "[${formatEndpointId(endpointId)}]"
+  } else {
+    "[${formatEndpointId(endpointId)}] $name"
+  }
 
 internal fun formatIdAndName(id: UInt, name: String?): String {
   val idText = formatExplorerId(id)
@@ -76,24 +76,23 @@ internal fun formatIdAndName(id: UInt, name: String?): String {
 internal fun formatIdAndName(id: ClusterId, name: String?): String = formatIdAndName(id.value, name)
 
 internal fun formatIdAndName(id: AttributeId, name: String?): String =
-    formatIdAndName(id.value, name)
+  formatIdAndName(id.value, name)
 
 internal fun formatIdAndName(id: CommandId, name: String?): String = formatIdAndName(id.value, name)
 
 internal fun formatIdAndName(id: EventId, name: String?): String = formatIdAndName(id.value, name)
 
 internal fun formatIdAndName(id: DeviceTypeId, name: String?): String =
-    formatIdAndName(id.value, name)
+  formatIdAndName(id.value, name)
 
 internal fun formatExplorerId(id: UInt): String =
-    if (id <= 0xFFFFu) String.format("0x%04X", id.toLong())
-    else String.format("0x%08X", id.toLong())
+  if (id <= 0xFFFFu) String.format("0x%04X", id.toLong()) else String.format("0x%08X", id.toLong())
 
 internal fun formatExplorerId(id: ClusterId): String = formatExplorerId(id.value)
 
 internal fun formatEndpointId(endpointId: EndpointId): String =
-    if (endpointId.toInt() <= 0xFF) String.format("0x%02X", endpointId.toInt())
-    else String.format("0x%04X", endpointId.toInt())
+  if (endpointId.toInt() <= 0xFF) String.format("0x%02X", endpointId.toInt())
+  else String.format("0x%04X", endpointId.toInt())
 
 internal fun matchesExplorerQuery(query: String, vararg fields: String): Boolean {
   val normalizedQuery = query.trim().lowercase()
@@ -105,8 +104,8 @@ internal fun matchesExplorerQuery(query: String, vararg fields: String): Boolean
 
 @Composable
 internal fun explorerSupportStatusText(baseText: String, isSupported: Boolean): String =
-    if (isSupported) {
-      baseText
-    } else {
-      "$baseText\n${stringResource(R.string.device_explorer_not_supported)}"
-    }
+  if (isSupported) {
+    baseText
+  } else {
+    "$baseText\n${stringResource(R.string.device_explorer_not_supported)}"
+  }

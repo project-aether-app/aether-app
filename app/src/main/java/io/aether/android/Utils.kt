@@ -74,7 +74,7 @@ fun displayPreferences(context: Context) {
       val sharedPreferencesFileKey = element.substringBefore(".xml")
       Timber.d("Preference fileKey=$sharedPreferencesFileKey")
       val sharedPreferences =
-          context.getSharedPreferences(sharedPreferencesFileKey, Context.MODE_PRIVATE)
+        context.getSharedPreferences(sharedPreferencesFileKey, Context.MODE_PRIVATE)
       val allPreferences = sharedPreferences.all
       for ((key, value) in allPreferences.entries) Timber.d("Preference key=$key value=$value")
     }
@@ -97,8 +97,8 @@ fun getTimestampForNow(): Timestamp {
  */
 fun formatTimestamp(context: Context, timestamp: Timestamp): String {
   return formatTimestamp(
-      context,
-      Instant.ofEpochSecond(timestamp.seconds, timestamp.nanos.toLong()),
+    context,
+    Instant.ofEpochSecond(timestamp.seconds, timestamp.nanos.toLong()),
   )
 }
 
@@ -118,13 +118,13 @@ fun Long.toTimestamp(): Timestamp {
 /** Generates a random number to be used as a device identifier during device commissioning */
 fun generateNextDeviceId(): Long {
   val secureRandom =
-      try {
-        SecureRandom.getInstance("SHA1PRNG")
-      } catch (ex: Exception) {
-        Timber.w(ex, "Failed to instantiate SecureRandom with SHA1PRNG")
-        // instantiate with the default algorithm
-        SecureRandom()
-      }
+    try {
+      SecureRandom.getInstance("SHA1PRNG")
+    } catch (ex: Exception) {
+      Timber.w(ex, "Failed to instantiate SecureRandom with SHA1PRNG")
+      // instantiate with the default algorithm
+      SecureRandom()
+    }
 
   return max(abs(secureRandom.nextLong()), 1)
 }

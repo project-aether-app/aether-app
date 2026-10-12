@@ -49,72 +49,72 @@ import io.aether.android.spacing
 
 @Composable
 internal fun FabricsRoute(
-    nodeId: NodeId,
-    onBackClick: () -> Unit,
-    viewModel: FabricsViewModel = hiltViewModel(),
+  nodeId: NodeId,
+  onBackClick: () -> Unit,
+  viewModel: FabricsViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(nodeId) { viewModel.loadFabrics(nodeId) }
 
   FabricsScreen(
-      uiState = uiState,
-      onBackClick = onBackClick,
-      onRefresh = { viewModel.loadFabrics(nodeId) },
-      onRemoveController = { index -> viewModel.removeFabric(nodeId, index) },
+    uiState = uiState,
+    onBackClick = onBackClick,
+    onRefresh = { viewModel.loadFabrics(nodeId) },
+    onRemoveController = { index -> viewModel.removeFabric(nodeId, index) },
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FabricsScreen(
-    uiState: FabricsUiState,
-    onBackClick: () -> Unit,
-    onRefresh: () -> Unit,
-    onRemoveController: (Int) -> Unit,
+  uiState: FabricsUiState,
+  onBackClick: () -> Unit,
+  onRefresh: () -> Unit,
+  onRemoveController: (Int) -> Unit,
 ) {
   Scaffold(
-      topBar = {
-        TopAppBar(
-            title = { Text(stringResource(R.string.device_settings_admin_fabrics)) },
-            navigationIcon = {
-              IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back_button),
-                )
-              }
-            },
-        )
-      },
+    topBar = {
+      TopAppBar(
+        title = { Text(stringResource(R.string.device_settings_admin_fabrics)) },
+        navigationIcon = {
+          IconButton(onClick = onBackClick) {
+            Icon(
+              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+              contentDescription = stringResource(R.string.back_button),
+            )
+          }
+        },
+      )
+    },
   ) { innerPadding ->
     if (uiState.isFirstTimeLoading) {
       LoadingIndicator(
-          stringResource(R.string.device_fabrics_loading),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
+        stringResource(R.string.device_fabrics_loading),
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
     } else {
       PullToRefreshBox(
-          isRefreshing = uiState.isBackgroundRefreshing,
-          onRefresh = onRefresh,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
+        isRefreshing = uiState.isBackgroundRefreshing,
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
       ) {
         if (uiState.errorMessageRes != null) {
           // Satisfy the requirement of having a scrollable container.
           Box(
-              modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-              contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center,
           ) {
             EmptyStateErrorBanner(
-                stringResource(uiState.errorMessageRes),
-                modifier = Modifier.fillMaxSize(),
+              stringResource(uiState.errorMessageRes),
+              modifier = Modifier.fillMaxSize(),
             )
           }
         } else {
           Fabrics(
-              uiState = uiState,
-              onRemoveController = onRemoveController,
-              modifier = Modifier.fillMaxSize(),
+            uiState = uiState,
+            onRemoveController = onRemoveController,
+            modifier = Modifier.fillMaxSize(),
           )
         }
       }
@@ -124,23 +124,23 @@ fun FabricsScreen(
 
 @Composable
 private fun Fabrics(
-    uiState: FabricsUiState,
-    onRemoveController: (Int) -> Unit,
-    modifier: Modifier = Modifier,
+  uiState: FabricsUiState,
+  onRemoveController: (Int) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   Column(
-      modifier =
-          modifier
-              .fillMaxSize()
-              .verticalScroll(rememberScrollState())
-              .padding(MaterialTheme.spacing.paddingNormal),
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+    modifier =
+      modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(MaterialTheme.spacing.paddingNormal),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     uiState.fabrics.forEach { fabric ->
       FabricItem(
-          fabric = fabric,
-          onRemove = { onRemoveController(fabric.fabricIndex) },
-          canRemove = !fabric.isCurrentFabric,
+        fabric = fabric,
+        onRemove = { onRemoveController(fabric.fabricIndex) },
+        canRemove = !fabric.isCurrentFabric,
       )
     }
   }
@@ -148,90 +148,90 @@ private fun Fabrics(
 
 @Composable
 private fun FabricItem(
-    fabric: ManagedFabric,
-    onRemove: () -> Unit,
-    canRemove: Boolean,
+  fabric: ManagedFabric,
+  onRemove: () -> Unit,
+  canRemove: Boolean,
 ) {
   var showConfirmDialog by remember(fabric.fabricIndex) { mutableStateOf(false) }
 
   if (showConfirmDialog && canRemove) {
     AlertDialog(
-        title = { Text(stringResource(R.string.device_fabric_remove_dialog_title)) },
-        text = { Text(stringResource(R.string.device_fabric_remove_dialog_body)) },
-        confirmButton = {
-          Button(
-              onClick = {
-                showConfirmDialog = false
-                onRemove()
-              },
-              colors =
-                  ButtonDefaults.buttonColors(
-                      containerColor = MaterialTheme.colorScheme.error,
-                      contentColor = MaterialTheme.colorScheme.onError,
-                  ),
-          ) {
-            Text(stringResource(R.string.device_fabric_remove_dialog_yes))
-          }
-        },
-        dismissButton = {
-          TextButton(onClick = { showConfirmDialog = false }) {
-            Text(stringResource(R.string.cancel))
-          }
-        },
-        onDismissRequest = { showConfirmDialog = false },
+      title = { Text(stringResource(R.string.device_fabric_remove_dialog_title)) },
+      text = { Text(stringResource(R.string.device_fabric_remove_dialog_body)) },
+      confirmButton = {
+        Button(
+          onClick = {
+            showConfirmDialog = false
+            onRemove()
+          },
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.error,
+              contentColor = MaterialTheme.colorScheme.onError,
+            ),
+        ) {
+          Text(stringResource(R.string.device_fabric_remove_dialog_yes))
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { showConfirmDialog = false }) {
+          Text(stringResource(R.string.cancel))
+        }
+      },
+      onDismissRequest = { showConfirmDialog = false },
     )
   }
 
   val label =
-      fabric.label.takeIf { it.isNotBlank() }
-          ?: stringResource(R.string.device_fabrics_fabric_label, fabric.fabricIndex)
+    fabric.label.takeIf { it.isNotBlank() }
+      ?: stringResource(R.string.device_fabrics_fabric_label, fabric.fabricIndex)
 
   GroupBox(title = label) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
       Column(modifier = Modifier.weight(1f)) {
         Text(
-            text =
-                stringResource(
-                    R.string.device_fabrics_fabric_vendor,
-                    vendorLabel(fabric.vendorId),
-                ),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          text =
+            stringResource(
+              R.string.device_fabrics_fabric_vendor,
+              vendorLabel(fabric.vendorId),
+            ),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text =
-                stringResource(
-                    R.string.device_fabrics_fabric_fabric_id,
-                    fabric.fabricId.toString(),
-                ),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          text =
+            stringResource(
+              R.string.device_fabrics_fabric_fabric_id,
+              fabric.fabricId.toString(),
+            ),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text =
-                stringResource(
-                    R.string.device_fabrics_fabric_node_id,
-                    fabric.nodeId.toString(),
-                ),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          text =
+            stringResource(
+              R.string.device_fabrics_fabric_node_id,
+              fabric.nodeId.toString(),
+            ),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text =
-                stringResource(
-                    R.string.device_fabrics_fabric_root_pub_key,
-                    fabric.rootPublicKey.take(8).joinToString(separator = "") { "%02X".format(it) },
-                ),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+          text =
+            stringResource(
+              R.string.device_fabrics_fabric_root_pub_key,
+              fabric.rootPublicKey.take(8).joinToString(separator = "") { "%02X".format(it) },
+            ),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
       }
       if (canRemove) {
         IconButton(onClick = { showConfirmDialog = true }) {
           Icon(
-              imageVector = Icons.Outlined.Delete,
-              contentDescription = stringResource(R.string.device_fabrics_fabric_remove),
-              tint = MaterialTheme.colorScheme.error,
+            imageVector = Icons.Outlined.Delete,
+            contentDescription = stringResource(R.string.device_fabrics_fabric_remove),
+            tint = MaterialTheme.colorScheme.error,
           )
         }
       }

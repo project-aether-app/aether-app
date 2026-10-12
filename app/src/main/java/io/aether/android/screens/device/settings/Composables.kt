@@ -31,25 +31,25 @@ internal fun SettingsSection(title: String, content: @Composable ColumnScope.() 
 
 @Composable
 internal fun SettingsInfoRow(
-    label: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+  label: String,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) =
-    LabeledContent(
-        label = label,
-        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
-    ) {
-      CompositionLocalProvider(
-          LocalTextStyle provides MaterialTheme.typography.bodyMedium,
-          content = content,
-      )
-    }
+  LabeledContent(
+    label = label,
+    modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
+  ) {
+    CompositionLocalProvider(
+      LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+      content = content,
+    )
+  }
 
 @Composable
 internal fun SettingsClickableRow(label: String, value: String, onClick: () -> Unit) {
   Row(
-      modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 4.dp),
-      verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 4.dp),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     LabeledContent(label = label, modifier = Modifier.weight(1f)) {
       Text(text = value, style = MaterialTheme.typography.bodyMedium)
@@ -59,30 +59,30 @@ internal fun SettingsClickableRow(label: String, value: String, onClick: () -> U
 
 @Composable
 internal fun SettingsActionRow(
-    icon: ImageVector,
-    label: String,
-    subtitle: String,
-    onClick: () -> Unit,
-    iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-    labelColor: Color = MaterialTheme.colorScheme.onSurface,
-    subtitleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+  icon: ImageVector,
+  label: String,
+  subtitle: String,
+  onClick: () -> Unit,
+  iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+  labelColor: Color = MaterialTheme.colorScheme.onSurface,
+  subtitleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
   Row(
-      modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 8.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(12.dp),
+    modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(12.dp),
   ) {
     Icon(
-        imageVector = icon,
-        contentDescription = null,
-        tint = iconTint,
+      imageVector = icon,
+      contentDescription = null,
+      tint = iconTint,
     )
     Column(modifier = Modifier.weight(1f)) {
       Text(text = label, style = MaterialTheme.typography.bodyMedium, color = labelColor)
       Text(
-          text = subtitle,
-          style = MaterialTheme.typography.bodySmall,
-          color = subtitleColor,
+        text = subtitle,
+        style = MaterialTheme.typography.bodySmall,
+        color = subtitleColor,
       )
     }
   }

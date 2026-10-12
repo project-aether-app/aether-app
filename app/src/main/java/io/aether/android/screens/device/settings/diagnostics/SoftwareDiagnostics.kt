@@ -26,37 +26,37 @@ fun SoftwareDiagnostics(data: SoftwareDiagnosticsData) {
       DiagnosticsInfoRow(stringResource(R.string.device_diagnostics_label_current_heap_usage)) {
         val progress = used.toFloat() / total.toFloat()
         LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier.fillMaxWidth(),
-            color =
-                if (progress > 0.9f) MaterialTheme.colorScheme.error
-                else MaterialTheme.colorScheme.primary,
+          progress = { progress },
+          modifier = Modifier.fillMaxWidth(),
+          color =
+            if (progress > 0.9f) MaterialTheme.colorScheme.error
+            else MaterialTheme.colorScheme.primary,
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
           Text(
-              stringResource(
-                  R.string.device_diagnostics_current_heap_used,
-                  (used / 1024u).toString(),
-              ),
+            stringResource(
+              R.string.device_diagnostics_current_heap_used,
+              (used / 1024u).toString(),
+            ),
           )
           Text(
-              stringResource(
-                  R.string.device_diagnostics_current_heap_free,
-                  (free / 1024u).toString(),
-              ),
+            stringResource(
+              R.string.device_diagnostics_current_heap_free,
+              (free / 1024u).toString(),
+            ),
           )
         }
       }
     }
     data.currentHeapHighWatermark?.let {
       DiagnosticsInfoRow(
-          stringResource(R.string.device_diagnostics_label_current_heap_high_watermark),
+        stringResource(R.string.device_diagnostics_label_current_heap_high_watermark),
       ) {
         Text(
-            stringResource(
-                R.string.device_diagnostics_current_heap_high_watermark,
-                (it / 1024u).toString(),
-            ),
+          stringResource(
+            R.string.device_diagnostics_current_heap_high_watermark,
+            (it / 1024u).toString(),
+          ),
         )
       }
     }
@@ -65,8 +65,8 @@ fun SoftwareDiagnostics(data: SoftwareDiagnosticsData) {
     val maxStackSizeAcrossThreads = data.threadMetrics.maxOfOrNull { it.stackSize ?: 0u } ?: 0u
     DiagnosticsSection(stringResource(R.string.device_diagnostics_section_threads)) {
       data.threadMetrics
-          .sortedBy { it.id }
-          .forEach { SoftwareDiagnosticsThread(it, maxStackSizeAcrossThreads) }
+        .sortedBy { it.id }
+        .forEach { SoftwareDiagnosticsThread(it, maxStackSizeAcrossThreads) }
     }
   }
 }
@@ -74,34 +74,34 @@ fun SoftwareDiagnostics(data: SoftwareDiagnosticsData) {
 @Composable
 private fun SoftwareDiagnosticsThread(thread: ThreadMetrics, maxStackSizeAcrossThreads: UInt) {
   DiagnosticsInfoRow(
-      stringResource(
-          R.string.device_diagnostics_thread_label,
-          thread.name ?: stringResource(R.string.device_diagnostics_thread_unnamed),
-          thread.id.toString(),
-      ),
+    stringResource(
+      R.string.device_diagnostics_thread_label,
+      thread.name ?: stringResource(R.string.device_diagnostics_thread_unnamed),
+      thread.id.toString(),
+    ),
   ) {
     if (thread.stackSize != null && thread.stackFreeCurrent != null) {
       val used = (thread.stackSize - thread.stackFreeCurrent).coerceAtLeast(0u)
       val progress = used.toFloat() / thread.stackSize.toFloat()
       LinearProgressIndicator(
-          progress = { progress },
-          modifier = Modifier.fillMaxWidth(),
-          color =
-              if (progress > 0.9f) MaterialTheme.colorScheme.error
-              else MaterialTheme.colorScheme.primary,
+        progress = { progress },
+        modifier = Modifier.fillMaxWidth(),
+        color =
+          if (progress > 0.9f) MaterialTheme.colorScheme.error
+          else MaterialTheme.colorScheme.primary,
       )
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(
-            stringResource(
-                R.string.device_diagnostics_thread_stack_used,
-                (used / 1024u).toString(),
-            ),
+          stringResource(
+            R.string.device_diagnostics_thread_stack_used,
+            (used / 1024u).toString(),
+          ),
         )
         Text(
-            stringResource(
-                R.string.device_diagnostics_thread_stack_free,
-                (thread.stackFreeCurrent / 1024u).toString(),
-            ),
+          stringResource(
+            R.string.device_diagnostics_thread_stack_free,
+            (thread.stackFreeCurrent / 1024u).toString(),
+          ),
         )
       }
     }

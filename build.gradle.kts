@@ -14,13 +14,22 @@ plugins {
   alias(libs.plugins.android.application) apply false
 
   // Kotlin plugin
-  alias(libs.plugins.kotlin.android) apply false
-  alias(libs.plugins.compose.compiler) apply false
+  alias(libs.plugins.kotlin.compose) apply false
   alias(libs.plugins.ksp) apply false
 
   // Hilt
-  alias(libs.plugins.hilt) apply false
+  alias(libs.plugins.hilt.android) apply false
+
+  // Protobuf
+  alias(libs.plugins.protobuf) apply false
 
   // Paparazzi (screen offline rendering)
   alias(libs.plugins.paparazzi) apply false
+
+  // Version Catalog Update
+  alias(libs.plugins.version.catalog.update)
+}
+
+versionCatalogUpdate {
+  sortByKey = false
 }

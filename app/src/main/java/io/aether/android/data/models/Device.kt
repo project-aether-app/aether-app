@@ -15,14 +15,14 @@ import java.time.Instant
 
 /** A physical Matter device commissioned into the network. */
 data class Device(
-    val id: NodeId,
-    val name: String = "",
-    val vendor: Vendor = Vendor(),
-    val product: Product = Product(),
-    val dateCommissioned: Instant? = null,
-    val isOnline: Boolean = false,
-    // In a well designed Matter device the endpoint list is not empty.
-    val endpoints: List<Endpoint> = emptyList(),
+  val id: NodeId,
+  val name: String = "",
+  val vendor: Vendor = Vendor(),
+  val product: Product = Product(),
+  val dateCommissioned: Instant? = null,
+  val isOnline: Boolean = false,
+  // In a well designed Matter device the endpoint list is not empty.
+  val endpoints: List<Endpoint> = emptyList(),
 ) {
   val primaryEndpoint: Endpoint
     get() = endpoints.minByOrNull { it.id.toInt() } ?: Endpoint(id = EndpointId(0u))
@@ -49,7 +49,7 @@ data class Device(
 
       // 2. Fallback: Check the primary endpoint if non-primary had no types.
       val primaryFallbackType =
-          primaryEndpoint.deviceTypes.firstOrNull { it.id != Devices.RootNode.ID }
+        primaryEndpoint.deviceTypes.firstOrNull { it.id != Devices.RootNode.ID }
 
       // 3. If the primary endpoint has no valid types, fall back to the root device type.
       return primaryFallbackType ?: DeviceType(Devices.RootNode.ID)
@@ -57,18 +57,16 @@ data class Device(
 }
 
 data class Vendor(
-    val id: VendorId = VendorId(0u),
-    val name: String = "",
+  val id: VendorId = VendorId(0u),
+  val name: String = "",
 )
 
 data class Product(
-    val id: ProductId = ProductId(0u),
-    val name: String = "",
+  val id: ProductId = ProductId(0u),
+  val name: String = "",
 )
 
-data class DeviceType(
-    val id: DeviceTypeId,
-) {
+data class DeviceType(val id: DeviceTypeId) {
   val name: String
     get() = DEVICES[id] ?: "Unknown (${id})"
 
@@ -78,28 +76,28 @@ data class DeviceType(
 
 /** An endpoint exposed by a physical Matter device. */
 data class Endpoint(
-    val id: EndpointId,
-    val label: String = "",
-    val deviceTypes: List<DeviceType> = listOf(DeviceType(Devices.RootNode.ID)),
-    val supportsLevelControl: Boolean = false,
-    val supportsColorTemperature: Boolean = false,
-    val isOn: Boolean = false,
-    val level: Int = 0,
-    val colorTemperature: Int = 0,
+  val id: EndpointId,
+  val label: String = "",
+  val deviceTypes: List<DeviceType> = listOf(DeviceType(Devices.RootNode.ID)),
+  val supportsLevelControl: Boolean = false,
+  val supportsColorTemperature: Boolean = false,
+  val isOn: Boolean = false,
+  val level: Int = 0,
+  val colorTemperature: Int = 0,
 ) {
   val hasLevelControlSupport: Boolean
     get() =
-        supportsLevelControl ||
-            deviceTypes.any {
-              it.id == Devices.DimmableLight.ID ||
-                  it.id == Devices.ColorTemperatureLight.ID ||
-                  it.id == Devices.ExtendedColorLight.ID
-            }
+      supportsLevelControl ||
+        deviceTypes.any {
+          it.id == Devices.DimmableLight.ID ||
+            it.id == Devices.ColorTemperatureLight.ID ||
+            it.id == Devices.ExtendedColorLight.ID
+        }
 
   val hasColorTemperatureSupport: Boolean
     get() =
-        supportsColorTemperature ||
-            deviceTypes.any {
-              it.id == Devices.ColorTemperatureLight.ID || it.id == Devices.ExtendedColorLight.ID
-            }
+      supportsColorTemperature ||
+        deviceTypes.any {
+          it.id == Devices.ColorTemperatureLight.ID || it.id == Devices.ExtendedColorLight.ID
+        }
 }

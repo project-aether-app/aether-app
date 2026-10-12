@@ -47,8 +47,8 @@ fun routeToDeviceDiagnostics(nodeId: NodeId): String = "device/${nodeId.toLong()
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController,
-    onMenuClick: () -> Unit,
+  navController: NavHostController,
+  onMenuClick: () -> Unit,
 ) {
   // Lambdas to all destinations needed in our various routes.
   // [Top level Route Composables should not be passed the navController explicitly,
@@ -76,57 +76,57 @@ fun AppNavigation(
     composable(DEST_HOME) { HomeRoute(navigateToDevice, onMenuClick) }
     // Device
     composable(
-        ROUTE_DEVICE,
-        arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
+      ROUTE_DEVICE,
+      arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
     ) {
       DeviceRoute(
-          navigateToDeviceSettings = navigateToDeviceSettings,
-          onBackClick = { navController.popBackStack() },
-          nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
+        navigateToDeviceSettings = navigateToDeviceSettings,
+        onBackClick = { navController.popBackStack() },
+        nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
       )
     }
     // Device settings
     composable(
-        ROUTE_DEVICE_SETTINGS,
-        arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
+      ROUTE_DEVICE_SETTINGS,
+      arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
     ) {
       DeviceSettingsRoute(
-          navigateToHome = navigateToHome,
-          navigateToDeviceExplorer = navigateToDeviceExplorer,
-          navigateToDeviceFabrics = navigateToDeviceFabrics,
-          navigateToDeviceDiagnostics = navigateToDeviceDiagnostics,
-          onBackClick = { navController.popBackStack() },
-          nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
+        navigateToHome = navigateToHome,
+        navigateToDeviceExplorer = navigateToDeviceExplorer,
+        navigateToDeviceFabrics = navigateToDeviceFabrics,
+        navigateToDeviceDiagnostics = navigateToDeviceDiagnostics,
+        onBackClick = { navController.popBackStack() },
+        nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
       )
     }
     // Explorer from Device Settings
     composable(
-        ROUTE_DEVICE_EXPLORER,
-        arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
+      ROUTE_DEVICE_EXPLORER,
+      arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
     ) {
       ExplorerRoute(
-          onBackClick = { navController.popBackStack() },
-          nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
+        onBackClick = { navController.popBackStack() },
+        nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
       )
     }
     // Fabrics from Device Settings
     composable(
-        ROUTE_DEVICE_FABRICS,
-        arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
+      ROUTE_DEVICE_FABRICS,
+      arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
     ) {
       FabricsRoute(
-          onBackClick = { navController.popBackStack() },
-          nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
+        onBackClick = { navController.popBackStack() },
+        nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
       )
     }
     // Diagnostics from Device Settings
     composable(
-        ROUTE_DEVICE_DIAGNOSTICS,
-        arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
+      ROUTE_DEVICE_DIAGNOSTICS,
+      arguments = listOf(navArgument(ARG_NODE_ID) { type = NavType.LongType }),
     ) {
       DiagnosticsRoute(
-          onBackClick = { navController.popBackStack() },
-          nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
+        onBackClick = { navController.popBackStack() },
+        nodeId = it.arguments?.getLong(ARG_NODE_ID)!!.toNodeId(),
       )
     }
     // Matter Device Scanner

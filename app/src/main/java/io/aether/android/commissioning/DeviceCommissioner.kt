@@ -12,7 +12,7 @@ import io.aether.android.matter.VendorId
 data class CommissionedDevice(val nodeId: NodeId, val vendorId: VendorId, val productId: ProductId)
 
 class CommissioningWindowExpiringException(val secondsLeft: Long) :
-    Exception("Commissioning window expires in $secondsLeft seconds")
+  Exception("Commissioning window expires in $secondsLeft seconds")
 
 /** Starts Matter commissioning through an external commissioner (Google Play Services). */
 interface DeviceCommissioner {

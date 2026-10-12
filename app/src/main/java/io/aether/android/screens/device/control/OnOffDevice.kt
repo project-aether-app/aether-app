@@ -29,10 +29,10 @@ import io.aether.android.spacing
  */
 @Composable
 internal fun OnOffDeviceControl(
-    device: Device,
-    endpoint: Endpoint,
-    lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
-    onOnOffClick: (Boolean) -> Unit,
+  device: Device,
+  endpoint: Endpoint,
+  lastUpdatedDeviceState: DeviceRepository.EndpointStateSnapshot?,
+  onOnOffClick: (Boolean) -> Unit,
 ) {
   var isOnline by remember(device, endpoint) { mutableStateOf(device.isOnline) }
   var isOn by remember(device, endpoint) { mutableStateOf(endpoint.isOn) }
@@ -40,7 +40,7 @@ internal fun OnOffDeviceControl(
   LaunchedEffect(device, endpoint, lastUpdatedDeviceState) {
     when {
       lastUpdatedDeviceState?.nodeId == device.id &&
-          lastUpdatedDeviceState.endpointId == endpoint.id -> {
+        lastUpdatedDeviceState.endpointId == endpoint.id -> {
         isOnline = lastUpdatedDeviceState.online
         isOn = lastUpdatedDeviceState.on
       }
@@ -53,12 +53,12 @@ internal fun OnOffDeviceControl(
 
   Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal)) {
     OnOffClusterControl(
-        isOnline = isOnline,
-        isOn = isOn,
-        onToggle = { value ->
-          isOn = value
-          onOnOffClick(value)
-        },
+      isOnline = isOnline,
+      isOn = isOn,
+      onToggle = { value ->
+        isOn = value
+        onOnOffClick(value)
+      },
     )
   }
 }

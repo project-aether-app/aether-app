@@ -21,78 +21,72 @@ import org.junit.Test
 
 class DevicePreviewTest {
 
-  @get:Rule
-  val paparazzi =
-      Paparazzi(
-          theme = "android:Theme.Material.Light.NoActionBar",
-      )
+  @get:Rule val paparazzi = Paparazzi(theme = "android:Theme.Material.Light.NoActionBar")
 
   private val testDevice =
-      Device(
-          id = NodeId(0x1234u),
-          vendor = Vendor(id = VendorId(0x1135u)),
-          product = Product(id = ProductId(0x1234u)),
-          name = "Test Device",
-          isOnline = false,
-          endpoints =
+    Device(
+      id = NodeId(0x1234u),
+      vendor = Vendor(id = VendorId(0x1135u)),
+      product = Product(id = ProductId(0x1234u)),
+      name = "Test Device",
+      isOnline = false,
+      endpoints =
+        listOf(
+          Endpoint(
+            id = io.aether.android.matter.EndpointId(1u),
+            deviceTypes = listOf(Devices.OnOffPluginUnit.ID).map { DeviceType(id = it) },
+          ),
+          Endpoint(
+            id = io.aether.android.matter.EndpointId(2u),
+            deviceTypes =
               listOf(
-                  Endpoint(
-                      id = io.aether.android.matter.EndpointId(1u),
-                      deviceTypes = listOf(Devices.OnOffPluginUnit.ID).map { DeviceType(id = it) },
-                  ),
-                  Endpoint(
-                      id = io.aether.android.matter.EndpointId(2u),
-                      deviceTypes =
-                          listOf(
-                                  Devices.DimmableLight.ID,
-                                  Devices.OnOffPluginUnit.ID,
-                              )
-                              .map { DeviceType(id = it) },
-                      level = 50,
-                  ),
-              ),
-      )
+                  Devices.DimmableLight.ID,
+                  Devices.OnOffPluginUnit.ID,
+                )
+                .map { DeviceType(id = it) },
+            level = 50,
+          ),
+        ),
+    )
 
   private fun snapshotDeviceScreen(uiState: DeviceUiState) {
     paparazzi.snapshot {
       DeviceScreen(
-          uiState = uiState,
-          onBackClick = {},
-          onSettingsClick = {},
-          onOnOffClick = { _: Endpoint, _: Boolean -> },
-          onBrightnessChange = { _: Endpoint, _: Int -> },
-          onColorTemperatureChange = { _: Endpoint, _: Int -> },
-          onDismissMsgDialog = {},
+        uiState = uiState,
+        onBackClick = {},
+        onSettingsClick = {},
+        onOnOffClick = { _: Endpoint, _: Boolean -> },
+        onBrightnessChange = { _: Endpoint, _: Int -> },
+        onColorTemperatureChange = { _: Endpoint, _: Int -> },
+        onDismissMsgDialog = {},
       )
     }
   }
 
   @Test
   fun previewLoading() {
-    snapshotDeviceScreen(
-        uiState = DeviceUiState(isFirstTimeLoading = true),
-    )
+    snapshotDeviceScreen(uiState = DeviceUiState(isFirstTimeLoading = true))
   }
 
   @Test
   fun previewDevice() {
     snapshotDeviceScreen(
-        uiState =
-            DeviceUiState(
-                isFirstTimeLoading = false,
-                device = testDevice,
-            ),
+      uiState =
+        DeviceUiState(
+          isFirstTimeLoading = false,
+          device = testDevice,
+        ),
     )
   }
 
   @Test
   fun previewErrorMessage() {
     snapshotDeviceScreen(
-        uiState =
-            DeviceUiState(
-                isFirstTimeLoading = false,
-                errorMessageRes = R.string.controllers_offline,
-            ),
+      uiState =
+        DeviceUiState(
+          isFirstTimeLoading = false,
+          errorMessageRes = R.string.controllers_offline,
+        ),
     )
   }
 }

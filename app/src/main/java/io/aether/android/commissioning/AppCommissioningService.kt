@@ -65,15 +65,15 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
 
   override fun onCommissioningRequested(metadata: CommissioningRequestMetadata) {
     Timber.d(
-        "*** onCommissioningRequested ***:\n" +
-            "\tdeviceDescriptor: " +
-            "vendorId=${metadata.deviceDescriptor.vendorId} " +
-            "productId=${metadata.deviceDescriptor.productId}\n" +
-            "\tnetworkLocation: " +
-            "IP address=${metadata.networkLocation.ipAddress} " +
-            "hostAddress=${metadata.networkLocation.ipAddress.hostAddress} " +
-            "port=${metadata.networkLocation.port}\n" +
-            "\tpassCode=${metadata.passcode}",
+      "*** onCommissioningRequested ***:\n" +
+        "\tdeviceDescriptor: " +
+        "vendorId=${metadata.deviceDescriptor.vendorId} " +
+        "productId=${metadata.deviceDescriptor.productId}\n" +
+        "\tnetworkLocation: " +
+        "IP address=${metadata.networkLocation.ipAddress} " +
+        "hostAddress=${metadata.networkLocation.ipAddress.hostAddress} " +
+        "port=${metadata.networkLocation.port}\n" +
+        "\tpassCode=${metadata.passcode}",
     )
 
     // Perform commissioning on custom fabric for the sample app.
@@ -82,10 +82,10 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
       try {
         Timber.d("Establishing PASE connection deviceId=$deviceId")
         chipClient.awaitEstablishPaseConnection(
-            deviceId,
-            metadata.networkLocation.ipAddress.hostAddress!!,
-            metadata.networkLocation.port,
-            metadata.passcode,
+          deviceId,
+          metadata.networkLocation.ipAddress.hostAddress!!,
+          metadata.networkLocation.port,
+          metadata.passcode,
         )
 
         Timber.d("Commissioning deviceId=$deviceId")
@@ -94,37 +94,37 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
         Timber.e(e, "onCommissioningRequested() failed")
         // No way to determine whether this was ATTESTATION_FAILED or DEVICE_UNREACHABLE.
         commissioningServiceDelegate
-            .sendCommissioningError(CommissioningError.OTHER)
-            .addOnSuccessListener {
-              Timber.d(
-                  "Commissioning: commissioningServiceDelegate.sendCommissioningError() succeeded",
-              )
-            }
-            .addOnFailureListener { e2 ->
-              Timber.e(
-                  e2,
-                  "Commissioning: commissioningServiceDelegate.sendCommissioningError() failed",
-              )
-            }
+          .sendCommissioningError(CommissioningError.OTHER)
+          .addOnSuccessListener {
+            Timber.d(
+              "Commissioning: commissioningServiceDelegate.sendCommissioningError() succeeded",
+            )
+          }
+          .addOnFailureListener { e2 ->
+            Timber.e(
+              e2,
+              "Commissioning: commissioningServiceDelegate.sendCommissioningError() failed",
+            )
+          }
         return@launch
       }
 
       Timber.d("Sending commissioning complete")
       commissioningServiceDelegate
-          .sendCommissioningComplete(
-              CommissioningCompleteMetadata.builder().setToken(deviceId.toString()).build(),
+        .sendCommissioningComplete(
+          CommissioningCompleteMetadata.builder().setToken(deviceId.toString()).build(),
+        )
+        .addOnSuccessListener {
+          Timber.d(
+            "Commissioning: commissioningServiceDelegate.sendCommissioningComplete() succeeded",
           )
-          .addOnSuccessListener {
-            Timber.d(
-                "Commissioning: commissioningServiceDelegate.sendCommissioningComplete() succeeded",
-            )
-          }
-          .addOnFailureListener { e ->
-            Timber.e(
-                e,
-                "Commissioning: commissioningServiceDelegate.sendCommissioningComplete() failed",
-            )
-          }
+        }
+        .addOnFailureListener { e ->
+          Timber.e(
+            e,
+            "Commissioning: commissioningServiceDelegate.sendCommissioningComplete() failed",
+          )
+        }
     }
   }
 }

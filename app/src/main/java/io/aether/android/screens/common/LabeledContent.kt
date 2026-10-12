@@ -17,17 +17,17 @@ import io.aether.android.spacing
 
 @Composable
 fun LabeledContent(
-    label: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+  label: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) {
   Column(
-      modifier = modifier.semantics(mergeDescendants = true) {},
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingTiny),
+    modifier = modifier.semantics(mergeDescendants = true) {},
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingTiny),
   ) {
     CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.labelSmall,
-        LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+      LocalTextStyle provides MaterialTheme.typography.labelSmall,
+      LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
     ) {
       label()
     }
@@ -38,13 +38,13 @@ fun LabeledContent(
 /** Convenience overload for the most common "just a string" case */
 @Composable
 fun LabeledContent(
-    label: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+  label: String,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) {
   LabeledContent(
-      label = { Text(label) },
-      modifier = modifier,
-      content = content,
+    label = { Text(label) },
+    modifier = modifier,
+    content = content,
   )
 }

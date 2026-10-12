@@ -15,6 +15,6 @@ abstract class AppLifecycleObserverModule {
   @Binds
   @IntoSet
   abstract fun bindsHalfSheetSuppressionObserver(
-      impl: HalfSheetSuppressionObserver,
+    impl: HalfSheetSuppressionObserver,
   ): AppLifecycleObserver
 }

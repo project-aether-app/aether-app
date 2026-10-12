@@ -45,20 +45,20 @@ class ServiceDiscovery(context: Context, val coroutineScope: CoroutineScope) {
   private val nsdManager = (context.getSystemService(Context.NSD_SERVICE) as NsdManager)
   private val lock = Semaphore(1)
   private val discoveryListener: NsdManager.DiscoveryListener =
-      DiscoveryListener(
-          threadBorderRouterServiceType,
-          nsdManager,
-          resolvedDevices,
-          coroutineScope,
-          lock,
-      )
+    DiscoveryListener(
+      threadBorderRouterServiceType,
+      nsdManager,
+      resolvedDevices,
+      coroutineScope,
+      lock,
+    )
 
   fun start() {
     coroutineScope.launch(Dispatchers.IO) {
       nsdManager.discoverServices(
-          threadBorderRouterServiceType,
-          NsdManager.PROTOCOL_DNS_SD,
-          discoveryListener,
+        threadBorderRouterServiceType,
+        NsdManager.PROTOCOL_DNS_SD,
+        discoveryListener,
       )
     }
   }
@@ -83,11 +83,11 @@ class ServiceDiscovery(context: Context, val coroutineScope: CoroutineScope) {
  * simultaneous resolving of services.
  */
 class DiscoveryListener(
-    private val serviceType: String,
-    private val nsdManager: NsdManager,
-    private val resolvedServices: MutableList<NsdServiceInfo>,
-    private val coroutineScope: CoroutineScope,
-    private val lock: Semaphore,
+  private val serviceType: String,
+  private val nsdManager: NsdManager,
+  private val resolvedServices: MutableList<NsdServiceInfo>,
+  private val coroutineScope: CoroutineScope,
+  private val lock: Semaphore,
 ) : NsdManager.DiscoveryListener {
   // Called as soon as service discovery begins.
   override fun onDiscoveryStarted(regType: String) {
@@ -96,7 +96,7 @@ class DiscoveryListener(
 
   override fun onServiceFound(service: NsdServiceInfo) {
     if (
-        service.serviceType != serviceType
+      service.serviceType != serviceType
     ) { // Service type is the string containing the protocol and transport layer for
       // this service.
       Timber.d("Unknown service discovered serviceType=${service.serviceType}")
@@ -146,9 +146,8 @@ class DiscoveryListener(
  * It will log part of the information found and add the data to [resolvedDevices] for future usage
  * when we want to show a list of known Border Routers in the local network.
  */
-class ResolveListener(
-    private val resolvedDevices: MutableList<NsdServiceInfo>,
-) : NsdManager.ResolveListener {
+class ResolveListener(private val resolvedDevices: MutableList<NsdServiceInfo>) :
+  NsdManager.ResolveListener {
   override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
     // Called when the resolve fails. Use the error code to debug.
     Timber.e("Service resolution failed errorCode=$errorCode")
@@ -158,13 +157,13 @@ class ResolveListener(
     val serviceId = serviceInfo.attributes["id"]
     if (serviceId != null && serviceId.isNotEmpty()) {
       Timber.d(
-          "Resolve Succeeded\n" +
-              "    Host Service Name: ${serviceInfo.serviceName}\n" +
-              "                   ID: ${
+        "Resolve Succeeded\n" +
+          "    Host Service Name: ${serviceInfo.serviceName}\n" +
+          "                   ID: ${
           BaseEncoding.base16().encode(serviceId)
         }\n" +
-              "                   NN: ${serviceInfo.attributes["nn"]?.let { String(it) }}\n" +
-              "                   IP: ${serviceInfoHostAddress(serviceInfo)}\n",
+          "                   NN: ${serviceInfo.attributes["nn"]?.let { String(it) }}\n" +
+          "                   IP: ${serviceInfoHostAddress(serviceInfo)}\n",
       )
       resolvedDevices.add(serviceInfo)
     } else {

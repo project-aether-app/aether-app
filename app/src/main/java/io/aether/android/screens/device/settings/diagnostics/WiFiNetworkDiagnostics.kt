@@ -31,7 +31,7 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
       add(stringResource(R.string.device_diagnostics_network_tx, it.toString()))
     }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
   val networkTrafficMulticast = buildList {
     data.packetMulticastRxCount?.let {
       add(stringResource(R.string.device_diagnostics_network_rx, it.toString()))
@@ -40,7 +40,7 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
       add(stringResource(R.string.device_diagnostics_network_tx, it.toString()))
     }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
 
   val linkQuality = buildList {
     data.beaconRxCount?.let {
@@ -53,7 +53,7 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
       add(stringResource(R.string.device_diagnostics_network_drops, it.toString()))
     }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
 
   val linkProperties = buildList {
     data.securityType?.let { add(it.name) }
@@ -63,14 +63,14 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
     }
     data.currentMaxRate?.let {
       add(
-          stringResource(
-              R.string.device_diagnostics_network_rate,
-              it.toFloat() / 1000000,
-          ),
+        stringResource(
+          R.string.device_diagnostics_network_rate,
+          it.toFloat() / 1000000,
+        ),
       )
     }
   }
-      .joinToString(SEPARATOR)
+    .joinToString(SEPARATOR)
 
   DiagnosticsSection(stringResource(R.string.device_diagnostics_section_wifi_network)) {
     data.bssid?.let {
@@ -81,11 +81,11 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
     if (networkTrafficUnicast.isNotEmpty() || networkTrafficMulticast.isNotEmpty()) {
       DiagnosticsInfoRow(stringResource(R.string.device_diagnostics_label_network_traffic)) {
         networkTrafficUnicast
-            .takeIf { it.isNotEmpty() }
-            ?.let { Text(stringResource(R.string.device_diagnostics_network_unicast, it)) }
+          .takeIf { it.isNotEmpty() }
+          ?.let { Text(stringResource(R.string.device_diagnostics_network_unicast, it)) }
         networkTrafficMulticast
-            .takeIf { it.isNotEmpty() }
-            ?.let { Text(stringResource(R.string.device_diagnostics_network_multicast, it)) }
+          .takeIf { it.isNotEmpty() }
+          ?.let { Text(stringResource(R.string.device_diagnostics_network_multicast, it)) }
       }
     }
     if (data.rssi != null || linkQuality.isNotEmpty()) {
@@ -94,20 +94,20 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
           // Normalize RSSI (-100 to -30 dBm) to a 0.0f to 1.0f float range.
           val progress = (it.coerceIn(-100, -30) + 100) / 70f
           Row(
-              modifier = Modifier.fillMaxWidth(),
-              horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
-              verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+            verticalAlignment = Alignment.CenterVertically,
           ) {
             Text(stringResource(R.string.device_diagnostics_network_rssi))
             LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier.weight(1f),
-                color =
-                    when {
-                      progress > 0.7f -> MaterialTheme.colorScheme.primary
-                      progress > 0.4f -> Color.Yellow
-                      else -> MaterialTheme.colorScheme.error
-                    },
+              progress = { progress },
+              modifier = Modifier.weight(1f),
+              color =
+                when {
+                  progress > 0.7f -> MaterialTheme.colorScheme.primary
+                  progress > 0.4f -> Color.Yellow
+                  else -> MaterialTheme.colorScheme.error
+                },
             )
             Text(stringResource(R.string.device_diagnostics_network_dbm, it))
           }
@@ -117,7 +117,7 @@ fun WiFiNetworkDiagnostics(data: WiFiNetworkDiagnosticsData) {
     }
     if (linkProperties.isNotEmpty()) {
       DiagnosticsInfoRow(
-          stringResource(R.string.device_diagnostics_label_network_link_properties),
+        stringResource(R.string.device_diagnostics_label_network_link_properties),
       ) {
         Text(linkProperties)
       }

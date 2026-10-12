@@ -23,26 +23,26 @@ import io.aether.android.spacing
 /** Displays the on/off state of a single OnOff cluster and lets the user toggle it. */
 @Composable
 internal fun OnOffClusterControl(
-    isOnline: Boolean,
-    isOn: Boolean,
-    onToggle: (Boolean) -> Unit,
+  isOnline: Boolean,
+  isOn: Boolean,
+  onToggle: (Boolean) -> Unit,
 ) {
   val bgColor =
-      if (isOnline && isOn) MaterialTheme.colorScheme.surfaceVariant
-      else MaterialTheme.colorScheme.surface
+    if (isOnline && isOn) MaterialTheme.colorScheme.surfaceVariant
+    else MaterialTheme.colorScheme.surface
   val contentColor =
-      if (isOnline && isOn) MaterialTheme.colorScheme.onSurfaceVariant
-      else MaterialTheme.colorScheme.onSurface
+    if (isOnline && isOn) MaterialTheme.colorScheme.onSurfaceVariant
+    else MaterialTheme.colorScheme.onSurface
   Surface(
-      modifier = Modifier.fillMaxWidth(),
-      border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-      color = bgColor,
-      contentColor = contentColor,
-      shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
+    modifier = Modifier.fillMaxWidth(),
+    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+    color = bgColor,
+    contentColor = contentColor,
+    shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
   ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent),
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent),
     ) {
       Text(text = isOnDisplayString(isOn), style = MaterialTheme.typography.bodyLarge)
       Spacer(Modifier.weight(1f))

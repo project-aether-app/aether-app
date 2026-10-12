@@ -16,24 +16,24 @@ import io.aether.android.R
 
 @Composable
 fun SearchTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: @Composable (() -> Unit),
+  value: String,
+  onValueChange: (String) -> Unit,
+  label: @Composable (() -> Unit),
 ) {
   OutlinedTextField(
-      value = value,
-      onValueChange = onValueChange,
-      label = label,
-      trailingIcon = {
-        if (value.isNotEmpty()) {
-          IconButton(onClick = { onValueChange("") }) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = stringResource(R.string.device_explorer_search_clear),
-            )
-          }
+    value = value,
+    onValueChange = onValueChange,
+    label = label,
+    trailingIcon = {
+      if (value.isNotEmpty()) {
+        IconButton(onClick = { onValueChange("") }) {
+          Icon(
+            imageVector = Icons.Filled.Close,
+            contentDescription = stringResource(R.string.device_explorer_search_clear),
+          )
         }
-      },
-      modifier = Modifier.fillMaxWidth(),
+      }
+    },
+    modifier = Modifier.fillMaxWidth(),
   )
 }

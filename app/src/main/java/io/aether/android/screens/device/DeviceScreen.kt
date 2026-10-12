@@ -51,10 +51,10 @@ import timber.log.Timber
 
 @Composable
 internal fun DeviceRoute(
-    navigateToDeviceSettings: (nodeId: NodeId) -> Unit,
-    onBackClick: () -> Unit,
-    nodeId: NodeId,
-    deviceViewModel: DeviceViewModel = hiltViewModel(),
+  navigateToDeviceSettings: (nodeId: NodeId) -> Unit,
+  onBackClick: () -> Unit,
+  nodeId: NodeId,
+  deviceViewModel: DeviceViewModel = hiltViewModel(),
 ) {
   Timber.d("Opening device nodeId=$nodeId")
 
@@ -87,88 +87,88 @@ internal fun DeviceRoute(
   }
 
   DeviceScreen(
-      uiState = uiState,
-      onBackClick = onBackClick,
-      onSettingsClick = { navigateToDeviceSettings(nodeId) },
-      onOnOffClick = onOnOffClick,
-      onBrightnessChange = onBrightnessChange,
-      onColorTemperatureChange = onColorTemperatureChange,
-      onDismissMsgDialog = onDismissMsgDialog,
+    uiState = uiState,
+    onBackClick = onBackClick,
+    onSettingsClick = { navigateToDeviceSettings(nodeId) },
+    onOnOffClick = onOnOffClick,
+    onBrightnessChange = onBrightnessChange,
+    onColorTemperatureChange = onColorTemperatureChange,
+    onDismissMsgDialog = onDismissMsgDialog,
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceScreen(
-    uiState: DeviceUiState,
-    onBackClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
-    onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
-    onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
-    onDismissMsgDialog: () -> Unit,
+  uiState: DeviceUiState,
+  onBackClick: () -> Unit,
+  onSettingsClick: () -> Unit,
+  onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
+  onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
+  onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
+  onDismissMsgDialog: () -> Unit,
 ) {
   Scaffold(
-      topBar = {
-        TopAppBar(
-            title = { Text(uiState.device?.name ?: stringResource(R.string.device_screen_title)) },
-            navigationIcon = {
-              IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back_button),
-                )
-              }
-            },
-            actions = {
-              if (uiState.device != null) {
-                IconButton(onClick = onSettingsClick) {
-                  Icon(
-                      imageVector = Icons.Filled.Settings,
-                      contentDescription = stringResource(R.string.device_settings),
-                  )
-                }
-              }
-            },
-        )
-      },
+    topBar = {
+      TopAppBar(
+        title = { Text(uiState.device?.name ?: stringResource(R.string.device_screen_title)) },
+        navigationIcon = {
+          IconButton(onClick = onBackClick) {
+            Icon(
+              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+              contentDescription = stringResource(R.string.back_button),
+            )
+          }
+        },
+        actions = {
+          if (uiState.device != null) {
+            IconButton(onClick = onSettingsClick) {
+              Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = stringResource(R.string.device_settings),
+              )
+            }
+          }
+        },
+      )
+    },
   ) { innerPadding ->
     when {
       uiState.isFirstTimeLoading -> {
         LoadingIndicator(
-            stringResource(R.string.loading_device_info),
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+          stringResource(R.string.loading_device_info),
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
         )
         return@Scaffold
       }
       uiState.errorMessageRes != null -> {
         EmptyStateErrorBanner(
-            stringResource(uiState.errorMessageRes),
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+          stringResource(uiState.errorMessageRes),
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
         )
         return@Scaffold
       }
       else ->
-          Device(
-              uiState = uiState,
-              onOnOffClick = onOnOffClick,
-              onBrightnessChange = onBrightnessChange,
-              onColorTemperatureChange = onColorTemperatureChange,
-              onDismissMsgDialog = onDismissMsgDialog,
-              modifier = Modifier.fillMaxSize().padding(innerPadding),
-          )
+        Device(
+          uiState = uiState,
+          onOnOffClick = onOnOffClick,
+          onBrightnessChange = onBrightnessChange,
+          onColorTemperatureChange = onColorTemperatureChange,
+          onDismissMsgDialog = onDismissMsgDialog,
+          modifier = Modifier.fillMaxSize().padding(innerPadding),
+        )
     }
   }
 }
 
 @Composable
 private fun Device(
-    uiState: DeviceUiState,
-    onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
-    onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
-    onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
-    onDismissMsgDialog: () -> Unit,
-    modifier: Modifier = Modifier,
+  uiState: DeviceUiState,
+  onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
+  onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
+  onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
+  onDismissMsgDialog: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
 
   uiState.msgDialogInfo?.let { dialogInfo -> MsgAlertDialog(dialogInfo, onDismissMsgDialog) }
@@ -180,29 +180,27 @@ private fun Device(
   val endpointsToShow = uiState.device.endpoints
 
   Column(
-      modifier =
-          modifier
-              .verticalScroll(rememberScrollState())
-              .padding(MaterialTheme.spacing.paddingNormal),
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+    modifier =
+      modifier.verticalScroll(rememberScrollState()).padding(MaterialTheme.spacing.paddingNormal),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     if (!uiState.device.isOnline) {
       OfflineLabel(modifier = Modifier.fillMaxWidth())
     }
     endpointsToShow.forEach { endpoint ->
       Surface(
-          modifier = Modifier.fillMaxWidth(),
-          border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-          shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
+        modifier = Modifier.fillMaxWidth(),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+        shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
       ) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent)) {
           EndpointDeviceControl(
-              device = uiState.device,
-              endpoint = endpoint,
-              lastUpdatedEndpointState = uiState.lastUpdatedEndpointState,
-              onOnOffClick = { value -> onOnOffClick(endpoint, value) },
-              onBrightnessChange = { value -> onBrightnessChange(endpoint, value) },
-              onColorTemperatureChange = { value -> onColorTemperatureChange(endpoint, value) },
+            device = uiState.device,
+            endpoint = endpoint,
+            lastUpdatedEndpointState = uiState.lastUpdatedEndpointState,
+            onOnOffClick = { value -> onOnOffClick(endpoint, value) },
+            onBrightnessChange = { value -> onBrightnessChange(endpoint, value) },
+            onColorTemperatureChange = { value -> onColorTemperatureChange(endpoint, value) },
           )
         }
       }
@@ -215,31 +213,31 @@ private fun Device(
 
 @Composable
 private fun EndpointDeviceControl(
-    device: Device,
-    endpoint: Endpoint,
-    lastUpdatedEndpointState: DeviceRepository.EndpointStateSnapshot?,
-    onOnOffClick: (Boolean) -> Unit,
-    onBrightnessChange: (Int) -> Unit,
-    onColorTemperatureChange: (Int) -> Unit,
+  device: Device,
+  endpoint: Endpoint,
+  lastUpdatedEndpointState: DeviceRepository.EndpointStateSnapshot?,
+  onOnOffClick: (Boolean) -> Unit,
+  onBrightnessChange: (Int) -> Unit,
+  onColorTemperatureChange: (Int) -> Unit,
 ) {
   when {
     endpoint.hasColorTemperatureSupport ->
-        ColorTemperatureDeviceControl(
-            device,
-            endpoint,
-            lastUpdatedEndpointState,
-            onOnOffClick,
-            onBrightnessChange,
-            onColorTemperatureChange,
-        )
+      ColorTemperatureDeviceControl(
+        device,
+        endpoint,
+        lastUpdatedEndpointState,
+        onOnOffClick,
+        onBrightnessChange,
+        onColorTemperatureChange,
+      )
     endpoint.hasLevelControlSupport ->
-        DimmableDeviceControl(
-            device,
-            endpoint,
-            lastUpdatedEndpointState,
-            onOnOffClick,
-            onBrightnessChange,
-        )
+      DimmableDeviceControl(
+        device,
+        endpoint,
+        lastUpdatedEndpointState,
+        onOnOffClick,
+        onBrightnessChange,
+      )
     else -> OnOffDeviceControl(device, endpoint, lastUpdatedEndpointState, onOnOffClick)
   }
 }

@@ -25,31 +25,31 @@ import io.aether.android.spacing
  */
 @Composable
 internal fun LevelClusterControl(
-    title: String,
-    isOnline: Boolean,
-    isOn: Boolean,
-    level: Float,
-    onLevelChange: (Float) -> Unit,
-    onLevelChangeFinished: () -> Unit,
+  title: String,
+  isOnline: Boolean,
+  isOn: Boolean,
+  level: Float,
+  onLevelChange: (Float) -> Unit,
+  onLevelChangeFinished: () -> Unit,
 ) {
   Surface(
-      modifier = Modifier.fillMaxWidth(),
-      border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-      shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
+    modifier = Modifier.fillMaxWidth(),
+    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+    shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
   ) {
     Column(modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent)) {
       Text(text = title)
       Slider(
-          enabled = isOnline && isOn,
-          value = level,
-          onValueChange = onLevelChange,
-          onValueChangeFinished = onLevelChangeFinished,
-          valueRange = 0f..1f,
+        enabled = isOnline && isOn,
+        value = level,
+        onValueChange = onLevelChange,
+        onValueChangeFinished = onLevelChangeFinished,
+        valueRange = 0f..1f,
       )
       Text(
-          text = (level * 100).toInt().toString(),
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth(),
+        text = (level * 100).toInt().toString(),
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth(),
       )
     }
   }

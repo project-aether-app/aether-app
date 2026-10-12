@@ -33,8 +33,8 @@ internal abstract class ModuleBle {
     @MatterBeaconInject
     fun providesBluetoothLeScanner(@ApplicationContext context: Context): BluetoothLeScanner? {
       val bluetoothAdapter =
-          (context.getSystemService(BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)
-              ?.adapter
+        (context.getSystemService(BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)
+          ?.adapter
       return bluetoothAdapter?.takeIf { it.state == BluetoothAdapter.STATE_ON }?.bluetoothLeScanner
     }
   }

@@ -19,18 +19,18 @@ object FabricStateSerializer : Serializer<MatterFabricState> {
   override val defaultValue: MatterFabricState = MatterFabricState.getDefaultInstance()
 
   override suspend fun readFrom(input: InputStream): MatterFabricState =
-      try {
-        MatterFabricState.parseFrom(input)
-      } catch (exception: InvalidProtocolBufferException) {
-        throw CorruptionException("Cannot read proto.", exception)
-      }
+    try {
+      MatterFabricState.parseFrom(input)
+    } catch (exception: InvalidProtocolBufferException) {
+      throw CorruptionException("Cannot read proto.", exception)
+    }
 
   override suspend fun writeTo(t: MatterFabricState, output: OutputStream) = t.writeTo(output)
 }
 
 val Context.fabricDataStore: DataStore<MatterFabricState> by
-    dataStore(
-        fileName = "devices_state__store.proto",
-        serializer = FabricStateSerializer,
-        produceMigrations = { emptyList() },
-    )
+  dataStore(
+    fileName = "devices_state__store.proto",
+    serializer = FabricStateSerializer,
+    produceMigrations = { emptyList() },
+  )

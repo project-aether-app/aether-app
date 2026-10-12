@@ -2142,7 +2142,7 @@ object Enums {
   }
 
   enum class ThermostatUserInterfaceConfigurationClusterScheduleProgrammingVisibility(
-      val value: Int,
+    val value: Int,
   ) {
     ScheduleProgrammingPermitted(0),
     ScheduleProgrammingDenied(1),

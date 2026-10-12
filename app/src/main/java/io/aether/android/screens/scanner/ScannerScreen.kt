@@ -43,25 +43,25 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScannerRoute(
-    onBackClick: () -> Unit,
-    scannerViewModel: ScannerViewModel = hiltViewModel(),
+  onBackClick: () -> Unit,
+  scannerViewModel: ScannerViewModel = hiltViewModel(),
 ) {
   val uiState by scannerViewModel.uiState.collectAsStateWithLifecycle()
 
   Scaffold(
-      topBar = {
-        TopAppBar(
-            title = { Text(stringResource(R.string.menu_item_scanner)) },
-            navigationIcon = {
-              IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back_button),
-                )
-              }
-            },
-        )
-      },
+    topBar = {
+      TopAppBar(
+        title = { Text(stringResource(R.string.menu_item_scanner)) },
+        navigationIcon = {
+          IconButton(onClick = onBackClick) {
+            Icon(
+              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+              contentDescription = stringResource(R.string.back_button),
+            )
+          }
+        },
+      )
+    },
   ) { innerPadding ->
     ScannerScreen(uiState = uiState, modifier = Modifier.fillMaxSize().padding(innerPadding))
   }
@@ -79,24 +79,24 @@ private fun ScannerScreen(uiState: ScannerUiState, modifier: Modifier = Modifier
 @Composable
 fun MatterBeaconItem(beacon: MatterBeacon) {
   val icon =
-      when (beacon.transport) {
-        is Transport.Ble -> R.drawable.quantum_gm_ic_bluetooth_vd_theme_24
-        is Transport.Hotspot -> R.drawable.quantum_gm_ic_wifi_vd_theme_24
-        is Transport.Mdns -> R.drawable.quantum_gm_ic_router_vd_theme_24
-      }
+    when (beacon.transport) {
+      is Transport.Ble -> R.drawable.quantum_gm_ic_bluetooth_vd_theme_24
+      is Transport.Hotspot -> R.drawable.quantum_gm_ic_wifi_vd_theme_24
+      is Transport.Mdns -> R.drawable.quantum_gm_ic_router_vd_theme_24
+    }
   Row(
-      modifier =
-          Modifier.clickable {
-            // [TODO] Selecting an item in this list could display a screen with detailed
-            // information
-            //  about the device, and allow actions on it such as "commissioning".
-            Timber.d("beacon item clicked")
-          },
+    modifier =
+      Modifier.clickable {
+        // [TODO] Selecting an item in this list could display a screen with detailed
+        // information
+        //  about the device, and allow actions on it such as "commissioning".
+        Timber.d("beacon item clicked")
+      },
   ) {
     Image(
-        painter = painterResource(icon),
-        contentDescription = stringResource(R.string.transport_icon),
-        modifier = Modifier.padding(4.dp).align(Alignment.CenterVertically),
+      painter = painterResource(icon),
+      contentDescription = stringResource(R.string.transport_icon),
+      modifier = Modifier.padding(4.dp).align(Alignment.CenterVertically),
     )
     Column(modifier = Modifier.padding(8.dp).align(Alignment.CenterVertically)) {
       val text: String
@@ -116,14 +116,14 @@ fun MatterBeaconItem(beacon: MatterBeacon) {
       }
       Text(text = text, color = color, style = MaterialTheme.typography.titleMedium)
       Text(
-          text =
-              stringResource(
-                  R.string.beacon_detail_text,
-                  beacon.vendorId.toInt(),
-                  beacon.productId.toInt(),
-                  beacon.discriminator,
-              ),
-          style = MaterialTheme.typography.bodyMedium,
+        text =
+          stringResource(
+            R.string.beacon_detail_text,
+            beacon.vendorId.toInt(),
+            beacon.productId.toInt(),
+            beacon.discriminator,
+          ),
+        style = MaterialTheme.typography.bodyMedium,
       )
     }
   }

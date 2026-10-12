@@ -28,10 +28,10 @@ import timber.log.Timber
 class DeveloperUtilitiesViewModel
 @Inject
 constructor(
-    private val devicesRepository: DeviceRepository,
-    private val userPreferencesRepository: UserPreferencesRepository,
-    private val fabricRepository: FabricRepository,
-    private val appErrorNotifier: AppErrorNotifier,
+  private val devicesRepository: DeviceRepository,
+  private val userPreferencesRepository: UserPreferencesRepository,
+  private val fabricRepository: FabricRepository,
+  private val appErrorNotifier: AppErrorNotifier,
 ) : ViewModel() {
 
   // Controls whether the "Message" AlertDialog should be shown in the UI.
@@ -57,11 +57,11 @@ constructor(
       val divider = "-".repeat(20)
       val userPreferences = userPreferencesRepository.getData()
       Timber.d(
-          "UserPreferences Repository\n${divider} [UserPreferences Repository] ${divider}\n${userPreferences}\n${divider} End of [UserPreferences Repository] $divider",
+        "UserPreferences Repository\n${divider} [UserPreferences Repository] ${divider}\n${userPreferences}\n${divider} End of [UserPreferences Repository] $divider",
       )
       val devices = fabricRepository.getDevices()
       Timber.d(
-          "Devices Repository\n${divider} [Devices Repository] ${divider}\n${devices}\n${divider} End of [Devices Repository] $divider",
+        "Devices Repository\n${divider} [Devices Repository] ${divider}\n${devices}\n${divider} End of [Devices Repository] $divider",
       )
     }
   }
@@ -73,7 +73,7 @@ constructor(
     val permissions = getRequiredScanningPermissions()
     permissions.forEach { permission ->
       Timber.d(
-          "Permission [${permission}] Granted [${
+        "Permission [${permission}] Granted [${
           ContextCompat.checkSelfPermission(
             context,
             permission,
@@ -93,7 +93,7 @@ constructor(
     Timber.d("Required scanning permissions sdkInt=${Build.VERSION.SDK_INT}")
     return when {
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
-          arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.ACCESS_FINE_LOCATION)
+        arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.ACCESS_FINE_LOCATION)
       else -> arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
     }
   }

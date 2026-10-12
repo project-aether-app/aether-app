@@ -18,10 +18,10 @@ fun Throwable.isCommunicationTimeoutError(): Boolean {
     }
     val message = current.message?.lowercase(Locale.US).orEmpty()
     if (
-        message.contains("timeout") ||
-            message.contains("timed out") ||
-            message.contains("time out") ||
-            message.contains("deadline")
+      message.contains("timeout") ||
+        message.contains("timed out") ||
+        message.contains("time out") ||
+        message.contains("deadline")
     ) {
       return true
     }

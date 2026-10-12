@@ -12,11 +12,11 @@ import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 
 plugins {
   alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.ksp)
-  alias(libs.plugins.google.protobuf)
-  alias(libs.plugins.hilt)
-  alias(libs.plugins.ktfmt.plugin)
-  alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.hilt.android)
+  alias(libs.plugins.protobuf)
+  alias(libs.plugins.ktfmt)
   alias(libs.plugins.paparazzi)
 }
 
@@ -105,26 +105,26 @@ android {
 
 dependencies {
   // Connected Home
-  implementation(libs.play.services.base)
-  implementation(libs.play.services.home)
+  implementation(libs.google.play.services.base)
+  implementation(libs.google.play.services.home)
 
   // Core library desugaring (required by play-services-threadnetwork)
   coreLibraryDesugaring(libs.desugar.jdk.libs)
 
   // Matter Android Demo SDK
-  implementation(libs.matter.android.demo.sdk)
+  implementation(libs.google.matter.sdk)
 
   // Thread Network
-  implementation(libs.play.services.threadnetwork)
+  implementation(libs.google.play.services.threadnetwork)
   // Thread QR Code Scanning
-  implementation(libs.code.scanner)
+  implementation(libs.google.code.scanner)
   // Thread QR Code Generation
   implementation(libs.zxing)
 
   // AndroidX
-  implementation(libs.appcompat)
-  implementation(libs.core.ktx)
-  implementation(libs.preference)
+  implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.preference)
 
   // Compose
   // Bill of Materials: https://developer.android.com/jetpack/compose/bom
@@ -146,16 +146,16 @@ dependencies {
   implementation(libs.androidx.activity.compose)
 
   // Navigation
-  implementation(libs.navigation.compose)
+  implementation(libs.androidx.navigation.compose)
 
   // Lifecycle
-  implementation(libs.lifecycle.livedata.ktx)
-  implementation(libs.lifecycle.runtime.ktx)
-  implementation(libs.lifecycle.viewmodel.ktx)
+  implementation(libs.androidx.lifecycle.livedata.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
   // Datastore
-  implementation(libs.datastore)
-  implementation(libs.datastore.core)
+  implementation(libs.androidx.datastore)
+  implementation(libs.androidx.datastore.core)
   implementation(libs.protobuf.javalite)
 
   // Hilt
@@ -171,7 +171,7 @@ dependencies {
   implementation(libs.zhanghai.compose.preference)
 
   // Other
-  implementation(libs.material)
+  implementation(libs.google.material)
   implementation(libs.timber)
   // Needed for using BaseEncoding class
   implementation(libs.guava)
@@ -193,17 +193,19 @@ tasks.named("ktfmtCheck") { dependsOn("ktfmtCheckSources") }
 
 tasks.named("ktfmtFormat") { dependsOn("ktfmtFormatSources") }
 
+ktfmt { googleStyle() }
+
 protobuf {
   protoc {
     // Choose the right protoc binary for the current OS and CPU architecture
     val osName = System.getProperty("os.name").lowercase()
     val osArch = System.getProperty("os.arch").lowercase()
     val protocDepSuffix =
-        if (osName.contains("mac")) {
-          if (osArch == "aarch64" || osArch == "arm64") ":osx-aarch_64" else ":osx-x86_64"
-        } else {
-          ""
-        }
+      if (osName.contains("mac")) {
+        if (osArch == "aarch64" || osArch == "arm64") ":osx-aarch_64" else ":osx-x86_64"
+      } else {
+        ""
+      }
     artifact = "com.google.protobuf:protoc:4.35.0" + protocDepSuffix
   }
 

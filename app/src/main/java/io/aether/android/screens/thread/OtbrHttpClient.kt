@@ -28,15 +28,15 @@ object OtbrHttpClient {
 
   /** what is generally an OK response */
   val okResponses =
-      setOf(
-          HttpURLConnection.HTTP_OK,
-          HttpURLConnection.HTTP_CREATED,
-          HttpURLConnection.HTTP_ACCEPTED,
-          HttpURLConnection.HTTP_NOT_AUTHORITATIVE,
-          HttpURLConnection.HTTP_NO_CONTENT,
-          HttpURLConnection.HTTP_RESET,
-          HttpURLConnection.HTTP_PARTIAL,
-      )
+    setOf(
+      HttpURLConnection.HTTP_OK,
+      HttpURLConnection.HTTP_CREATED,
+      HttpURLConnection.HTTP_ACCEPTED,
+      HttpURLConnection.HTTP_NOT_AUTHORITATIVE,
+      HttpURLConnection.HTTP_NO_CONTENT,
+      HttpURLConnection.HTTP_RESET,
+      HttpURLConnection.HTTP_PARTIAL,
+    )
 
   /**
    * Creates credentials in the format used by the OTBR HTTP server. See its documentation in
@@ -50,8 +50,8 @@ object OtbrHttpClient {
 
     val jsonQuery = JSONObject()
     jsonQuery.put(
-        "ActiveDataset",
-        BaseEncoding.base16().encode(newCredentials.activeOperationalDataset),
+      "ActiveDataset",
+      BaseEncoding.base16().encode(newCredentials.activeOperationalDataset),
     )
     jsonQuery.put("PendingTimestamp", jsonTimestamp)
     // delay of committing the pending set into active set: 10000ms
@@ -72,11 +72,11 @@ object OtbrHttpClient {
    * Rest API for more information (link above)
    */
   suspend fun createJsonHttpRequest(
-      url: URL,
-      verb: Verbs,
-      postPayload: String = "",
-      contentTypeMimeType: String = "application/json",
-      acceptMimeType: String = "application/json",
+    url: URL,
+    verb: Verbs,
+    postPayload: String = "",
+    contentTypeMimeType: String = "application/json",
+    acceptMimeType: String = "application/json",
   ): Pair<HttpURLConnection, String> {
 
     // Use IO Dispatcher so it doesn't block the UI thread
@@ -90,12 +90,12 @@ object OtbrHttpClient {
       urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0")
 
       urlConnection.requestMethod =
-          when (verb) {
-            Verbs.GET -> "GET"
-            Verbs.POST -> "POST"
-            Verbs.DELETE -> "DELETE"
-            Verbs.PUT -> "PUT"
-          }
+        when (verb) {
+          Verbs.GET -> "GET"
+          Verbs.POST -> "POST"
+          Verbs.DELETE -> "DELETE"
+          Verbs.PUT -> "PUT"
+        }
 
       when (verb) {
         Verbs.POST,

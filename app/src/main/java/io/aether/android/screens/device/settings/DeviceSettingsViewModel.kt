@@ -48,154 +48,154 @@ import kotlinx.coroutines.selects.select
 import timber.log.Timber
 
 data class DeviceSettingsUiState(
-    // Lifecycle Flags
-    val isFirstTimeLoading: Boolean = true,
-    val isBackgroundRefreshing: Boolean = false,
-    @field:StringRes val errorMessageRes: Int? = null,
+  // Lifecycle Flags
+  val isFirstTimeLoading: Boolean = true,
+  val isBackgroundRefreshing: Boolean = false,
+  @field:StringRes val errorMessageRes: Int? = null,
 
-    // Core Screen Data
-    val device: Device? = null,
-    val basicInformation: BasicInformationAttributes? = null,
-    val dateCommissioned: Instant? = null,
+  // Core Screen Data
+  val device: Device? = null,
+  val basicInformation: BasicInformationAttributes? = null,
+  val dateCommissioned: Instant? = null,
 
-    // UI Overlay / Dialog States
-    val msgDialogInfo: DialogInfo? = null,
-    val showShareDeviceAlertDialog: Boolean = false,
-    val showRemoveDeviceAlertDialog: Boolean = false,
-    val showLocalRemoveDeviceAlertDialog: Boolean = false,
-    val deviceRemovalCompleted: Boolean = false,
-    val pairingWindowOpenForDeviceSharing: Boolean = false,
+  // UI Overlay / Dialog States
+  val msgDialogInfo: DialogInfo? = null,
+  val showShareDeviceAlertDialog: Boolean = false,
+  val showRemoveDeviceAlertDialog: Boolean = false,
+  val showLocalRemoveDeviceAlertDialog: Boolean = false,
+  val deviceRemovalCompleted: Boolean = false,
+  val pairingWindowOpenForDeviceSharing: Boolean = false,
 )
 
 private data class DeviceSettingsCoreData(
-    val device: Device? = null,
-    val basicInformation: BasicInformationAttributes? = null,
-    val isFirstTimeLoading: Boolean = true,
-    val isBackgroundRefreshing: Boolean = false,
-    val errorMessageRes: Int? = null,
+  val device: Device? = null,
+  val basicInformation: BasicInformationAttributes? = null,
+  val isFirstTimeLoading: Boolean = true,
+  val isBackgroundRefreshing: Boolean = false,
+  val errorMessageRes: Int? = null,
 )
 
 @HiltViewModel
 class DeviceSettingsViewModel
 @Inject
 constructor(
-    private val devicesRepository: DeviceRepository,
-    private val fabricRepository: FabricRepository,
-    private val chipClient: ChipClient,
-    private val clustersHelper: ClustersHelper,
-    private val setDeviceNameUseCase: SetDeviceNameUseCase,
+  private val devicesRepository: DeviceRepository,
+  private val fabricRepository: FabricRepository,
+  private val chipClient: ChipClient,
+  private val clustersHelper: ClustersHelper,
+  private val setDeviceNameUseCase: SetDeviceNameUseCase,
 ) : ViewModel() {
 
   private val refreshTrigger = MutableSharedFlow<NodeId>(replay = 1)
 
   @OptIn(ExperimentalCoroutinesApi::class)
   private val deviceCoreDataState: StateFlow<DeviceSettingsCoreData> =
-      refreshTrigger
-          .flatMapLatest { nodeId ->
-            flow {
-              // Use existing state as a local cache: emit stale data immediately so the UI
-              // never flashes "Loading" or shows unknown values while refreshing.
-              val cached = deviceCoreDataState.value
-              if (cached.device != null && cached.device.id == nodeId) {
-                emit(cached.copy(isBackgroundRefreshing = true))
-              } else {
-                emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
-              }
-              coroutineScope {
-                // Kick off the network read immediately (async) so total wait time is
-                // bounded by the network round-trip, not storage + network sequentially.
-                val networkDeferred = async {
-                  runCatching { clustersHelper.readBasicInformationAttributes(nodeId) }
-                      .onFailure { Timber.w(it, "Network read failed") }
-                      .getOrNull()
-                }
-                // Fetch fresh data from storage (fast local read). getDevice() throws if the
-                // device isn't found, so fall back to a stub device instead of propagating.
-                val fallbackDevice = Device(id = nodeId)
-                val deviceDeferred = async {
-                  runCatching { devicesRepository.getDevice(nodeId) }
-                      .onFailure { Timber.w(it, "Storage read failed") }
-                      .getOrDefault(fallbackDevice)
-                }
-                val cachedBasicInfo = cached.takeIf { it.device?.id == nodeId }?.basicInformation
-                // Race the local storage fetch against the timeout.
-                val device =
-                    select<Device> {
-                      deviceDeferred.onAwait { it }
-                      onTimeout(500.milliseconds) {
-                        Timber.d("Storage read took too long. Emitting fallback first.")
-                        // Emit fallback right away so the UI doesn't freeze, then keep waiting.
-                        emit(
-                            DeviceSettingsCoreData(
-                                device = fallbackDevice,
-                                basicInformation = cachedBasicInfo,
-                                isFirstTimeLoading = false,
-                                isBackgroundRefreshing = true,
-                            ),
-                        )
-                        deviceDeferred.await()
-                      }
-                    }
-                // Emit storage-fresh device with cached basicInfo so e.g. a rename is
-                // reflected immediately without waiting for the network round-trip.
-                emit(
+    refreshTrigger
+      .flatMapLatest { nodeId ->
+        flow {
+          // Use existing state as a local cache: emit stale data immediately so the UI
+          // never flashes "Loading" or shows unknown values while refreshing.
+          val cached = deviceCoreDataState.value
+          if (cached.device != null && cached.device.id == nodeId) {
+            emit(cached.copy(isBackgroundRefreshing = true))
+          } else {
+            emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
+          }
+          coroutineScope {
+            // Kick off the network read immediately (async) so total wait time is
+            // bounded by the network round-trip, not storage + network sequentially.
+            val networkDeferred = async {
+              runCatching { clustersHelper.readBasicInformationAttributes(nodeId) }
+                .onFailure { Timber.w(it, "Network read failed") }
+                .getOrNull()
+            }
+            // Fetch fresh data from storage (fast local read). getDevice() throws if the
+            // device isn't found, so fall back to a stub device instead of propagating.
+            val fallbackDevice = Device(id = nodeId)
+            val deviceDeferred = async {
+              runCatching { devicesRepository.getDevice(nodeId) }
+                .onFailure { Timber.w(it, "Storage read failed") }
+                .getOrDefault(fallbackDevice)
+            }
+            val cachedBasicInfo = cached.takeIf { it.device?.id == nodeId }?.basicInformation
+            // Race the local storage fetch against the timeout.
+            val device =
+              select<Device> {
+                deviceDeferred.onAwait { it }
+                onTimeout(500.milliseconds) {
+                  Timber.d("Storage read took too long. Emitting fallback first.")
+                  // Emit fallback right away so the UI doesn't freeze, then keep waiting.
+                  emit(
                     DeviceSettingsCoreData(
-                        device = device,
-                        basicInformation = cachedBasicInfo,
-                        isFirstTimeLoading = false,
-                        isBackgroundRefreshing = true,
+                      device = fallbackDevice,
+                      basicInformation = cachedBasicInfo,
+                      isFirstTimeLoading = false,
+                      isBackgroundRefreshing = true,
                     ),
-                )
-                // Await network result and update with live basic information.
-                val basicInfo = networkDeferred.await()
-                if (basicInfo != null) {
-                  syncBasicInfoToStorage(nodeId, basicInfo)
-                  emit(
-                      DeviceSettingsCoreData(
-                          device = device,
-                          basicInformation = basicInfo,
-                          isFirstTimeLoading = false,
-                          isBackgroundRefreshing = false,
-                      ),
                   )
-                } else {
-                  emit(
-                      DeviceSettingsCoreData(
-                          device = device,
-                          basicInformation = cachedBasicInfo,
-                          isFirstTimeLoading = false,
-                          isBackgroundRefreshing = false,
-                      ),
-                  )
+                  deviceDeferred.await()
                 }
               }
+            // Emit storage-fresh device with cached basicInfo so e.g. a rename is
+            // reflected immediately without waiting for the network round-trip.
+            emit(
+              DeviceSettingsCoreData(
+                device = device,
+                basicInformation = cachedBasicInfo,
+                isFirstTimeLoading = false,
+                isBackgroundRefreshing = true,
+              ),
+            )
+            // Await network result and update with live basic information.
+            val basicInfo = networkDeferred.await()
+            if (basicInfo != null) {
+              syncBasicInfoToStorage(nodeId, basicInfo)
+              emit(
+                DeviceSettingsCoreData(
+                  device = device,
+                  basicInformation = basicInfo,
+                  isFirstTimeLoading = false,
+                  isBackgroundRefreshing = false,
+                ),
+              )
+            } else {
+              emit(
+                DeviceSettingsCoreData(
+                  device = device,
+                  basicInformation = cachedBasicInfo,
+                  isFirstTimeLoading = false,
+                  isBackgroundRefreshing = false,
+                ),
+              )
             }
           }
-          .stateIn(
-              viewModelScope,
-              SharingStarted.WhileSubscribed(5000),
-              DeviceSettingsCoreData(),
-          )
+        }
+      }
+      .stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        DeviceSettingsCoreData(),
+      )
 
   fun loadDevice(nodeId: NodeId) {
     refreshTrigger.tryEmit(nodeId)
   }
 
   private suspend fun syncBasicInfoToStorage(
-      nodeId: NodeId,
-      basicInfo: BasicInformationAttributes,
+    nodeId: NodeId,
+    basicInfo: BasicInformationAttributes,
   ) {
     runCatching {
       devicesRepository.updateNodeBasicInfo(
-          nodeId,
-          basicInfo.vendorId,
-          basicInfo.vendorName,
-          basicInfo.productId,
-          basicInfo.productName,
-          basicInfo.nodeLabel,
+        nodeId,
+        basicInfo.vendorId,
+        basicInfo.vendorName,
+        basicInfo.productId,
+        basicInfo.productName,
+        basicInfo.nodeLabel,
       )
     }
-        .onFailure { Timber.e(it, "syncBasicInfoToStorage failed") }
+      .onFailure { Timber.e(it, "syncBasicInfoToStorage failed") }
   }
 
   // Controls whether the "Message" AlertDialog should be shown in the UI.
@@ -213,50 +213,50 @@ constructor(
   // Communicates to the UI that the pairing window is open for device sharing.
   private var _pairingWindowOpenForDeviceSharing = MutableStateFlow(false)
   val uiState: StateFlow<DeviceSettingsUiState> =
-      combine(
-              deviceCoreDataState,
-              fabricRepository.devicesFlow,
-              _msgDialogInfo.asStateFlow(),
-              _showShareDeviceAlertDialog.asStateFlow(),
-              _showRemoveDeviceAlertDialog.asStateFlow(),
-              _showLocalRemoveDeviceAlertDialog.asStateFlow(),
-              _deviceRemovalCompleted.asStateFlow(),
-              _pairingWindowOpenForDeviceSharing.asStateFlow(),
-          ) { array ->
-            val coreData = array[0] as DeviceSettingsCoreData
-            val devices = array[1] as List<*>
-            val msgDialogInfo = array[2] as DialogInfo?
-            val showShareDeviceAlertDialog = array[3] as Boolean
-            val showRemoveDeviceAlertDialog = array[4] as Boolean
-            val showLocalRemoveDeviceAlertDialog = array[5] as Boolean
-            val deviceRemovalCompleted = array[6] as Boolean
-            val pairingWindowOpenForDeviceSharing = array[7] as Boolean
+    combine(
+        deviceCoreDataState,
+        fabricRepository.devicesFlow,
+        _msgDialogInfo.asStateFlow(),
+        _showShareDeviceAlertDialog.asStateFlow(),
+        _showRemoveDeviceAlertDialog.asStateFlow(),
+        _showLocalRemoveDeviceAlertDialog.asStateFlow(),
+        _deviceRemovalCompleted.asStateFlow(),
+        _pairingWindowOpenForDeviceSharing.asStateFlow(),
+      ) { array ->
+        val coreData = array[0] as DeviceSettingsCoreData
+        val devices = array[1] as List<*>
+        val msgDialogInfo = array[2] as DialogInfo?
+        val showShareDeviceAlertDialog = array[3] as Boolean
+        val showRemoveDeviceAlertDialog = array[4] as Boolean
+        val showLocalRemoveDeviceAlertDialog = array[5] as Boolean
+        val deviceRemovalCompleted = array[6] as Boolean
+        val pairingWindowOpenForDeviceSharing = array[7] as Boolean
 
-            val node =
-                coreData.device?.let { dev ->
-                  devices.filterIsInstance<Device>().firstOrNull { it.id == dev.id }
-                }
-            val isOnline = node?.isOnline ?: false
-            val dateCommissioned = node?.dateCommissioned
-            // TODO: Fix isOnline handling.
-            // coreData.device?.isOnline = isOnline
-
-            DeviceSettingsUiState(
-                isFirstTimeLoading = coreData.isFirstTimeLoading,
-                isBackgroundRefreshing = coreData.isBackgroundRefreshing,
-                errorMessageRes = coreData.errorMessageRes,
-                device = coreData.device?.copy(isOnline = isOnline),
-                basicInformation = coreData.basicInformation,
-                dateCommissioned = dateCommissioned,
-                msgDialogInfo = msgDialogInfo,
-                showShareDeviceAlertDialog = showShareDeviceAlertDialog,
-                showRemoveDeviceAlertDialog = showRemoveDeviceAlertDialog,
-                showLocalRemoveDeviceAlertDialog = showLocalRemoveDeviceAlertDialog,
-                deviceRemovalCompleted = deviceRemovalCompleted,
-                pairingWindowOpenForDeviceSharing = pairingWindowOpenForDeviceSharing,
-            )
+        val node =
+          coreData.device?.let { dev ->
+            devices.filterIsInstance<Device>().firstOrNull { it.id == dev.id }
           }
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceSettingsUiState())
+        val isOnline = node?.isOnline ?: false
+        val dateCommissioned = node?.dateCommissioned
+        // TODO: Fix isOnline handling.
+        // coreData.device?.isOnline = isOnline
+
+        DeviceSettingsUiState(
+          isFirstTimeLoading = coreData.isFirstTimeLoading,
+          isBackgroundRefreshing = coreData.isBackgroundRefreshing,
+          errorMessageRes = coreData.errorMessageRes,
+          device = coreData.device?.copy(isOnline = isOnline),
+          basicInformation = coreData.basicInformation,
+          dateCommissioned = dateCommissioned,
+          msgDialogInfo = msgDialogInfo,
+          showShareDeviceAlertDialog = showShareDeviceAlertDialog,
+          showRemoveDeviceAlertDialog = showRemoveDeviceAlertDialog,
+          showLocalRemoveDeviceAlertDialog = showLocalRemoveDeviceAlertDialog,
+          deviceRemovalCompleted = deviceRemovalCompleted,
+          pairingWindowOpenForDeviceSharing = pairingWindowOpenForDeviceSharing,
+        )
+      }
+      .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeviceSettingsUiState())
 
   // -----------------------------------------------------------------------------------------------
   // Rename device
@@ -265,10 +265,10 @@ constructor(
     Timber.d("Renaming device nodeId=$nodeId newName=$newName")
     viewModelScope.launch {
       val result =
-          setDeviceNameUseCase.execute(nodeId, newName) {
-            // Refresh from storage immediately so the UI reflects the new name.
-            loadDevice(nodeId)
-          }
+        setDeviceNameUseCase.execute(nodeId, newName) {
+          // Refresh from storage immediately so the UI reflects the new name.
+          loadDevice(nodeId)
+        }
       if (result is SetDeviceNameResult.LocalError) {
         showMsgDialog(R.string.set_device_name_failed, result.exception.message)
       }
@@ -343,9 +343,9 @@ constructor(
     Timber.d("Opening pairing window")
     viewModelScope.launch {
       showMsgDialog(
-          R.string.opening_pairing_window_title,
-          R.string.opening_pairing_window_message,
-          false,
+        R.string.opening_pairing_window_title,
+        R.string.opening_pairing_window_message,
+        false,
       )
       try {
         val devicePtr = chipClient.awaitGetConnectedDevicePointer(nodeId)
@@ -356,9 +356,9 @@ constructor(
         }
         when (OPEN_COMMISSIONING_WINDOW_API) {
           OpenCommissioningWindowApi.ChipDeviceController ->
-              openCommissioningWindowUsingOpenPairingWindowWithPin(nodeId)
+            openCommissioningWindowUsingOpenPairingWindowWithPin(nodeId)
           OpenCommissioningWindowApi.AdministratorCommissioningCluster ->
-              openCommissioningWindowWithAdministratorCommissioningCluster(nodeId)
+            openCommissioningWindowWithAdministratorCommissioningCluster(nodeId)
         }
         dismissMsgDialog()
         _pairingWindowOpenForDeviceSharing.value = true
@@ -372,16 +372,16 @@ constructor(
 
   private suspend fun openCommissioningWindowUsingOpenPairingWindowWithPin(nodeId: NodeId) {
     Timber.d(
-        "Opening pairing window durationSeconds=$OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS " +
-            "iteration=$ITERATION discriminator=$DISCRIMINATOR",
+      "Opening pairing window durationSeconds=$OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS " +
+        "iteration=$ITERATION discriminator=$DISCRIMINATOR",
     )
     val connectedDevicePointer = chipClient.awaitGetConnectedDevicePointer(nodeId)
     chipClient.awaitOpenPairingWindowWithPIN(
-        connectedDevicePointer,
-        OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS,
-        ITERATION,
-        DISCRIMINATOR,
-        SETUP_PIN_CODE,
+      connectedDevicePointer,
+      OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS,
+      ITERATION,
+      DISCRIMINATOR,
+      SETUP_PIN_CODE,
     )
   }
 
@@ -390,16 +390,16 @@ constructor(
     val timedInvokeTimeoutMs = 10000
     val connectedDevicePointer = chipClient.awaitGetConnectedDevicePointer(nodeId)
     val verifier =
-        chipClient.computePaseVerifier(connectedDevicePointer, SETUP_PIN_CODE, ITERATION, salt)
+      chipClient.computePaseVerifier(connectedDevicePointer, SETUP_PIN_CODE, ITERATION, salt)
     clustersHelper.openCommissioningWindowAdministratorCommissioningCluster(
-        nodeId.toLong(),
-        EndpointId(0u),
-        OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS,
-        verifier.pakeVerifier,
-        DISCRIMINATOR,
-        ITERATION,
-        salt,
-        timedInvokeTimeoutMs,
+      nodeId.toLong(),
+      EndpointId(0u),
+      OPEN_COMMISSIONING_WINDOW_DURATION_SECONDS,
+      verifier.pakeVerifier,
+      DISCRIMINATOR,
+      ITERATION,
+      salt,
+      timedInvokeTimeoutMs,
     )
   }
 
@@ -446,33 +446,33 @@ constructor(
   // UI State update
 
   fun showMsgDialog(
-      title: String,
-      msg: String?,
-      showConfirmButton: Boolean = true,
+    title: String,
+    msg: String?,
+    showConfirmButton: Boolean = true,
   ) {
     Timber.d("Showing message dialog title=$title")
     _msgDialogInfo.value =
-        DialogInfo(title = title, message = msg, showConfirmButton = showConfirmButton)
+      DialogInfo(title = title, message = msg, showConfirmButton = showConfirmButton)
   }
 
   fun showMsgDialog(
-      @StringRes titleRes: Int,
-      @StringRes msgRes: Int,
-      showConfirmButton: Boolean = true,
+    @StringRes titleRes: Int,
+    @StringRes msgRes: Int,
+    showConfirmButton: Boolean = true,
   ) {
     Timber.d("Showing message dialog titleRes=$titleRes")
     _msgDialogInfo.value =
-        DialogInfo(titleRes = titleRes, messageRes = msgRes, showConfirmButton = showConfirmButton)
+      DialogInfo(titleRes = titleRes, messageRes = msgRes, showConfirmButton = showConfirmButton)
   }
 
   fun showMsgDialog(
-      @StringRes titleRes: Int,
-      msg: String?,
-      showConfirmButton: Boolean = true,
+    @StringRes titleRes: Int,
+    msg: String?,
+    showConfirmButton: Boolean = true,
   ) {
     Timber.d("Showing message dialog titleRes=$titleRes")
     _msgDialogInfo.value =
-        DialogInfo(titleRes = titleRes, message = msg, showConfirmButton = showConfirmButton)
+      DialogInfo(titleRes = titleRes, message = msg, showConfirmButton = showConfirmButton)
   }
 
   fun dismissMsgDialog() {

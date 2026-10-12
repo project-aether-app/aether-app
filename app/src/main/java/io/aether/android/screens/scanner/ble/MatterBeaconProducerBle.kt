@@ -33,8 +33,8 @@ import timber.log.Timber
 class MatterBeaconProducerBle
 @Inject
 constructor(
-    @param:MatterBeaconInject private val bluetoothLeScanner: BluetoothLeScanner?,
-    @param:ApplicationContext private val context: Context,
+  @param:MatterBeaconInject private val bluetoothLeScanner: BluetoothLeScanner?,
+  @param:ApplicationContext private val context: Context,
 ) : MatterBeaconProducer {
 
   // ---------------------------------------------------------------------------
@@ -45,34 +45,32 @@ constructor(
     val beaconEmittedTime = ConcurrentHashMap<MatterBeacon, Long>()
 
     val scanCallback =
-        object : ScanCallback() {
-          override fun onScanResult(callbackType: Int, result: ScanResult) {
-            result.toMatterBeaconOrNull()?.let { beacon ->
-              val currentTime = SystemClock.elapsedRealtime()
-              val shouldWeEmitItAgain =
-                  currentTime - (beaconEmittedTime[beacon] ?: 0) > BEACON_EMITTING_DEBOUNCE_IN_MS
-              if (shouldWeEmitItAgain) {
-                beaconEmittedTime[beacon] = currentTime
-                Timber.d("Emitting BLE beacon=$beacon")
-                trySend(beacon)
-              }
+      object : ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult) {
+          result.toMatterBeaconOrNull()?.let { beacon ->
+            val currentTime = SystemClock.elapsedRealtime()
+            val shouldWeEmitItAgain =
+              currentTime - (beaconEmittedTime[beacon] ?: 0) > BEACON_EMITTING_DEBOUNCE_IN_MS
+            if (shouldWeEmitItAgain) {
+              beaconEmittedTime[beacon] = currentTime
+              Timber.d("Emitting BLE beacon=$beacon")
+              trySend(beacon)
             }
           }
         }
+      }
 
     if (bluetoothLeScanner != null) {
       Timber.d("Starting BLE scan.")
       bluetoothLeScanner.startScan(
-          listOf(
-              ScanFilter.Builder()
-                  .setServiceData(MATTER_UUID, byteArrayOf(0), byteArrayOf(0))
-                  .build(),
-          ),
-          ScanSettings.Builder()
-              .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-              .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-              .build(),
-          scanCallback,
+        listOf(
+          ScanFilter.Builder().setServiceData(MATTER_UUID, byteArrayOf(0), byteArrayOf(0)).build(),
+        ),
+        ScanSettings.Builder()
+          .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+          .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+          .build(),
+        scanCallback,
       )
     } else {
       Timber.d("BLE Scanner not available.")
@@ -85,7 +83,7 @@ constructor(
       }
 
       val bluetoothAdapter: BluetoothAdapter =
-          (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
+        (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
       if (bluetoothAdapter.state == BluetoothAdapter.STATE_ON) {
         Timber.d("Stopping BLE scan.")
         bluetoothLeScanner.stopScan(scanCallback)
@@ -112,12 +110,11 @@ constructor(
     }
 
     return MatterBeacon(
-        name = device.address,
-        vendorId = VendorId(((data[10].toInt() or (data[11].toInt() shl 8)) and 0xFFFF).toUShort()),
-        productId =
-            ProductId(((data[12].toInt() or (data[13].toInt() shl 8)) and 0xFFFF).toUShort()),
-        discriminator = ((data[8].toInt() or (data[9].toInt() shl 8)) and 0xFFF),
-        Transport.Ble(device.address),
+      name = device.address,
+      vendorId = VendorId(((data[10].toInt() or (data[11].toInt() shl 8)) and 0xFFFF).toUShort()),
+      productId = ProductId(((data[12].toInt() or (data[13].toInt() shl 8)) and 0xFFFF).toUShort()),
+      discriminator = ((data[8].toInt() or (data[9].toInt() shl 8)) and 0xFFF),
+      Transport.Ble(device.address),
     )
   }
 

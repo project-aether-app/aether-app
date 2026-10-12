@@ -6,1332 +6,1289 @@
 package io.aether.android.matter
 
 val CLUSTERS_1_4 =
-    mapOf<ClusterId, ClusterInfo>(
-        Clusters.WaterTankLevelMonitoring.ID to
-            ClusterInfo(
-                name = "Water Tank Level Monitoring",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.WaterTankLevelMonitoring.Attributes.Condition.ID to
-                            AttributeInfo(
-                                name = "Condition",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterTankLevelMonitoring.Attributes.DegradationDirection.ID to
-                            AttributeInfo(
-                                name = "DegradationDirection",
-                                type =
-                                    DataType.RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterTankLevelMonitoring.Attributes.ChangeIndication.ID to
-                            AttributeInfo(
-                                name = "ChangeIndication",
-                                type = DataType.RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterTankLevelMonitoring.Attributes.InPlaceIndicator.ID to
-                            AttributeInfo(
-                                name = "InPlaceIndicator",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterTankLevelMonitoring.Attributes.LastChangedTime.ID to
-                            AttributeInfo(
-                                name = "LastChangedTime",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.WaterTankLevelMonitoring.Attributes.ReplacementProductList.ID to
-                            AttributeInfo(
-                                name = "ReplacementProductList",
-                                type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WaterTankLevelMonitoring.CommandsIncoming.ResetCondition.ID to
-                            CommandInfo(
-                                name = "ResetCondition",
-                                privilege = Privilege.OPERATE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.WaterHeaterManagement.ID to
-            ClusterInfo(
-                name = "Water Heater Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.WaterHeaterManagement.Attributes.HeaterTypes.ID to
-                            AttributeInfo(
-                                name = "HeaterTypes",
-                                type = DataType.WATER_HEATER_HEAT_SOURCE_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterHeaterManagement.Attributes.HeatDemand.ID to
-                            AttributeInfo(
-                                name = "HeatDemand",
-                                type = DataType.WATER_HEATER_HEAT_SOURCE_BITMAP,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterHeaterManagement.Attributes.TankVolume.ID to
-                            AttributeInfo(
-                                name = "TankVolume",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterHeaterManagement.Attributes.EstimatedHeatRequired.ID to
-                            AttributeInfo(
-                                name = "EstimatedHeatRequired",
-                                type = DataType.ENERGY_MILLIWATT_HOURS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterHeaterManagement.Attributes.TankPercentage.ID to
-                            AttributeInfo(
-                                name = "TankPercentage",
-                                type = DataType.PERCENT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WaterHeaterManagement.Attributes.BoostState.ID to
-                            AttributeInfo(
-                                name = "BoostState",
-                                type = DataType.WATER_HEATER_MANAGEMENT_CLUSTER_BOOST_STATE_ENUM,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WaterHeaterManagement.CommandsIncoming.Boost.ID to
-                            CommandInfo(
-                                name = "Boost",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "BoostInfo",
-                                                type = DataType.WATER_HEATER_BOOST_INFO_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.WaterHeaterManagement.CommandsIncoming.CancelBoost.ID to
-                            CommandInfo(
-                                name = "CancelBoost",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.WaterHeaterManagement.Events.BoostStarted.ID to
-                            EventInfo(
-                                name = "BoostStarted",
-                            ),
-                        Clusters.WaterHeaterManagement.Events.BoostEnded.ID to
-                            EventInfo(
-                                name = "BoostEnded",
-                            ),
-                    ),
-            ),
-        Clusters.WaterHeaterMode.ID to
-            ClusterInfo(
-                name = "Water Heater Mode",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.WaterHeaterMode.Attributes.SupportedModes.ID to
-                            AttributeInfo(
-                                name = "SupportedModes",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.WaterHeaterMode.Attributes.CurrentMode.ID to
-                            AttributeInfo(
-                                name = "CurrentMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.WaterHeaterMode.Attributes.StartUpMode.ID to
-                            AttributeInfo(
-                                name = "StartUpMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                        Clusters.WaterHeaterMode.Attributes.OnMode.ID to
-                            AttributeInfo(
-                                name = "OnMode",
-                                type = DataType.UNKNOWN,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ServiceArea.ID to
-            ClusterInfo(
-                name = "Service Area",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ServiceArea.Attributes.SupportedAreas.ID to
-                            AttributeInfo(
-                                name = "SupportedAreas",
-                                type = DataType.LIST_AREA_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ServiceArea.Attributes.SupportedMaps.ID to
-                            AttributeInfo(
-                                name = "SupportedMaps",
-                                type = DataType.LIST_MAP_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ServiceArea.Attributes.SelectedAreas.ID to
-                            AttributeInfo(
-                                name = "SelectedAreas",
-                                type = DataType.LIST_U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ServiceArea.Attributes.CurrentArea.ID to
-                            AttributeInfo(
-                                name = "CurrentArea",
-                                type = DataType.U_INT32,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ServiceArea.Attributes.EstimatedEndTime.ID to
-                            AttributeInfo(
-                                name = "EstimatedEndTime",
-                                type = DataType.EPOCH_SECONDS,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ServiceArea.Attributes.Progress.ID to
-                            AttributeInfo(
-                                name = "Progress",
-                                type = DataType.LIST_PROGRESS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ServiceArea.CommandsIncoming.SelectAreas.ID to
-                            CommandInfo(
-                                name = "SelectAreas",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NewAreas",
-                                                type = DataType.LIST_U_INT32,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ServiceArea.CommandsIncoming.SkipArea.ID to
-                            CommandInfo(
-                                name = "SkipArea",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "SkippedArea",
-                                                type = DataType.U_INT32,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ServiceArea.CommandsOutgoing.SelectAreasResponse.ID to
-                            CommandInfo(
-                                name = "SelectAreasResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type =
-                                                    DataType
-                                                        .SERVICE_AREA_CLUSTER_SELECT_AREAS_STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "StatusText",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ServiceArea.CommandsOutgoing.SkipAreaResponse.ID to
-                            CommandInfo(
-                                name = "SkipAreaResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Status",
-                                                type =
-                                                    DataType.SERVICE_AREA_CLUSTER_SKIP_AREA_STATUS,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "StatusText",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.WiFiNetworkManagement.ID to
-            ClusterInfo(
-                name = "Wi-Fi Network Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.WiFiNetworkManagement.Attributes.SSID.ID to
-                            AttributeInfo(
-                                name = "SSID",
-                                type = DataType.OCTET_STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.WiFiNetworkManagement.Attributes.PassphraseSurrogate.ID to
-                            AttributeInfo(
-                                name = "PassphraseSurrogate",
-                                type = DataType.U_INT64,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WiFiNetworkManagement.CommandsIncoming.NetworkPassphraseRequest
-                            .ID to
-                            CommandInfo(
-                                name = "NetworkPassphraseRequest",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.WiFiNetworkManagement.CommandsOutgoing.NetworkPassphraseResponse
-                            .ID to
-                            CommandInfo(
-                                name = "NetworkPassphraseResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Passphrase",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ThreadBorderRouterManagement.ID to
-            ClusterInfo(
-                name = "Thread Border Router Management",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ThreadBorderRouterManagement.Attributes.BorderRouterName.ID to
-                            AttributeInfo(
-                                name = "BorderRouterName",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ThreadBorderRouterManagement.Attributes.BorderAgentID.ID to
-                            AttributeInfo(
-                                name = "BorderAgentID",
-                                type = DataType.OCTET_STRING,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ThreadBorderRouterManagement.Attributes.ThreadVersion.ID to
-                            AttributeInfo(
-                                name = "ThreadVersion",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ThreadBorderRouterManagement.Attributes.InterfaceEnabled.ID to
-                            AttributeInfo(
-                                name = "InterfaceEnabled",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ThreadBorderRouterManagement.Attributes.ActiveDatasetTimestamp
-                            .ID to
-                            AttributeInfo(
-                                name = "ActiveDatasetTimestamp",
-                                type = DataType.U_INT64,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ThreadBorderRouterManagement.Attributes.PendingDatasetTimestamp
-                            .ID to
-                            AttributeInfo(
-                                name = "PendingDatasetTimestamp",
-                                type = DataType.U_INT64,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ThreadBorderRouterManagement.CommandsIncoming
-                            .GetActiveDatasetRequest
-                            .ID to
-                            CommandInfo(
-                                name = "GetActiveDatasetRequest",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ThreadBorderRouterManagement.CommandsIncoming
-                            .GetPendingDatasetRequest
-                            .ID to
-                            CommandInfo(
-                                name = "GetPendingDatasetRequest",
-                                privilege = Privilege.MANAGE,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.ThreadBorderRouterManagement.CommandsIncoming
-                            .SetActiveDatasetRequest
-                            .ID to
-                            CommandInfo(
-                                name = "SetActiveDatasetRequest",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ActiveDataset",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Breadcrumb",
-                                                type = DataType.U_INT64,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ThreadBorderRouterManagement.CommandsIncoming
-                            .SetPendingDatasetRequest
-                            .ID to
-                            CommandInfo(
-                                name = "SetPendingDatasetRequest",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "PendingDataset",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ThreadBorderRouterManagement.CommandsOutgoing.DatasetResponse.ID to
-                            CommandInfo(
-                                name = "DatasetResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "Dataset",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.ThreadNetworkDirectory.ID to
-            ClusterInfo(
-                name = "Thread Network Directory",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.ThreadNetworkDirectory.Attributes.PreferredExtendedPanID.ID to
-                            AttributeInfo(
-                                name = "PreferredExtendedPanID",
-                                type = DataType.OCTET_STRING,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.ThreadNetworkDirectory.Attributes.ThreadNetworks.ID to
-                            AttributeInfo(
-                                name = "ThreadNetworks",
-                                type = DataType.LIST_THREAD_NETWORK_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.ThreadNetworkDirectory.Attributes.ThreadNetworkTableSize.ID to
-                            AttributeInfo(
-                                name = "ThreadNetworkTableSize",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ThreadNetworkDirectory.CommandsIncoming.AddNetwork.ID to
-                            CommandInfo(
-                                name = "AddNetwork",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "OperationalDataset",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ThreadNetworkDirectory.CommandsIncoming.RemoveNetwork.ID to
-                            CommandInfo(
-                                name = "RemoveNetwork",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ExtendedPanID",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.ThreadNetworkDirectory.CommandsIncoming.GetOperationalDataset.ID to
-                            CommandInfo(
-                                name = "GetOperationalDataset",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ExtendedPanID",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.ThreadNetworkDirectory.CommandsOutgoing.OperationalDatasetResponse
-                            .ID to
-                            CommandInfo(
-                                name = "OperationalDatasetResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "OperationalDataset",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.EcosystemInformation.ID to
-            ClusterInfo(
-                name = "Ecosystem Information",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.EcosystemInformation.Attributes.DeviceDirectory.ID to
-                            AttributeInfo(
-                                name = "DeviceDirectory",
-                                type = DataType.LIST_ECOSYSTEM_DEVICE_STRUCT,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.EcosystemInformation.Attributes.LocationDirectory.ID to
-                            AttributeInfo(
-                                name = "LocationDirectory",
-                                type = DataType.LIST_ECOSYSTEM_LOCATION_STRUCT,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.CommissionerControl.ID to
-            ClusterInfo(
-                name = "Commissioner Control",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.CommissionerControl.Attributes.SupportedDeviceCategories.ID to
-                            AttributeInfo(
-                                name = "SupportedDeviceCategories",
-                                type = DataType.SUPPORTED_DEVICE_CATEGORY_BITMAP,
-                                readPrivilege = Privilege.MANAGE,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CommissionerControl.CommandsIncoming.RequestCommissioningApproval
-                            .ID to
-                            CommandInfo(
-                                name = "RequestCommissioningApproval",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "RequestID",
-                                                type = DataType.U_INT64,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "VendorID",
-                                                type = DataType.VENDOR_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "ProductID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "Label",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.CommissionerControl.CommandsIncoming.CommissionNode.ID to
-                            CommandInfo(
-                                name = "CommissionNode",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "RequestID",
-                                                type = DataType.U_INT64,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ResponseTimeoutSeconds",
-                                                type = DataType.U_INT16,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.CommissionerControl.CommandsOutgoing.ReverseOpenCommissioningWindow
-                            .ID to
-                            CommandInfo(
-                                name = "ReverseOpenCommissioningWindow",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CommissioningTimeout",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "PAKEPasscodeVerifier",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Discriminator",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "Iterations",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "Salt",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.CommissionerControl.Events.CommissioningRequestResult.ID to
-                            EventInfo(
-                                name = "CommissioningRequestResult",
-                            ),
-                    ),
-            ),
-        Clusters.JointFabricDatastore.ID to
-            ClusterInfo(
-                name = "Joint Fabric Datastore",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.JointFabricDatastore.Attributes.AnchorRootCA.ID to
-                            AttributeInfo(
-                                name = "AnchorRootCA",
-                                type = DataType.OCTET_STRING,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.AnchorNodeID.ID to
-                            AttributeInfo(
-                                name = "AnchorNodeID",
-                                type = DataType.NODE_ID,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.AnchorVendorID.ID to
-                            AttributeInfo(
-                                name = "AnchorVendorID",
-                                type = DataType.VENDOR_ID,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.FriendlyName.ID to
-                            AttributeInfo(
-                                name = "FriendlyName",
-                                type = DataType.STRING,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.GroupKeySetList.ID to
-                            AttributeInfo(
-                                name = "GroupKeySetList",
-                                type = DataType.LIST_GROUP_KEY_SET_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.GroupList.ID to
-                            AttributeInfo(
-                                name = "GroupList",
-                                type = DataType.LIST_DATASTORE_GROUP_INFORMATION_ENTRY,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.NodeList.ID to
-                            AttributeInfo(
-                                name = "NodeList",
-                                type = DataType.LIST_DATASTORE_NODE_INFORMATION_ENTRY,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.AdminList.ID to
-                            AttributeInfo(
-                                name = "AdminList",
-                                type = DataType.LIST_DATASTORE_ADMINISTRATOR_INFORMATION_ENTRY,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.Status.ID to
-                            AttributeInfo(
-                                name = "Status",
-                                type = DataType.DATASTORE_ADMINISTRATOR_INFORMATION_ENTRY,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.EndpointGroupIDList.ID to
-                            AttributeInfo(
-                                name = "EndpointGroupIDList",
-                                type = DataType.LIST_DATASTORE_ENDPOINT_GROUP_ID_ENTRY_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.EndpointBindingList.ID to
-                            AttributeInfo(
-                                name = "EndpointBindingList",
-                                type = DataType.LIST_DATASTORE_ENDPOINT_BINDING_ENTRY_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.NodeKeySetList.ID to
-                            AttributeInfo(
-                                name = "NodeKeySetList",
-                                type = DataType.LIST_DATASTORE_NODE_KEY_SET_ENTRY_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.NodeACLList.ID to
-                            AttributeInfo(
-                                name = "NodeACLList",
-                                type = DataType.LIST_DATASTORE_ACL_ENTRY_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                        Clusters.JointFabricDatastore.Attributes.NodeEndpointList.ID to
-                            AttributeInfo(
-                                name = "NodeEndpointList",
-                                type = DataType.LIST_DATASTORE_ENDPOINT_ENTRY_STRUCT,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddKeySet.ID to
-                            CommandInfo(
-                                name = "AddKeySet",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupKeySet",
-                                                type = DataType.GROUP_KEY_SET_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.UpdateKeySet.ID to
-                            CommandInfo(
-                                name = "UpdateKeySet",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupKeySet",
-                                                type = DataType.GROUP_KEY_SET_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.RemoveKeySet.ID to
-                            CommandInfo(
-                                name = "RemoveKeySet",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupKeySetID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddGroup.ID to
-                            CommandInfo(
-                                name = "AddGroup",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "GroupKeySetID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "GroupCAT",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "GroupCATVersion",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "GroupPermission",
-                                                type = DataType.ACCESS_CONTROL_ENTRY_PRIVILEGE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.UpdateGroup.ID to
-                            CommandInfo(
-                                name = "UpdateGroup",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "GroupKeySetID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "GroupCAT",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "GroupCATVersion",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "GroupPermission",
-                                                type = DataType.ACCESS_CONTROL_ENTRY_PRIVILEGE_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.RemoveGroup.ID to
-                            CommandInfo(
-                                name = "RemoveGroup",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddAdmin.ID to
-                            CommandInfo(
-                                name = "AddAdmin",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type =
-                                                    DataType
-                                                        .DATASTORE_ADMINISTRATOR_INFORMATION_ENTRY,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "VendorID",
-                                                type = DataType.STRING,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "ICAC",
-                                                type = DataType.VENDOR_ID,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "ICAC",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.UpdateAdmin.ID to
-                            CommandInfo(
-                                name = "UpdateAdmin",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "ICAC",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.RemoveAdmin.ID to
-                            CommandInfo(
-                                name = "RemoveAdmin",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddPendingNode.ID to
-                            CommandInfo(
-                                name = "AddPendingNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.RefreshNode.ID to
-                            CommandInfo(
-                                name = "RefreshNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.UpdateNode.ID to
-                            CommandInfo(
-                                name = "UpdateNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.RemoveNode.ID to
-                            CommandInfo(
-                                name = "RemoveNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.UpdateEndpointForNode.ID to
-                            CommandInfo(
-                                name = "UpdateEndpointForNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "FriendlyName",
-                                                type = DataType.STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddGroupIDToEndpointForNode
-                            .ID to
-                            CommandInfo(
-                                name = "AddGroupIDToEndpointForNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming
-                            .RemoveGroupIDFromEndpointForNode
-                            .ID to
-                            CommandInfo(
-                                name = "RemoveGroupIDFromEndpointForNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddBindingToEndpointForNode
-                            .ID to
-                            CommandInfo(
-                                name = "AddBindingToEndpointForNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Binding",
-                                                type = DataType.TARGET_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming
-                            .RemoveBindingFromEndpointForNode
-                            .ID to
-                            CommandInfo(
-                                name = "RemoveBindingFromEndpointForNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ListID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.AddACLToNode.ID to
-                            CommandInfo(
-                                name = "AddACLToNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ACLEntry",
-                                                type = DataType.ACCESS_CONTROL_ENTRY_STRUCT,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricDatastore.CommandsIncoming.RemoveACLFromNode.ID to
-                            CommandInfo(
-                                name = "RemoveACLFromNode",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ListID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "NodeID",
-                                                type = DataType.NODE_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.JointFabricAdministrator.ID to
-            ClusterInfo(
-                name = "Joint Fabric Administrator",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.JointFabricAdministrator.Attributes.AdministratorFabricIndex.ID to
-                            AttributeInfo(
-                                name = "AdministratorFabricIndex",
-                                type = DataType.FABRIC_INDEX,
-                                readPrivilege = Privilege.ADMINISTER,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.JointFabricAdministrator.CommandsIncoming.ICACCSRRequest.ID to
-                            CommandInfo(
-                                name = "ICACCSRRequest",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ICACSR",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsIncoming.AddICAC.ID to
-                            CommandInfo(
-                                name = "AddICAC",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "ICACValue",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ICACValue",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsIncoming
-                            .OpenJointCommissioningWindow
-                            .ID to
-                            CommandInfo(
-                                name = "OpenJointCommissioningWindow",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CommissioningTimeout",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "PAKEPasscodeVerifier",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Discriminator",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "Iterations",
-                                                type = DataType.U_INT32,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "Salt",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsIncoming.TransferAnchorRequest
-                            .ID to
-                            CommandInfo(
-                                name = "TransferAnchorRequest",
-                                privilege = Privilege.ADMINISTER,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsIncoming.TransferAnchorComplete
-                            .ID to
-                            CommandInfo(
-                                name = "TransferAnchorComplete",
-                                privilege = Privilege.ADMINISTER,
-                                parameters = mapOf<UInt, ParameterInfo>(),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsIncoming
-                            .AnnounceJointFabricAdministrator
-                            .ID to
-                            CommandInfo(
-                                name = "AnnounceJointFabricAdministrator",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "EndpointID",
-                                                type = DataType.ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.JointFabricAdministrator.CommandsOutgoing.ICACCSRResponse.ID to
-                            CommandInfo(
-                                name = "ICACCSRResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StatusCode",
-                                                type =
-                                                    DataType
-                                                        .JOINT_FABRIC_PKI_CLUSTER_ICAC_SIGNING_REQUEST_STATUS_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "ICACCSR",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsOutgoing.ICACResponse.ID to
-                            CommandInfo(
-                                name = "ICACResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StatusCode",
-                                                type =
-                                                    DataType
-                                                        .JOINT_FABRIC_PKI_CLUSTER_TRANSFER_ANCHOR_RESPONSE_STATUS_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.JointFabricAdministrator.CommandsOutgoing.TransferAnchorResponse
-                            .ID to
-                            CommandInfo(
-                                name = "TransferAnchorResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "StatusCode",
-                                                type =
-                                                    DataType
-                                                        .JOINT_FABRIC_ADMINISTRATOR_CLUSTER_TRANSFER_ANCHOR_RESPONSE_STATUS_ENUM,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-    )
+  mapOf<ClusterId, ClusterInfo>(
+    Clusters.WaterTankLevelMonitoring.ID to
+      ClusterInfo(
+        name = "Water Tank Level Monitoring",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.WaterTankLevelMonitoring.Attributes.Condition.ID to
+              AttributeInfo(
+                name = "Condition",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterTankLevelMonitoring.Attributes.DegradationDirection.ID to
+              AttributeInfo(
+                name = "DegradationDirection",
+                type = DataType.RESOURCE_MONITORING_CLUSTER_DEGRADATION_DIRECTION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterTankLevelMonitoring.Attributes.ChangeIndication.ID to
+              AttributeInfo(
+                name = "ChangeIndication",
+                type = DataType.RESOURCE_MONITORING_CLUSTER_CHANGE_INDICATION_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterTankLevelMonitoring.Attributes.InPlaceIndicator.ID to
+              AttributeInfo(
+                name = "InPlaceIndicator",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterTankLevelMonitoring.Attributes.LastChangedTime.ID to
+              AttributeInfo(
+                name = "LastChangedTime",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.WaterTankLevelMonitoring.Attributes.ReplacementProductList.ID to
+              AttributeInfo(
+                name = "ReplacementProductList",
+                type = DataType.LIST_REPLACEMENT_PRODUCT_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WaterTankLevelMonitoring.CommandsIncoming.ResetCondition.ID to
+              CommandInfo(
+                name = "ResetCondition",
+                privilege = Privilege.OPERATE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.WaterHeaterManagement.ID to
+      ClusterInfo(
+        name = "Water Heater Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.WaterHeaterManagement.Attributes.HeaterTypes.ID to
+              AttributeInfo(
+                name = "HeaterTypes",
+                type = DataType.WATER_HEATER_HEAT_SOURCE_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterHeaterManagement.Attributes.HeatDemand.ID to
+              AttributeInfo(
+                name = "HeatDemand",
+                type = DataType.WATER_HEATER_HEAT_SOURCE_BITMAP,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterHeaterManagement.Attributes.TankVolume.ID to
+              AttributeInfo(
+                name = "TankVolume",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterHeaterManagement.Attributes.EstimatedHeatRequired.ID to
+              AttributeInfo(
+                name = "EstimatedHeatRequired",
+                type = DataType.ENERGY_MILLIWATT_HOURS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterHeaterManagement.Attributes.TankPercentage.ID to
+              AttributeInfo(
+                name = "TankPercentage",
+                type = DataType.PERCENT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WaterHeaterManagement.Attributes.BoostState.ID to
+              AttributeInfo(
+                name = "BoostState",
+                type = DataType.WATER_HEATER_MANAGEMENT_CLUSTER_BOOST_STATE_ENUM,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WaterHeaterManagement.CommandsIncoming.Boost.ID to
+              CommandInfo(
+                name = "Boost",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "BoostInfo",
+                        type = DataType.WATER_HEATER_BOOST_INFO_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.WaterHeaterManagement.CommandsIncoming.CancelBoost.ID to
+              CommandInfo(
+                name = "CancelBoost",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.WaterHeaterManagement.Events.BoostStarted.ID to
+              EventInfo(name = "BoostStarted"),
+            Clusters.WaterHeaterManagement.Events.BoostEnded.ID to EventInfo(name = "BoostEnded"),
+          ),
+      ),
+    Clusters.WaterHeaterMode.ID to
+      ClusterInfo(
+        name = "Water Heater Mode",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.WaterHeaterMode.Attributes.SupportedModes.ID to
+              AttributeInfo(
+                name = "SupportedModes",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.WaterHeaterMode.Attributes.CurrentMode.ID to
+              AttributeInfo(
+                name = "CurrentMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.WaterHeaterMode.Attributes.StartUpMode.ID to
+              AttributeInfo(
+                name = "StartUpMode",
+                type = DataType.UNKNOWN,
+              ),
+            Clusters.WaterHeaterMode.Attributes.OnMode.ID to
+              AttributeInfo(
+                name = "OnMode",
+                type = DataType.UNKNOWN,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ServiceArea.ID to
+      ClusterInfo(
+        name = "Service Area",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ServiceArea.Attributes.SupportedAreas.ID to
+              AttributeInfo(
+                name = "SupportedAreas",
+                type = DataType.LIST_AREA_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ServiceArea.Attributes.SupportedMaps.ID to
+              AttributeInfo(
+                name = "SupportedMaps",
+                type = DataType.LIST_MAP_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ServiceArea.Attributes.SelectedAreas.ID to
+              AttributeInfo(
+                name = "SelectedAreas",
+                type = DataType.LIST_U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ServiceArea.Attributes.CurrentArea.ID to
+              AttributeInfo(
+                name = "CurrentArea",
+                type = DataType.U_INT32,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ServiceArea.Attributes.EstimatedEndTime.ID to
+              AttributeInfo(
+                name = "EstimatedEndTime",
+                type = DataType.EPOCH_SECONDS,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ServiceArea.Attributes.Progress.ID to
+              AttributeInfo(
+                name = "Progress",
+                type = DataType.LIST_PROGRESS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ServiceArea.CommandsIncoming.SelectAreas.ID to
+              CommandInfo(
+                name = "SelectAreas",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NewAreas",
+                        type = DataType.LIST_U_INT32,
+                      ),
+                  ),
+              ),
+            Clusters.ServiceArea.CommandsIncoming.SkipArea.ID to
+              CommandInfo(
+                name = "SkipArea",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "SkippedArea",
+                        type = DataType.U_INT32,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ServiceArea.CommandsOutgoing.SelectAreasResponse.ID to
+              CommandInfo(
+                name = "SelectAreasResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.SERVICE_AREA_CLUSTER_SELECT_AREAS_STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "StatusText",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ServiceArea.CommandsOutgoing.SkipAreaResponse.ID to
+              CommandInfo(
+                name = "SkipAreaResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Status",
+                        type = DataType.SERVICE_AREA_CLUSTER_SKIP_AREA_STATUS,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "StatusText",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.WiFiNetworkManagement.ID to
+      ClusterInfo(
+        name = "Wi-Fi Network Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.WiFiNetworkManagement.Attributes.SSID.ID to
+              AttributeInfo(
+                name = "SSID",
+                type = DataType.OCTET_STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.WiFiNetworkManagement.Attributes.PassphraseSurrogate.ID to
+              AttributeInfo(
+                name = "PassphraseSurrogate",
+                type = DataType.U_INT64,
+                readPrivilege = Privilege.MANAGE,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WiFiNetworkManagement.CommandsIncoming.NetworkPassphraseRequest.ID to
+              CommandInfo(
+                name = "NetworkPassphraseRequest",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.WiFiNetworkManagement.CommandsOutgoing.NetworkPassphraseResponse.ID to
+              CommandInfo(
+                name = "NetworkPassphraseResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Passphrase",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ThreadBorderRouterManagement.ID to
+      ClusterInfo(
+        name = "Thread Border Router Management",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ThreadBorderRouterManagement.Attributes.BorderRouterName.ID to
+              AttributeInfo(
+                name = "BorderRouterName",
+                type = DataType.STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ThreadBorderRouterManagement.Attributes.BorderAgentID.ID to
+              AttributeInfo(
+                name = "BorderAgentID",
+                type = DataType.OCTET_STRING,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ThreadBorderRouterManagement.Attributes.ThreadVersion.ID to
+              AttributeInfo(
+                name = "ThreadVersion",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ThreadBorderRouterManagement.Attributes.InterfaceEnabled.ID to
+              AttributeInfo(
+                name = "InterfaceEnabled",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ThreadBorderRouterManagement.Attributes.ActiveDatasetTimestamp.ID to
+              AttributeInfo(
+                name = "ActiveDatasetTimestamp",
+                type = DataType.U_INT64,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ThreadBorderRouterManagement.Attributes.PendingDatasetTimestamp.ID to
+              AttributeInfo(
+                name = "PendingDatasetTimestamp",
+                type = DataType.U_INT64,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ThreadBorderRouterManagement.CommandsIncoming.GetActiveDatasetRequest.ID to
+              CommandInfo(
+                name = "GetActiveDatasetRequest",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ThreadBorderRouterManagement.CommandsIncoming.GetPendingDatasetRequest.ID to
+              CommandInfo(
+                name = "GetPendingDatasetRequest",
+                privilege = Privilege.MANAGE,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.ThreadBorderRouterManagement.CommandsIncoming.SetActiveDatasetRequest.ID to
+              CommandInfo(
+                name = "SetActiveDatasetRequest",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ActiveDataset",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Breadcrumb",
+                        type = DataType.U_INT64,
+                      ),
+                  ),
+              ),
+            Clusters.ThreadBorderRouterManagement.CommandsIncoming.SetPendingDatasetRequest.ID to
+              CommandInfo(
+                name = "SetPendingDatasetRequest",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "PendingDataset",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ThreadBorderRouterManagement.CommandsOutgoing.DatasetResponse.ID to
+              CommandInfo(
+                name = "DatasetResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "Dataset",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.ThreadNetworkDirectory.ID to
+      ClusterInfo(
+        name = "Thread Network Directory",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.ThreadNetworkDirectory.Attributes.PreferredExtendedPanID.ID to
+              AttributeInfo(
+                name = "PreferredExtendedPanID",
+                type = DataType.OCTET_STRING,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.ThreadNetworkDirectory.Attributes.ThreadNetworks.ID to
+              AttributeInfo(
+                name = "ThreadNetworks",
+                type = DataType.LIST_THREAD_NETWORK_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.ThreadNetworkDirectory.Attributes.ThreadNetworkTableSize.ID to
+              AttributeInfo(
+                name = "ThreadNetworkTableSize",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ThreadNetworkDirectory.CommandsIncoming.AddNetwork.ID to
+              CommandInfo(
+                name = "AddNetwork",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "OperationalDataset",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ThreadNetworkDirectory.CommandsIncoming.RemoveNetwork.ID to
+              CommandInfo(
+                name = "RemoveNetwork",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ExtendedPanID",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.ThreadNetworkDirectory.CommandsIncoming.GetOperationalDataset.ID to
+              CommandInfo(
+                name = "GetOperationalDataset",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ExtendedPanID",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.ThreadNetworkDirectory.CommandsOutgoing.OperationalDatasetResponse.ID to
+              CommandInfo(
+                name = "OperationalDatasetResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "OperationalDataset",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.EcosystemInformation.ID to
+      ClusterInfo(
+        name = "Ecosystem Information",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.EcosystemInformation.Attributes.DeviceDirectory.ID to
+              AttributeInfo(
+                name = "DeviceDirectory",
+                type = DataType.LIST_ECOSYSTEM_DEVICE_STRUCT,
+                readPrivilege = Privilege.MANAGE,
+              ),
+            Clusters.EcosystemInformation.Attributes.LocationDirectory.ID to
+              AttributeInfo(
+                name = "LocationDirectory",
+                type = DataType.LIST_ECOSYSTEM_LOCATION_STRUCT,
+                readPrivilege = Privilege.MANAGE,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.CommissionerControl.ID to
+      ClusterInfo(
+        name = "Commissioner Control",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.CommissionerControl.Attributes.SupportedDeviceCategories.ID to
+              AttributeInfo(
+                name = "SupportedDeviceCategories",
+                type = DataType.SUPPORTED_DEVICE_CATEGORY_BITMAP,
+                readPrivilege = Privilege.MANAGE,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CommissionerControl.CommandsIncoming.RequestCommissioningApproval.ID to
+              CommandInfo(
+                name = "RequestCommissioningApproval",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "RequestID",
+                        type = DataType.U_INT64,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "VendorID",
+                        type = DataType.VENDOR_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "ProductID",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "Label",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.CommissionerControl.CommandsIncoming.CommissionNode.ID to
+              CommandInfo(
+                name = "CommissionNode",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "RequestID",
+                        type = DataType.U_INT64,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ResponseTimeoutSeconds",
+                        type = DataType.U_INT16,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.CommissionerControl.CommandsOutgoing.ReverseOpenCommissioningWindow.ID to
+              CommandInfo(
+                name = "ReverseOpenCommissioningWindow",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CommissioningTimeout",
+                        type = DataType.U_INT16,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "PAKEPasscodeVerifier",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Discriminator",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "Iterations",
+                        type = DataType.U_INT32,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "Salt",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.CommissionerControl.Events.CommissioningRequestResult.ID to
+              EventInfo(name = "CommissioningRequestResult"),
+          ),
+      ),
+    Clusters.JointFabricDatastore.ID to
+      ClusterInfo(
+        name = "Joint Fabric Datastore",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.JointFabricDatastore.Attributes.AnchorRootCA.ID to
+              AttributeInfo(
+                name = "AnchorRootCA",
+                type = DataType.OCTET_STRING,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.AnchorNodeID.ID to
+              AttributeInfo(
+                name = "AnchorNodeID",
+                type = DataType.NODE_ID,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.AnchorVendorID.ID to
+              AttributeInfo(
+                name = "AnchorVendorID",
+                type = DataType.VENDOR_ID,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.FriendlyName.ID to
+              AttributeInfo(
+                name = "FriendlyName",
+                type = DataType.STRING,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.GroupKeySetList.ID to
+              AttributeInfo(
+                name = "GroupKeySetList",
+                type = DataType.LIST_GROUP_KEY_SET_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.GroupList.ID to
+              AttributeInfo(
+                name = "GroupList",
+                type = DataType.LIST_DATASTORE_GROUP_INFORMATION_ENTRY,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.NodeList.ID to
+              AttributeInfo(
+                name = "NodeList",
+                type = DataType.LIST_DATASTORE_NODE_INFORMATION_ENTRY,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.AdminList.ID to
+              AttributeInfo(
+                name = "AdminList",
+                type = DataType.LIST_DATASTORE_ADMINISTRATOR_INFORMATION_ENTRY,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.Status.ID to
+              AttributeInfo(
+                name = "Status",
+                type = DataType.DATASTORE_ADMINISTRATOR_INFORMATION_ENTRY,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.EndpointGroupIDList.ID to
+              AttributeInfo(
+                name = "EndpointGroupIDList",
+                type = DataType.LIST_DATASTORE_ENDPOINT_GROUP_ID_ENTRY_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.EndpointBindingList.ID to
+              AttributeInfo(
+                name = "EndpointBindingList",
+                type = DataType.LIST_DATASTORE_ENDPOINT_BINDING_ENTRY_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.NodeKeySetList.ID to
+              AttributeInfo(
+                name = "NodeKeySetList",
+                type = DataType.LIST_DATASTORE_NODE_KEY_SET_ENTRY_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.NodeACLList.ID to
+              AttributeInfo(
+                name = "NodeACLList",
+                type = DataType.LIST_DATASTORE_ACL_ENTRY_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+            Clusters.JointFabricDatastore.Attributes.NodeEndpointList.ID to
+              AttributeInfo(
+                name = "NodeEndpointList",
+                type = DataType.LIST_DATASTORE_ENDPOINT_ENTRY_STRUCT,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.JointFabricDatastore.CommandsIncoming.AddKeySet.ID to
+              CommandInfo(
+                name = "AddKeySet",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupKeySet",
+                        type = DataType.GROUP_KEY_SET_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.UpdateKeySet.ID to
+              CommandInfo(
+                name = "UpdateKeySet",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupKeySet",
+                        type = DataType.GROUP_KEY_SET_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveKeySet.ID to
+              CommandInfo(
+                name = "RemoveKeySet",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupKeySetID",
+                        type = DataType.U_INT16,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.AddGroup.ID to
+              CommandInfo(
+                name = "AddGroup",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "GroupKeySetID",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "GroupCAT",
+                        type = DataType.U_INT16,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "GroupCATVersion",
+                        type = DataType.U_INT16,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "GroupPermission",
+                        type = DataType.ACCESS_CONTROL_ENTRY_PRIVILEGE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.UpdateGroup.ID to
+              CommandInfo(
+                name = "UpdateGroup",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "GroupKeySetID",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "GroupCAT",
+                        type = DataType.U_INT16,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "GroupCATVersion",
+                        type = DataType.U_INT16,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "GroupPermission",
+                        type = DataType.ACCESS_CONTROL_ENTRY_PRIVILEGE_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveGroup.ID to
+              CommandInfo(
+                name = "RemoveGroup",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.AddAdmin.ID to
+              CommandInfo(
+                name = "AddAdmin",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.DATASTORE_ADMINISTRATOR_INFORMATION_ENTRY,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.NODE_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "VendorID",
+                        type = DataType.STRING,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "ICAC",
+                        type = DataType.VENDOR_ID,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "ICAC",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.UpdateAdmin.ID to
+              CommandInfo(
+                name = "UpdateAdmin",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "ICAC",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveAdmin.ID to
+              CommandInfo(
+                name = "RemoveAdmin",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.AddPendingNode.ID to
+              CommandInfo(
+                name = "AddPendingNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RefreshNode.ID to
+              CommandInfo(
+                name = "RefreshNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.UpdateNode.ID to
+              CommandInfo(
+                name = "UpdateNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveNode.ID to
+              CommandInfo(
+                name = "RemoveNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.UpdateEndpointForNode.ID to
+              CommandInfo(
+                name = "UpdateEndpointForNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "FriendlyName",
+                        type = DataType.STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.AddGroupIDToEndpointForNode.ID to
+              CommandInfo(
+                name = "AddGroupIDToEndpointForNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveGroupIDFromEndpointForNode.ID to
+              CommandInfo(
+                name = "RemoveGroupIDFromEndpointForNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.AddBindingToEndpointForNode.ID to
+              CommandInfo(
+                name = "AddBindingToEndpointForNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Binding",
+                        type = DataType.TARGET_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveBindingFromEndpointForNode.ID to
+              CommandInfo(
+                name = "RemoveBindingFromEndpointForNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ListID",
+                        type = DataType.U_INT16,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.AddACLToNode.ID to
+              CommandInfo(
+                name = "AddACLToNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ACLEntry",
+                        type = DataType.ACCESS_CONTROL_ENTRY_STRUCT,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricDatastore.CommandsIncoming.RemoveACLFromNode.ID to
+              CommandInfo(
+                name = "RemoveACLFromNode",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ListID",
+                        type = DataType.U_INT16,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "NodeID",
+                        type = DataType.NODE_ID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.JointFabricAdministrator.ID to
+      ClusterInfo(
+        name = "Joint Fabric Administrator",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.JointFabricAdministrator.Attributes.AdministratorFabricIndex.ID to
+              AttributeInfo(
+                name = "AdministratorFabricIndex",
+                type = DataType.FABRIC_INDEX,
+                readPrivilege = Privilege.ADMINISTER,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.JointFabricAdministrator.CommandsIncoming.ICACCSRRequest.ID to
+              CommandInfo(
+                name = "ICACCSRRequest",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ICACSR",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricAdministrator.CommandsIncoming.AddICAC.ID to
+              CommandInfo(
+                name = "AddICAC",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "ICACValue",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ICACValue",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricAdministrator.CommandsIncoming.OpenJointCommissioningWindow.ID to
+              CommandInfo(
+                name = "OpenJointCommissioningWindow",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CommissioningTimeout",
+                        type = DataType.U_INT16,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "PAKEPasscodeVerifier",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Discriminator",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "Iterations",
+                        type = DataType.U_INT32,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "Salt",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricAdministrator.CommandsIncoming.TransferAnchorRequest.ID to
+              CommandInfo(
+                name = "TransferAnchorRequest",
+                privilege = Privilege.ADMINISTER,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.JointFabricAdministrator.CommandsIncoming.TransferAnchorComplete.ID to
+              CommandInfo(
+                name = "TransferAnchorComplete",
+                privilege = Privilege.ADMINISTER,
+                parameters = mapOf<UInt, ParameterInfo>(),
+              ),
+            Clusters.JointFabricAdministrator.CommandsIncoming.AnnounceJointFabricAdministrator
+              .ID to
+              CommandInfo(
+                name = "AnnounceJointFabricAdministrator",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "EndpointID",
+                        type = DataType.ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.JointFabricAdministrator.CommandsOutgoing.ICACCSRResponse.ID to
+              CommandInfo(
+                name = "ICACCSRResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StatusCode",
+                        type = DataType.JOINT_FABRIC_PKI_CLUSTER_ICAC_SIGNING_REQUEST_STATUS_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "ICACCSR",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricAdministrator.CommandsOutgoing.ICACResponse.ID to
+              CommandInfo(
+                name = "ICACResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StatusCode",
+                        type =
+                          DataType.JOINT_FABRIC_PKI_CLUSTER_TRANSFER_ANCHOR_RESPONSE_STATUS_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.JointFabricAdministrator.CommandsOutgoing.TransferAnchorResponse.ID to
+              CommandInfo(
+                name = "TransferAnchorResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "StatusCode",
+                        type =
+                          DataType
+                            .JOINT_FABRIC_ADMINISTRATOR_CLUSTER_TRANSFER_ANCHOR_RESPONSE_STATUS_ENUM,
+                      ),
+                  ),
+              ),
+          ),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+  )

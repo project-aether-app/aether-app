@@ -13,11 +13,11 @@ class MatterControllerApplication : Application() {
     super.onCreate()
 
     Timber.plant(
-        object : Timber.DebugTree() {
-          override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-            super.log(priority, "${APP_NAME}-$tag", message, t)
-          }
-        },
+      object : Timber.DebugTree() {
+        override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+          super.log(priority, "${APP_NAME}-$tag", message, t)
+        }
+      },
     )
   }
 }

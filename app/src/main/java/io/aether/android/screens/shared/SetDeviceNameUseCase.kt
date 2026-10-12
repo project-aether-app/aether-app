@@ -44,9 +44,9 @@ sealed class SetDeviceNameResult {
 class SetDeviceNameUseCase
 @Inject
 constructor(
-    private val devicesRepository: DeviceRepository,
-    private val clustersHelper: ClustersHelper,
-    private val appErrorNotifier: AppErrorNotifier,
+  private val devicesRepository: DeviceRepository,
+  private val clustersHelper: ClustersHelper,
+  private val appErrorNotifier: AppErrorNotifier,
 ) {
   // Coroutine scope that lives for the lifetime of the singleton so that NodeLabel writes survive
   // screen navigation (i.e. are not cancelled when the caller's viewModelScope is cancelled).
@@ -68,9 +68,9 @@ constructor(
    *   update fails. NodeLabel write failures are delivered asynchronously via [AppErrorNotifier].
    */
   suspend fun execute(
-      nodeId: NodeId,
-      name: String,
-      onLocalPersisted: suspend () -> Unit = {},
+    nodeId: NodeId,
+    name: String,
+    onLocalPersisted: suspend () -> Unit = {},
   ): SetDeviceNameResult {
     Timber.d("Setting device name nodeId=$nodeId nameLength=${name.length}")
     try {
@@ -95,10 +95,10 @@ constructor(
         }
         Timber.e(e, "Failed to write node label")
         appErrorNotifier.notify(
-            DialogInfo(
-                titleRes = R.string.set_device_name_failed,
-                message = e.message ?: e.toString(),
-            ),
+          DialogInfo(
+            titleRes = R.string.set_device_name_failed,
+            message = e.message ?: e.toString(),
+          ),
         )
       }
     }

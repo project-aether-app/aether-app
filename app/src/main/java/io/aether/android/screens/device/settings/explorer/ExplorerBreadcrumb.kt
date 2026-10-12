@@ -30,47 +30,47 @@ import io.aether.android.spacing
 
 @Composable
 internal fun BreadcrumbBar(
-    navStack: List<ExplorerLevel>,
-    deviceMatterInfoList: List<DeviceMatterInfo>,
-    onPopToIndex: (Int) -> Unit,
+  navStack: List<ExplorerLevel>,
+  deviceMatterInfoList: List<DeviceMatterInfo>,
+  onPopToIndex: (Int) -> Unit,
 ) {
   val scrollState = androidx.compose.foundation.rememberScrollState()
   LaunchedEffect(navStack.size) { scrollState.animateScrollTo(scrollState.maxValue) }
 
   Row(
-      modifier =
-          Modifier.fillMaxWidth()
-              .horizontalScroll(scrollState)
-              .padding(
-                  start = 6.dp,
-                  top = 6.dp,
-                  end = MaterialTheme.spacing.paddingNormal,
-                  bottom = 6.dp,
-              ),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(4.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .horizontalScroll(scrollState)
+        .padding(
+          start = 6.dp,
+          top = 6.dp,
+          end = MaterialTheme.spacing.paddingNormal,
+          bottom = 6.dp,
+        ),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
   ) {
     navStack.forEachIndexed { index, level ->
       Icon(
-          imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-          contentDescription = null,
-          tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.onSurfaceVariant,
       )
       val label = breadcrumbLabelFor(level, deviceMatterInfoList)
       val isLast = index == navStack.size - 1
       if (isLast) {
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface,
+          text = label,
+          style = MaterialTheme.typography.bodySmall,
+          fontWeight = FontWeight.SemiBold,
+          color = MaterialTheme.colorScheme.onSurface,
         )
       } else {
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onPopToIndex(index) },
+          text = label,
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.primary,
+          modifier = Modifier.clickable { onPopToIndex(index) },
         )
       }
     }
@@ -80,30 +80,29 @@ internal fun BreadcrumbBar(
 
 @Composable
 private fun breadcrumbLabelFor(
-    level: ExplorerLevel,
-    deviceMatterInfoList: List<DeviceMatterInfo>,
+  level: ExplorerLevel,
+  deviceMatterInfoList: List<DeviceMatterInfo>,
 ): String =
-    when (level) {
-      ExplorerLevel.EndpointList -> stringResource(R.string.device_explorer_root)
-      is ExplorerLevel.ClusterList -> {
-        val info = deviceMatterInfoList.firstOrNull { it.endpointId == level.endpointId }
-        val endpointName =
-            info
-                ?.types
-                .orEmpty()
-                .map { typeId ->
-                  DEVICES[typeId] ?: stringResource(R.string.device_explorer_endpoint_type_unknown)
-                }
-                .joinToString(" & ")
-        formatEndpointLabel(level.endpointId, endpointName)
-      }
-      is ExplorerLevel.ClusterDetail -> {
-        val name =
-            CLUSTERS[level.clusterId]?.name
-                ?: stringResource(R.string.device_explorer_cluster_unknown)
-        formatIdAndName(level.clusterId, name)
-      }
-      is ExplorerLevel.AttributeDetail ->
-          formatIdAndName(level.attribute.id.value, level.attribute.name)
-      is ExplorerLevel.CommandInvoke -> formatIdAndName(level.command.id.value, level.command.name)
+  when (level) {
+    ExplorerLevel.EndpointList -> stringResource(R.string.device_explorer_root)
+    is ExplorerLevel.ClusterList -> {
+      val info = deviceMatterInfoList.firstOrNull { it.endpointId == level.endpointId }
+      val endpointName =
+        info
+          ?.types
+          .orEmpty()
+          .map { typeId ->
+            DEVICES[typeId] ?: stringResource(R.string.device_explorer_endpoint_type_unknown)
+          }
+          .joinToString(" & ")
+      formatEndpointLabel(level.endpointId, endpointName)
     }
+    is ExplorerLevel.ClusterDetail -> {
+      val name =
+        CLUSTERS[level.clusterId]?.name ?: stringResource(R.string.device_explorer_cluster_unknown)
+      formatIdAndName(level.clusterId, name)
+    }
+    is ExplorerLevel.AttributeDetail ->
+      formatIdAndName(level.attribute.id.value, level.attribute.name)
+    is ExplorerLevel.CommandInvoke -> formatIdAndName(level.command.id.value, level.command.name)
+  }

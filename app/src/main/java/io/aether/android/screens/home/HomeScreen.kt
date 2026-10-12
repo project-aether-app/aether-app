@@ -72,27 +72,25 @@ import io.aether.android.spacing
 
 @Composable
 internal fun HomeRoute(
-    navigateToDevice: (nodeId: NodeId) -> Unit,
-    onMenuClick: () -> Unit,
-    homeViewModel: HomeViewModel = hiltViewModel(),
+  navigateToDevice: (nodeId: NodeId) -> Unit,
+  onMenuClick: () -> Unit,
+  homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
   val activity = LocalContext.current.getActivity()!!
   val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
   val commissionDeviceLauncher =
-      rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartIntentSenderForResult(),
-      ) { result ->
-        homeViewModel.onCommissioningResult(result.resultCode, result.data)
-      }
+    rememberLauncherForActivityResult(
+      contract = ActivityResultContracts.StartIntentSenderForResult(),
+    ) { result ->
+      homeViewModel.onCommissioningResult(result.resultCode, result.data)
+    }
 
   LaunchedEffect(homeViewModel, commissionDeviceLauncher) {
     homeViewModel.effects.collect { effect ->
       when (effect) {
         is HomeEffect.LaunchCommissioning ->
-            commissionDeviceLauncher.launch(
-                IntentSenderRequest.Builder(effect.intentSender).build(),
-            )
+          commissionDeviceLauncher.launch(IntentSenderRequest.Builder(effect.intentSender).build())
       }
     }
   }
@@ -103,88 +101,88 @@ internal fun HomeRoute(
   }
 
   HomeScreen(
-      uiState = uiState,
-      onMenuClick = onMenuClick,
-      onUpdatePlayServicesClick = homeViewModel::onUpdatePlayServicesClick,
-      onCommissionDeviceClick = homeViewModel::onAddDeviceClick,
-      onCommissionedDeviceNameCaptured = homeViewModel::onCommissionedDeviceNameCaptured,
-      onDeviceClick = { navigateToDevice(it.id) },
-      onOnOffClick = homeViewModel::updateDeviceStateOn,
-      onDismissMsgDialog = homeViewModel::dismissMsgDialog,
+    uiState = uiState,
+    onMenuClick = onMenuClick,
+    onUpdatePlayServicesClick = homeViewModel::onUpdatePlayServicesClick,
+    onCommissionDeviceClick = homeViewModel::onAddDeviceClick,
+    onCommissionedDeviceNameCaptured = homeViewModel::onCommissionedDeviceNameCaptured,
+    onDeviceClick = { navigateToDevice(it.id) },
+    onOnOffClick = homeViewModel::updateDeviceStateOn,
+    onDismissMsgDialog = homeViewModel::dismissMsgDialog,
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    uiState: HomeUiState,
-    onMenuClick: () -> Unit,
-    onUpdatePlayServicesClick: () -> Unit,
-    onCommissionDeviceClick: () -> Unit,
-    onCommissionedDeviceNameCaptured: (name: String) -> Unit,
-    onDeviceClick: (device: Device) -> Unit,
-    onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
-    onDismissMsgDialog: () -> Unit,
+  uiState: HomeUiState,
+  onMenuClick: () -> Unit,
+  onUpdatePlayServicesClick: () -> Unit,
+  onCommissionDeviceClick: () -> Unit,
+  onCommissionedDeviceNameCaptured: (name: String) -> Unit,
+  onDeviceClick: (device: Device) -> Unit,
+  onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
+  onDismissMsgDialog: () -> Unit,
 ) {
   Box(modifier = Modifier.fillMaxSize()) {
     if (uiState.showUpdatePlayServicesDialog) {
       AlertDialog(
-          onDismissRequest = {},
-          title = { Text(stringResource(R.string.gps_update_title)) },
-          text = { Text(stringResource(R.string.gps_update_message)) },
-          confirmButton = {
-            TextButton(onClick = onUpdatePlayServicesClick) {
-              Text(stringResource(R.string.gps_update_button))
-            }
-          },
+        onDismissRequest = {},
+        title = { Text(stringResource(R.string.gps_update_title)) },
+        text = { Text(stringResource(R.string.gps_update_message)) },
+        confirmButton = {
+          TextButton(onClick = onUpdatePlayServicesClick) {
+            Text(stringResource(R.string.gps_update_button))
+          }
+        },
       )
     }
     if (uiState.devices.isEmpty()) {
       NoDevices()
     }
     Scaffold(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground,
-        topBar = {
-          TopAppBar(
-              title = {},
-              navigationIcon = {
-                IconButton(onClick = onMenuClick) {
-                  Icon(
-                      imageVector = Icons.Filled.Menu,
-                      contentDescription = stringResource(R.string.menu_button),
-                      tint = MaterialTheme.colorScheme.onBackground,
-                  )
-                }
-              },
-              colors =
-                  TopAppBarDefaults.topAppBarColors(
-                      containerColor = Color.Transparent,
-                      scrolledContainerColor = Color.Transparent,
-                      navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-                      titleContentColor = MaterialTheme.colorScheme.onBackground,
-                  ),
+      containerColor = Color.Transparent,
+      contentColor = MaterialTheme.colorScheme.onBackground,
+      topBar = {
+        TopAppBar(
+          title = {},
+          navigationIcon = {
+            IconButton(onClick = onMenuClick) {
+              Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = stringResource(R.string.menu_button),
+                tint = MaterialTheme.colorScheme.onBackground,
+              )
+            }
+          },
+          colors =
+            TopAppBarDefaults.topAppBarColors(
+              containerColor = Color.Transparent,
+              scrolledContainerColor = Color.Transparent,
+              navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+              titleContentColor = MaterialTheme.colorScheme.onBackground,
+            ),
+        )
+      },
+      floatingActionButton = {
+        FloatingActionButton(
+          onClick = onCommissionDeviceClick,
+          modifier = Modifier.padding(16.dp),
+        ) {
+          Icon(
+            Icons.Filled.Add,
+            contentDescription = stringResource(R.string.home_device_add_button),
           )
-        },
-        floatingActionButton = {
-          FloatingActionButton(
-              onClick = onCommissionDeviceClick,
-              modifier = Modifier.padding(16.dp),
-          ) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = stringResource(R.string.home_device_add_button),
-            )
-          }
-        },
+        }
+      },
     ) { innerPadding ->
       Home(
-          uiState = uiState,
-          onConsumeMsgDialog = onDismissMsgDialog,
-          onCommissionedDeviceNameCaptured = onCommissionedDeviceNameCaptured,
-          onDeviceClick = onDeviceClick,
-          onOnOffClick = onOnOffClick,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
+        uiState = uiState,
+        onConsumeMsgDialog = onDismissMsgDialog,
+        onCommissionedDeviceNameCaptured = onCommissionedDeviceNameCaptured,
+        onDeviceClick = onDeviceClick,
+        onOnOffClick = onOnOffClick,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
       )
     }
   }
@@ -192,12 +190,12 @@ fun HomeScreen(
 
 @Composable
 private fun Home(
-    uiState: HomeUiState,
-    onConsumeMsgDialog: () -> Unit,
-    onCommissionedDeviceNameCaptured: (name: String) -> Unit,
-    onDeviceClick: (device: Device) -> Unit,
-    onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
-    modifier: Modifier = Modifier,
+  uiState: HomeUiState,
+  onConsumeMsgDialog: () -> Unit,
+  onCommissionedDeviceNameCaptured: (name: String) -> Unit,
+  onDeviceClick: (device: Device) -> Unit,
+  onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
 
   if (uiState.msgDialogInfo != null) {
@@ -206,8 +204,8 @@ private fun Home(
 
   if (uiState.showNewDeviceNameAlertDialog) {
     NewDeviceAlertDialog(
-        onCommissionedDeviceNameCaptured,
-        uiState.deviceAttestationFailureIgnored,
+      onCommissionedDeviceNameCaptured,
+      uiState.deviceAttestationFailureIgnored,
     )
   }
 
@@ -215,9 +213,9 @@ private fun Home(
     this.items(uiState.devices) { device ->
       val onDeviceItemClick: () -> Unit = { onDeviceClick(device) }
       DeviceItem(
-          device = device,
-          onOnOffClick = onOnOffClick,
-          onDeviceClick = onDeviceItemClick,
+        device = device,
+        onOnOffClick = onOnOffClick,
+        onDeviceClick = onDeviceItemClick,
       )
     }
   }
@@ -225,39 +223,39 @@ private fun Home(
 
 @Composable
 private fun DeviceItem(
-    device: Device,
-    onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
-    onDeviceClick: (() -> Unit),
+  device: Device,
+  onOnOffClick: (nodeId: NodeId, value: Boolean) -> Unit,
+  onDeviceClick: (() -> Unit),
 ) {
   val isOn = device.primaryEndpoint.isOn
   val bgColor =
-      if (device.isOnline && isOn) MaterialTheme.colorScheme.surfaceVariant
-      else MaterialTheme.colorScheme.surface
+    if (device.isOnline && isOn) MaterialTheme.colorScheme.surfaceVariant
+    else MaterialTheme.colorScheme.surface
   val contentColor =
-      if (device.isOnline && isOn) MaterialTheme.colorScheme.onSurfaceVariant
-      else MaterialTheme.colorScheme.onSurface
+    if (device.isOnline && isOn) MaterialTheme.colorScheme.onSurfaceVariant
+    else MaterialTheme.colorScheme.onSurface
   val onCheckedChange: (value: Boolean) -> Unit = { onOnOffClick(device.id, it) }
   Surface(
-      modifier =
-          Modifier.padding(top = MaterialTheme.spacing.paddingSmall)
-              .padding(PaddingValues(horizontal = MaterialTheme.spacing.paddingSmall)),
-      border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-      contentColor = contentColor,
-      color = bgColor,
-      shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
-      onClick = onDeviceClick,
+    modifier =
+      Modifier.padding(top = MaterialTheme.spacing.paddingSmall)
+        .padding(PaddingValues(horizontal = MaterialTheme.spacing.paddingSmall)),
+    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+    contentColor = contentColor,
+    color = bgColor,
+    shape = RoundedCornerShape(MaterialTheme.spacing.roundedCorner),
+    onClick = onDeviceClick,
   ) {
     Column(modifier = Modifier.padding(MaterialTheme.spacing.paddingSurfaceContent)) {
       if (!device.isOnline) {
         OfflineLabel(modifier = Modifier.fillMaxWidth())
       }
       Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingSmall),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingSmall),
       ) {
         Icon(
-            painter = painterResource(id = device.deviceType.iconId),
-            contentDescription = null, // decorative element
+          painter = painterResource(id = device.deviceType.iconId),
+          contentDescription = null, // decorative element
         )
         Column {
           Text(text = device.name, style = MaterialTheme.typography.bodyLarge)
@@ -272,52 +270,50 @@ private fun DeviceItem(
 
 @Composable
 private fun NewDeviceAlertDialog(
-    onCommissionedDeviceNameCaptured: (name: String) -> Unit,
-    deviceAttestationFailureIgnored: Boolean,
+  onCommissionedDeviceNameCaptured: (name: String) -> Unit,
+  deviceAttestationFailureIgnored: Boolean,
 ) {
   var inputText by remember { mutableStateOf("") }
   AlertDialog(
-      title = { Text(text = "Specify device name") },
-      text = {
-        Column {
-          TextField(
-              value = inputText,
-              onValueChange = { inputText = it },
-              label = { Text("Device name") },
-              modifier = Modifier.fillMaxWidth(),
-          )
-          if (deviceAttestationFailureIgnored) {
-            val htmlText =
-                HtmlCompat.fromHtml(
-                        stringResource(R.string.device_attestation_warning),
-                        HtmlCompat.FROM_HTML_MODE_LEGACY,
-                    )
-                    .toString()
-            AndroidView(
-                modifier = Modifier.padding(top = 20.dp),
-                update = { it.text = htmlText },
-                factory = {
-                  MaterialTextView(it).apply {
-                    movementMethod = LinkMovementMethod.getInstance()
-                  }
-                },
-            )
-          }
-        }
-      },
-      confirmButton = {
-        Button(
-            onClick = {
-              // Process inputText
-              onCommissionedDeviceNameCaptured(inputText)
+    title = { Text(text = "Specify device name") },
+    text = {
+      Column {
+        TextField(
+          value = inputText,
+          onValueChange = { inputText = it },
+          label = { Text("Device name") },
+          modifier = Modifier.fillMaxWidth(),
+        )
+        if (deviceAttestationFailureIgnored) {
+          val htmlText =
+            HtmlCompat.fromHtml(
+                stringResource(R.string.device_attestation_warning),
+                HtmlCompat.FROM_HTML_MODE_LEGACY,
+              )
+              .toString()
+          AndroidView(
+            modifier = Modifier.padding(top = 20.dp),
+            update = { it.text = htmlText },
+            factory = {
+              MaterialTextView(it).apply { movementMethod = LinkMovementMethod.getInstance() }
             },
-            enabled = inputText.isNotEmpty(),
-        ) {
-          Text(stringResource(R.string.ok))
+          )
         }
-      },
-      onDismissRequest = {},
-      dismissButton = {},
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          // Process inputText
+          onCommissionedDeviceNameCaptured(inputText)
+        },
+        enabled = inputText.isNotEmpty(),
+      ) {
+        Text(stringResource(R.string.ok))
+      }
+    },
+    onDismissRequest = {},
+    dismissButton = {},
   )
 }
 
@@ -328,29 +324,27 @@ private fun NoDevices() {
     // the image is scaled uniformly to whichever dimension (width or height)
     // needs the least scaling, and the other axis is cropped.
     Image(
-        painter = painterResource(R.drawable.bg_empty_dashboard),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxSize(),
+      painter = painterResource(R.drawable.bg_empty_dashboard),
+      contentDescription = null,
+      contentScale = ContentScale.Crop,
+      modifier = Modifier.fillMaxSize(),
     )
     // Place the title/subtitle in a column whose bottom sits 20 % above the
     // bottom edge of the screen.
     Column(
-        modifier =
-            Modifier.align(Alignment.BottomCenter)
-                .padding(bottom = maxHeight * 0.2f)
-                .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+      modifier =
+        Modifier.align(Alignment.BottomCenter).padding(bottom = maxHeight * 0.2f).fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       Text(
-          text = stringResource(R.string.home_empty_dashboard_title),
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          style = MaterialTheme.typography.bodyMedium,
+        text = stringResource(R.string.home_empty_dashboard_title),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = MaterialTheme.typography.bodyMedium,
       )
       Text(
-          text = stringResource(R.string.home_empty_dashboard_subtitle),
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          style = MaterialTheme.typography.bodySmall,
+        text = stringResource(R.string.home_empty_dashboard_subtitle),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = MaterialTheme.typography.bodySmall,
       )
     }
   }

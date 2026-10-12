@@ -26,11 +26,11 @@ import io.aether.android.spacing
 
 @Composable
 internal fun EndpointListContent(
-    infos: List<DeviceMatterInfo>,
-    showSearch: Boolean,
-    searchQuery: String,
-    onSearchQueryChange: (String) -> Unit,
-    onSelectEndpoint: (EndpointId) -> Unit,
+  infos: List<DeviceMatterInfo>,
+  showSearch: Boolean,
+  searchQuery: String,
+  onSearchQueryChange: (String) -> Unit,
+  onSelectEndpoint: (EndpointId) -> Unit,
 ) {
   val listState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
 
@@ -42,81 +42,79 @@ internal fun EndpointListContent(
   val normalizedQuery = searchQuery.trim().lowercase()
 
   Column(
-      modifier = Modifier.fillMaxSize().padding(MaterialTheme.spacing.paddingNormal),
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
+    modifier = Modifier.fillMaxSize().padding(MaterialTheme.spacing.paddingNormal),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingNormal),
   ) {
     if (showSearch) {
       SearchTextField(
-          value = searchQuery,
-          onValueChange = onSearchQueryChange,
-          label = { Text(stringResource(R.string.device_explorer_search_endpoint)) },
+        value = searchQuery,
+        onValueChange = onSearchQueryChange,
+        label = { Text(stringResource(R.string.device_explorer_search_endpoint)) },
       )
     }
 
     if (filteredInfos.isEmpty()) {
       Text(
-          text =
-              if (normalizedQuery.isBlank())
-                  stringResource(R.string.device_explorer_endpoints_empty)
-              else stringResource(R.string.device_explorer_no_results),
-          style = MaterialTheme.typography.bodyMedium,
+        text =
+          if (normalizedQuery.isBlank()) stringResource(R.string.device_explorer_endpoints_empty)
+          else stringResource(R.string.device_explorer_no_results),
+        style = MaterialTheme.typography.bodyMedium,
       )
       return@Column
     }
 
     LazyColumn(
-        state = listState,
-        modifier = Modifier.weight(1f),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+      state = listState,
+      modifier = Modifier.weight(1f),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       items(filteredInfos, key = { "e-${it.endpointId}" }) { info ->
         val deviceTypes =
-            info.types
-                .map { typeId ->
-                  val typeName =
-                      DEVICES[typeId]
-                          ?: stringResource(R.string.device_explorer_endpoint_type_unknown)
-                  typeId to typeName
-                }
-                .sortedBy { it.first }
+          info.types
+            .map { typeId ->
+              val typeName =
+                DEVICES[typeId] ?: stringResource(R.string.device_explorer_endpoint_type_unknown)
+              typeId to typeName
+            }
+            .sortedBy { it.first }
         val titleName = deviceTypes.joinToString(" & ") { it.second }
         ExplorerRow(
-            text = formatEndpointLabel(info.endpointId, titleName),
-            secondaryText =
-                buildString {
-                  if (deviceTypes.size == 1) {
-                    append(
-                        stringResource(
-                            R.string.device_explorer_device_type,
-                            formatIdAndName(
-                                deviceTypes.first().first.value,
-                                deviceTypes.first().second,
-                            ),
-                        ),
-                    )
-                    append("\n")
-                  } else if (deviceTypes.isNotEmpty()) {
-                    append(stringResource(R.string.device_explorer_device_types))
-                    append("\n")
-                    deviceTypes.forEach { (typeId, name) ->
-                      append(
-                          stringResource(
-                              R.string.device_explorer_device_types_item,
-                              formatIdAndName(typeId.value, name),
-                          ),
-                      )
-                      append("\n")
-                    }
-                  }
+          text = formatEndpointLabel(info.endpointId, titleName),
+          secondaryText =
+            buildString {
+              if (deviceTypes.size == 1) {
+                append(
+                  stringResource(
+                    R.string.device_explorer_device_type,
+                    formatIdAndName(
+                      deviceTypes.first().first.value,
+                      deviceTypes.first().second,
+                    ),
+                  ),
+                )
+                append("\n")
+              } else if (deviceTypes.isNotEmpty()) {
+                append(stringResource(R.string.device_explorer_device_types))
+                append("\n")
+                deviceTypes.forEach { (typeId, name) ->
                   append(
-                      stringResource(
-                          R.string.device_explorer_endpoint_metadata,
-                          info.serverClusters.size,
-                          info.clientClusters.size,
-                      ),
+                    stringResource(
+                      R.string.device_explorer_device_types_item,
+                      formatIdAndName(typeId.value, name),
+                    ),
                   )
-                },
-            onClick = { onSelectEndpoint(info.endpointId) },
+                  append("\n")
+                }
+              }
+              append(
+                stringResource(
+                  R.string.device_explorer_endpoint_metadata,
+                  info.serverClusters.size,
+                  info.clientClusters.size,
+                ),
+              )
+            },
+          onClick = { onSelectEndpoint(info.endpointId) },
         )
       }
     }

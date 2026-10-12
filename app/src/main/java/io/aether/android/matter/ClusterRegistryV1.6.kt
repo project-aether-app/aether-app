@@ -6,378 +6,366 @@
 package io.aether.android.matter
 
 val CLUSTERS_1_6 =
-    mapOf<ClusterId, ClusterInfo>(
-        Clusters.TemperatureAlarm.ID to
-            ClusterInfo(
-                name = "Temperature Alarm",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.TemperatureAlarm.Attributes.CriticalOverTemperatureThreshold.ID to
-                            AttributeInfo(
-                                name = "CriticalOverTemperatureThreshold",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureAlarm.Attributes.MajorOverTemperatureThreshold.ID to
-                            AttributeInfo(
-                                name = "MajorOverTemperatureThreshold",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureAlarm.Attributes.MinorOverTemperatureThreshold.ID to
-                            AttributeInfo(
-                                name = "MinorOverTemperatureThreshold",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureAlarm.Attributes.MinorUnderTemperatureThreshold.ID to
-                            AttributeInfo(
-                                name = "MinorUnderTemperatureThreshold",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureAlarm.Attributes.MajorUnderTemperatureThreshold.ID to
-                            AttributeInfo(
-                                name = "MajorUnderTemperatureThreshold",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.TemperatureAlarm.Attributes.CriticalUnderTemperatureThreshold.ID to
-                            AttributeInfo(
-                                name = "CriticalUnderTemperatureThreshold",
-                                type = DataType.TEMPERATURE,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.TemperatureAlarm.CommandsIncoming.SetTemperatureAlarmThresholds
-                            .ID to
-                            CommandInfo(
-                                name = "SetTemperatureAlarmThresholds",
-                                privilege = Privilege.OPERATE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "CriticalOverTemperatureThreshold",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "MajorOverTemperatureThreshold",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "MinorOverTemperatureThreshold",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "MinorUnderTemperatureThreshold",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "MajorUnderTemperatureThreshold",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "CriticalUnderTemperatureThreshold",
-                                                type = DataType.TEMPERATURE,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events = mapOf<EventId, EventInfo>(),
-            ),
-        Clusters.Groupcast.ID to
-            ClusterInfo(
-                name = "Groupcast",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.Groupcast.Attributes.Membership.ID to
-                            AttributeInfo(
-                                name = "Membership",
-                                type = DataType.LIST_MEMBERSHIP_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.Groupcast.Attributes.MaxMembershipCount.ID to
-                            AttributeInfo(
-                                name = "MaxMembershipCount",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.Groupcast.Attributes.MaxMcastAddrCount.ID to
-                            AttributeInfo(
-                                name = "MaxMcastAddrCount",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.Groupcast.Attributes.UsedMcastAddrCount.ID to
-                            AttributeInfo(
-                                name = "UsedMcastAddrCount",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.Groupcast.Attributes.FabricUnderTest.ID to
-                            AttributeInfo(
-                                name = "FabricUnderTest",
-                                type = DataType.FABRIC_INDEX,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.Groupcast.CommandsIncoming.JoinGroup.ID to
-                            CommandInfo(
-                                name = "JoinGroup",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Endpoints",
-                                                type = DataType.LIST_ENDPOINT_ID,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "KeySetID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        3u to
-                                            ParameterInfo(
-                                                name = "Key",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                        4u to
-                                            ParameterInfo(
-                                                name = "UseAuxiliaryACL",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        5u to
-                                            ParameterInfo(
-                                                name = "ReplaceEndpoints",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                        6u to
-                                            ParameterInfo(
-                                                name = "McastAddrPolicy",
-                                                type =
-                                                    DataType
-                                                        .GROUPCAST_CLUSTER_MULTICAST_ADDR_POLICY_ENUM,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.Groupcast.CommandsIncoming.LeaveGroup.ID to
-                            CommandInfo(
-                                name = "LeaveGroup",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Endpoints",
-                                                type = DataType.LIST_ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.Groupcast.CommandsIncoming.UpdateGroupKey.ID to
-                            CommandInfo(
-                                name = "UpdateGroupKey",
-                                privilege = Privilege.MANAGE,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "KeySetID",
-                                                type = DataType.U_INT16,
-                                            ),
-                                        2u to
-                                            ParameterInfo(
-                                                name = "Key",
-                                                type = DataType.OCTET_STRING,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.Groupcast.CommandsIncoming.ConfigureAuxiliaryACL.ID to
-                            CommandInfo(
-                                name = "ConfigureAuxiliaryACL",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "UseAuxiliaryACL",
-                                                type = DataType.BOOLEAN,
-                                            ),
-                                    ),
-                            ),
-                        Clusters.Groupcast.CommandsIncoming.GroupcastTesting.ID to
-                            CommandInfo(
-                                name = "GroupcastTesting",
-                                privilege = Privilege.ADMINISTER,
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "TestOperation",
-                                                type =
-                                                    DataType
-                                                        .GROUPCAST_CLUSTER_GROUPCAST_TESTING_ENUM,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "DurationSeconds",
-                                                type = DataType.U_INT16,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                commandsOutgoing =
-                    mapOf<CommandId, CommandInfo>(
-                        Clusters.Groupcast.CommandsOutgoing.LeaveGroupResponse.ID to
-                            CommandInfo(
-                                name = "LeaveGroupResponse",
-                                parameters =
-                                    mapOf<UInt, ParameterInfo>(
-                                        0u to
-                                            ParameterInfo(
-                                                name = "GroupID",
-                                                type = DataType.GROUP_ID,
-                                            ),
-                                        1u to
-                                            ParameterInfo(
-                                                name = "Endpoints",
-                                                type = DataType.LIST_ENDPOINT_ID,
-                                            ),
-                                    ),
-                            ),
-                    ),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.Groupcast.Events.GroupcastTesting.ID to
-                            EventInfo(
-                                name = "GroupcastTesting",
-                            ),
-                    ),
-            ),
-        Clusters.AmbientContextSensing.ID to
-            ClusterInfo(
-                name = "Ambient Context Sensing",
-                attributes =
-                    mapOf<AttributeId, AttributeInfo>(
-                        Clusters.AmbientContextSensing.Attributes.HumanActivityDetected.ID to
-                            AttributeInfo(
-                                name = "HumanActivityDetected",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.ObjectIdentified.ID to
-                            AttributeInfo(
-                                name = "ObjectIdentified",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.AudioContextDetected.ID to
-                            AttributeInfo(
-                                name = "AudioContextDetected",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.AmbientContextType.ID to
-                            AttributeInfo(
-                                name = "AmbientContextType",
-                                type = DataType.LIST_AMBIENT_CONTEXT_TYPE_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.AmbientContextTypeSupported.ID to
-                            AttributeInfo(
-                                name = "AmbientContextTypeSupported",
-                                type = DataType.LIST_SEMANTIC_TAG_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.ObjectCountThresholdReached.ID to
-                            AttributeInfo(
-                                name = "ObjectCountThresholdReached",
-                                type = DataType.BOOLEAN,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.ObjectCountConfig.ID to
-                            AttributeInfo(
-                                name = "ObjectCountConfig",
-                                type = DataType.OBJECT_COUNT_CONFIG_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.ObjectCount.ID to
-                            AttributeInfo(
-                                name = "ObjectCount",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.SimultaneousDetectionLimit.ID to
-                            AttributeInfo(
-                                name = "SimultaneousDetectionLimit",
-                                type = DataType.U_INT8,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.OPERATE,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.HoldTime.ID to
-                            AttributeInfo(
-                                name = "HoldTime",
-                                type = DataType.U_INT16,
-                                readPrivilege = Privilege.VIEW,
-                                writePrivilege = Privilege.MANAGE,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.HoldTimeLimits.ID to
-                            AttributeInfo(
-                                name = "HoldTimeLimits",
-                                type = DataType.HOLD_TIME_LIMITS_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                        Clusters.AmbientContextSensing.Attributes.PredictedActivity.ID to
-                            AttributeInfo(
-                                name = "PredictedActivity",
-                                type = DataType.LIST_PREDICTED_ACTIVITY_STRUCT,
-                                readPrivilege = Privilege.VIEW,
-                            ),
-                    ),
-                commandsIncoming = mapOf<CommandId, CommandInfo>(),
-                commandsOutgoing = mapOf<CommandId, CommandInfo>(),
-                events =
-                    mapOf<EventId, EventInfo>(
-                        Clusters.AmbientContextSensing.Events.AmbientContextDetectStarted.ID to
-                            EventInfo(
-                                name = "AmbientContextDetectStarted",
-                            ),
-                        Clusters.AmbientContextSensing.Events.AmbientContextDetectEnded.ID to
-                            EventInfo(
-                                name = "AmbientContextDetectEnded",
-                            ),
-                    ),
-            ),
-    )
+  mapOf<ClusterId, ClusterInfo>(
+    Clusters.TemperatureAlarm.ID to
+      ClusterInfo(
+        name = "Temperature Alarm",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.TemperatureAlarm.Attributes.CriticalOverTemperatureThreshold.ID to
+              AttributeInfo(
+                name = "CriticalOverTemperatureThreshold",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureAlarm.Attributes.MajorOverTemperatureThreshold.ID to
+              AttributeInfo(
+                name = "MajorOverTemperatureThreshold",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureAlarm.Attributes.MinorOverTemperatureThreshold.ID to
+              AttributeInfo(
+                name = "MinorOverTemperatureThreshold",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureAlarm.Attributes.MinorUnderTemperatureThreshold.ID to
+              AttributeInfo(
+                name = "MinorUnderTemperatureThreshold",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureAlarm.Attributes.MajorUnderTemperatureThreshold.ID to
+              AttributeInfo(
+                name = "MajorUnderTemperatureThreshold",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.TemperatureAlarm.Attributes.CriticalUnderTemperatureThreshold.ID to
+              AttributeInfo(
+                name = "CriticalUnderTemperatureThreshold",
+                type = DataType.TEMPERATURE,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.TemperatureAlarm.CommandsIncoming.SetTemperatureAlarmThresholds.ID to
+              CommandInfo(
+                name = "SetTemperatureAlarmThresholds",
+                privilege = Privilege.OPERATE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "CriticalOverTemperatureThreshold",
+                        type = DataType.TEMPERATURE,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "MajorOverTemperatureThreshold",
+                        type = DataType.TEMPERATURE,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "MinorOverTemperatureThreshold",
+                        type = DataType.TEMPERATURE,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "MinorUnderTemperatureThreshold",
+                        type = DataType.TEMPERATURE,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "MajorUnderTemperatureThreshold",
+                        type = DataType.TEMPERATURE,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "CriticalUnderTemperatureThreshold",
+                        type = DataType.TEMPERATURE,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events = mapOf<EventId, EventInfo>(),
+      ),
+    Clusters.Groupcast.ID to
+      ClusterInfo(
+        name = "Groupcast",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.Groupcast.Attributes.Membership.ID to
+              AttributeInfo(
+                name = "Membership",
+                type = DataType.LIST_MEMBERSHIP_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.Groupcast.Attributes.MaxMembershipCount.ID to
+              AttributeInfo(
+                name = "MaxMembershipCount",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.Groupcast.Attributes.MaxMcastAddrCount.ID to
+              AttributeInfo(
+                name = "MaxMcastAddrCount",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.Groupcast.Attributes.UsedMcastAddrCount.ID to
+              AttributeInfo(
+                name = "UsedMcastAddrCount",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.Groupcast.Attributes.FabricUnderTest.ID to
+              AttributeInfo(
+                name = "FabricUnderTest",
+                type = DataType.FABRIC_INDEX,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.Groupcast.CommandsIncoming.JoinGroup.ID to
+              CommandInfo(
+                name = "JoinGroup",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Endpoints",
+                        type = DataType.LIST_ENDPOINT_ID,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "KeySetID",
+                        type = DataType.U_INT16,
+                      ),
+                    3u to
+                      ParameterInfo(
+                        name = "Key",
+                        type = DataType.OCTET_STRING,
+                      ),
+                    4u to
+                      ParameterInfo(
+                        name = "UseAuxiliaryACL",
+                        type = DataType.BOOLEAN,
+                      ),
+                    5u to
+                      ParameterInfo(
+                        name = "ReplaceEndpoints",
+                        type = DataType.BOOLEAN,
+                      ),
+                    6u to
+                      ParameterInfo(
+                        name = "McastAddrPolicy",
+                        type = DataType.GROUPCAST_CLUSTER_MULTICAST_ADDR_POLICY_ENUM,
+                      ),
+                  ),
+              ),
+            Clusters.Groupcast.CommandsIncoming.LeaveGroup.ID to
+              CommandInfo(
+                name = "LeaveGroup",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Endpoints",
+                        type = DataType.LIST_ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+            Clusters.Groupcast.CommandsIncoming.UpdateGroupKey.ID to
+              CommandInfo(
+                name = "UpdateGroupKey",
+                privilege = Privilege.MANAGE,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "KeySetID",
+                        type = DataType.U_INT16,
+                      ),
+                    2u to
+                      ParameterInfo(
+                        name = "Key",
+                        type = DataType.OCTET_STRING,
+                      ),
+                  ),
+              ),
+            Clusters.Groupcast.CommandsIncoming.ConfigureAuxiliaryACL.ID to
+              CommandInfo(
+                name = "ConfigureAuxiliaryACL",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "UseAuxiliaryACL",
+                        type = DataType.BOOLEAN,
+                      ),
+                  ),
+              ),
+            Clusters.Groupcast.CommandsIncoming.GroupcastTesting.ID to
+              CommandInfo(
+                name = "GroupcastTesting",
+                privilege = Privilege.ADMINISTER,
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "TestOperation",
+                        type = DataType.GROUPCAST_CLUSTER_GROUPCAST_TESTING_ENUM,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "DurationSeconds",
+                        type = DataType.U_INT16,
+                      ),
+                  ),
+              ),
+          ),
+        commandsOutgoing =
+          mapOf<CommandId, CommandInfo>(
+            Clusters.Groupcast.CommandsOutgoing.LeaveGroupResponse.ID to
+              CommandInfo(
+                name = "LeaveGroupResponse",
+                parameters =
+                  mapOf<UInt, ParameterInfo>(
+                    0u to
+                      ParameterInfo(
+                        name = "GroupID",
+                        type = DataType.GROUP_ID,
+                      ),
+                    1u to
+                      ParameterInfo(
+                        name = "Endpoints",
+                        type = DataType.LIST_ENDPOINT_ID,
+                      ),
+                  ),
+              ),
+          ),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.Groupcast.Events.GroupcastTesting.ID to EventInfo(name = "GroupcastTesting"),
+          ),
+      ),
+    Clusters.AmbientContextSensing.ID to
+      ClusterInfo(
+        name = "Ambient Context Sensing",
+        attributes =
+          mapOf<AttributeId, AttributeInfo>(
+            Clusters.AmbientContextSensing.Attributes.HumanActivityDetected.ID to
+              AttributeInfo(
+                name = "HumanActivityDetected",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.ObjectIdentified.ID to
+              AttributeInfo(
+                name = "ObjectIdentified",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.AudioContextDetected.ID to
+              AttributeInfo(
+                name = "AudioContextDetected",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.AmbientContextType.ID to
+              AttributeInfo(
+                name = "AmbientContextType",
+                type = DataType.LIST_AMBIENT_CONTEXT_TYPE_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.AmbientContextTypeSupported.ID to
+              AttributeInfo(
+                name = "AmbientContextTypeSupported",
+                type = DataType.LIST_SEMANTIC_TAG_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.ObjectCountThresholdReached.ID to
+              AttributeInfo(
+                name = "ObjectCountThresholdReached",
+                type = DataType.BOOLEAN,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.ObjectCountConfig.ID to
+              AttributeInfo(
+                name = "ObjectCountConfig",
+                type = DataType.OBJECT_COUNT_CONFIG_STRUCT,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.AmbientContextSensing.Attributes.ObjectCount.ID to
+              AttributeInfo(
+                name = "ObjectCount",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.SimultaneousDetectionLimit.ID to
+              AttributeInfo(
+                name = "SimultaneousDetectionLimit",
+                type = DataType.U_INT8,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.OPERATE,
+              ),
+            Clusters.AmbientContextSensing.Attributes.HoldTime.ID to
+              AttributeInfo(
+                name = "HoldTime",
+                type = DataType.U_INT16,
+                readPrivilege = Privilege.VIEW,
+                writePrivilege = Privilege.MANAGE,
+              ),
+            Clusters.AmbientContextSensing.Attributes.HoldTimeLimits.ID to
+              AttributeInfo(
+                name = "HoldTimeLimits",
+                type = DataType.HOLD_TIME_LIMITS_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+            Clusters.AmbientContextSensing.Attributes.PredictedActivity.ID to
+              AttributeInfo(
+                name = "PredictedActivity",
+                type = DataType.LIST_PREDICTED_ACTIVITY_STRUCT,
+                readPrivilege = Privilege.VIEW,
+              ),
+          ),
+        commandsIncoming = mapOf<CommandId, CommandInfo>(),
+        commandsOutgoing = mapOf<CommandId, CommandInfo>(),
+        events =
+          mapOf<EventId, EventInfo>(
+            Clusters.AmbientContextSensing.Events.AmbientContextDetectStarted.ID to
+              EventInfo(name = "AmbientContextDetectStarted"),
+            Clusters.AmbientContextSensing.Events.AmbientContextDetectEnded.ID to
+              EventInfo(name = "AmbientContextDetectEnded"),
+          ),
+      ),
+  )
