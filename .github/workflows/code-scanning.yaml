@@ -50,9 +50,13 @@ jobs:
           fileName: ktfmt-linux-x86_64-*.tar.gz
           extract: true
           latest: true
+      - name: Install Kotlin formatter
+        run: |
+          install ktfmt-linux-x86_64-*/ktfmt /usr/local/bin
+          rm -rf ktfmt-linux-x86_64-*
       - name: Format Kotlin scripts and source files
         run: |
-          ./ktfmt --google-style \
+          ktfmt --google-style \
             $(find . -name "*.kt" -o -name "*.kts")
       - name: Check for formatting violations
         run: git diff --exit-code
