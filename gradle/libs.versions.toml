@@ -4,19 +4,19 @@
 [versions]
 
 # Core Build Environment
-android-gradle-plugin = "9.2.1"
-kotlin = "2.3.21"
-ksp = "2.3.9"
+android-gradle-plugin = "9.4.1"
+kotlin = "2.4.21"
+ksp = "2.3.12"
 
 # AndroidX
 androidx-activity-compose = "1.13.0"
-androidx-appcompat = "1.7.1"
-androidx-compose-bom = "2026.05.01"
-androidx-core-ktx = "1.18.0"
+androidx-appcompat = "1.8.0"
+androidx-compose-bom = "2026.09.00"
+androidx-core-ktx = "1.19.1"
 androidx-datastore = "1.2.1"
-androidx-lifecycle = "2.10.0"
+androidx-lifecycle = "2.11.0"
 androidx-hilt-navigation-compose = "1.4.0"
-androidx-navigation-compose = "2.9.8"
+androidx-navigation-compose = "2.10.2"
 androidx-preference = "1.2.1"
 
 # Testing Frameworks
@@ -24,26 +24,26 @@ androidx-test-espresso = "3.7.0"
 androidx-test-junit = "1.3.0"
 androidx-test-rules = "1.7.0"
 androidx-test-runner = "1.7.0"
-androidx-test-uiautomator = "2.3.0"
+androidx-test-uiautomator = "2.4.0"
 junit = "4.13.2"
 
 # Google / Play Services / DI
 google-code-scanner = "16.1.0"
 google-material = "1.14.0"
 google-matter-sdk = "1.0"
-google-play-services-base = "18.10.0"
+google-play-services-base = "18.11.0"
 google-play-services-home = "16.0.0"
 google-play-services-threadnetwork = "16.3.0"
 google-protobuf-plugin = "0.10.0"
-google-protobuf-javalite = "4.35.0"
-guava = "33.6.0-jre"
-hilt = "2.59.2"
+google-protobuf-javalite = "4.36.2"
+guava = "33.7.2-jre"
+hilt = "2.60.1"
 
 # Third-Party Tools & Utilities
 desugar-jdk-libs = "2.1.5"
 kotlinx-coroutines-play-services = "1.11.0"
 ktfmt-gradle = "0.27.0"
-paparazzi = "2.0.0-alpha05"
+paparazzi = "2.0.0-alpha05.1"
 timber = "5.0.1"
 version-catalog-update = "1.1.1"
 zhanghai-compose-preference = "1.1.1"
