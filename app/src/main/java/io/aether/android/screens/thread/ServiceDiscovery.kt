@@ -9,6 +9,7 @@ import android.net.nsd.NsdServiceInfo
 import android.os.Build
 import com.google.common.io.BaseEncoding
 import java.util.concurrent.Semaphore
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -109,7 +110,7 @@ class DiscoveryListener(
         @Suppress("DEPRECATION")
         nsdManager.resolveService(service, ResolveListener(resolvedServices))
         // NsdManager fails if several resolve requests are sent without delays between them
-        delay(100)
+        delay(100.milliseconds)
         lock.release()
       }
     }

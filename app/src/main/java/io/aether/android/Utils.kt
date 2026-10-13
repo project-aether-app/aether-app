@@ -11,6 +11,7 @@ import java.lang.Long.max
 import java.security.SecureRandom
 import java.time.Instant
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.seconds
 import timber.log.Timber
 
 // -------------------------------------------------------------------------------------------------
@@ -174,8 +175,8 @@ enum class StateChangesMonitoringMode {
 val STATE_CHANGES_MONITORING_MODE = StateChangesMonitoringMode.Subscription
 
 // Intervals for PeriodicRead mode.
-const val PERIODIC_READ_INTERVAL_HOME_SCREEN_SECONDS = 10
-const val PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS = 2
+val PERIODIC_READ_INTERVAL_HOME_SCREEN = 10.seconds
+val PERIODIC_READ_INTERVAL_DEVICE_SCREEN = 2.seconds
 
 // ----- Device Sharing -----
 

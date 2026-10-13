@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chip.devicecontroller.model.NodeState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.aether.android.PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS
+import io.aether.android.PERIODIC_READ_INTERVAL_DEVICE_SCREEN
 import io.aether.android.STATE_CHANGES_MONITORING_MODE
 import io.aether.android.StateChangesMonitoringMode
 import io.aether.android.chip.ChipClient
@@ -349,7 +349,7 @@ constructor(
             colorTemperature ?: 0,
           )
         }
-        delay(PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS * 1000L)
+        delay(PERIODIC_READ_INTERVAL_DEVICE_SCREEN)
       }
     }
   }
