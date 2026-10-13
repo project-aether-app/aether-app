@@ -35,6 +35,7 @@ import io.aether.android.matter.NodeId
 import io.aether.android.platform.PlayServices
 import io.aether.android.screens.common.DialogInfo
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -259,7 +260,13 @@ constructor(
     viewModelScope.launch {
       fabricRepository.getDevices().forEach { basicDevice ->
         val device =
-          runCatching { devicesRepository.getDevice(basicDevice.id) }.getOrNull() ?: return@forEach
+          try {
+            devicesRepository.getDevice(basicDevice.id)
+          } catch (e: CancellationException) {
+            throw e // Propagate cancellation so the coroutine can properly cancel.
+          } catch (e: Throwable) {
+            null
+          } ?: return@launch
         runCatching {
           subscriptionHelper.awaitSubscribeToPeriodicUpdates(
             chipClient.getConnectedDevicePointer(device.id),
@@ -320,15 +327,20 @@ constructor(
   private fun updateEndpointFromReport(nodeId: NodeId, nodeState: NodeState) {
     viewModelScope.launch {
       val endpoint =
-        runCatching { devicesRepository.getDevice(nodeId).primaryEndpoint }.getOrNull()
-          ?: return@launch
+        try {
+          devicesRepository.getDevice(nodeId).primaryEndpoint
+        } catch (e: CancellationException) {
+          throw e // Propagate cancellation so the coroutine can properly cancel.
+        } catch (e: Throwable) {
+          null
+        } ?: return@launch
       val on =
         subscriptionHelper.extractAttribute(
           nodeState,
           endpoint.id,
           Clusters.OnOff.ID,
           Clusters.OnOff.Attributes.OnOff.ID.toLong(),
-        ) as Boolean? ?: return@launch
+        ) as? Boolean ?: return@launch
       devicesRepository.upsertEndpointState(
         nodeId,
         endpoint.id,

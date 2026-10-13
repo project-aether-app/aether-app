@@ -25,7 +25,7 @@ import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 
-class FabricsRepository @Inject constructor(private val chipClient: ChipClient) {
+class DeviceFabricsRepository @Inject constructor(private val chipClient: ChipClient) {
 
   @OptIn(ExperimentalAtomicApi::class)
   suspend fun readManagedFabrics(nodeId: NodeId): List<ManagedFabric> = runCatching {

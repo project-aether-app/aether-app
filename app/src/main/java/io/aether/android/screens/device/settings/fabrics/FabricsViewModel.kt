@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.R
-import io.aether.android.data.FabricsRepository
+import io.aether.android.data.DeviceFabricsRepository
 import io.aether.android.data.models.ManagedFabric
 import io.aether.android.matter.NodeId
 import javax.inject.Inject
@@ -30,7 +30,7 @@ data class FabricsUiState(
 )
 
 @HiltViewModel
-class FabricsViewModel @Inject constructor(private val repository: FabricsRepository) :
+class FabricsViewModel @Inject constructor(private val repository: DeviceFabricsRepository) :
   ViewModel() {
 
   private val _uiState = MutableStateFlow(FabricsUiState())

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.aether.android.R
-import io.aether.android.data.DiagnosticsRepository
+import io.aether.android.data.DeviceDiagnosticsRepository
 import io.aether.android.data.models.EthernetNetworkDiagnosticsData
 import io.aether.android.data.models.GeneralDiagnosticsData
 import io.aether.android.data.models.SoftwareDiagnosticsData
@@ -75,7 +75,7 @@ private sealed interface PartialState {
 @HiltViewModel
 class DiagnosticsViewModel
 @Inject
-constructor(private val diagnosticsRepository: DiagnosticsRepository) : ViewModel() {
+constructor(private val diagnosticsRepository: DeviceDiagnosticsRepository) : ViewModel() {
 
   private val refreshTrigger = MutableSharedFlow<RefreshRequest>(replay = 1)
 

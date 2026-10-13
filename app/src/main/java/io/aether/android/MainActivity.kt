@@ -44,11 +44,6 @@ class MainActivity : ComponentActivity() {
     }
   }
 
-  override fun onStart() {
-    super.onStart()
-    Timber.d("onStart()")
-  }
-
   /**
    * Constants we access from Utils, but that depend on the Activity context to be set to their
    * values.

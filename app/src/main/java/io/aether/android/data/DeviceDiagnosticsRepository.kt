@@ -32,7 +32,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
-class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClient) {
+class DeviceDiagnosticsRepository @Inject constructor(private val chipClient: ChipClient) {
 
   private val readTimeoutDuration = 5.seconds
 
@@ -81,6 +81,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
         .getEndpointState(ROOT_ENDPOINT_ID.toInt())
         ?.getClusterState(Clusters.GeneralDiagnostics.ID.toLong())
         ?: return GeneralDiagnosticsData(networkInterfaces = emptyList(), rebootCount = 0u)
+
     fun attr(id: AttributeId) = clusterState.getAttributeState(id.toLong())?.value
     return GeneralDiagnosticsData(
       networkInterfaces =
@@ -149,6 +150,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
         .getEndpointState(ROOT_ENDPOINT_ID.toInt())
         ?.getClusterState(Clusters.SoftwareDiagnostics.ID.toLong())
         ?: return SoftwareDiagnosticsData(threadMetrics = emptyList())
+
     fun attr(id: AttributeId) = clusterState.getAttributeState(id.toLong())?.value
     return SoftwareDiagnosticsData(
       threadMetrics =
@@ -212,6 +214,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
         .getEndpointState(ROOT_ENDPOINT_ID.toInt())
         ?.getClusterState(Clusters.EthernetNetworkDiagnostics.ID.toLong())
         ?: return EthernetNetworkDiagnosticsData()
+
     fun attr(id: AttributeId) = clusterState.getAttributeState(id.toLong())?.value
     return EthernetNetworkDiagnosticsData(
       phyRate = attr(Clusters.EthernetNetworkDiagnostics.Attributes.PHYRate.ID).toPhyRateOrNull(),
@@ -280,6 +283,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
         .getEndpointState(ROOT_ENDPOINT_ID.toInt())
         ?.getClusterState(Clusters.WiFiNetworkDiagnostics.ID.toLong())
         ?: return WiFiNetworkDiagnosticsData()
+
     fun attr(id: AttributeId) = clusterState.getAttributeState(id.toLong())?.value
     return WiFiNetworkDiagnosticsData(
       bssid = attr(Clusters.WiFiNetworkDiagnostics.Attributes.BSSID.ID).toBSSID(),
@@ -357,6 +361,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
         .getEndpointState(ROOT_ENDPOINT_ID.toInt())
         ?.getClusterState(Clusters.ThreadNetworkDiagnostics.ID.toLong())
         ?: return ThreadNetworkDiagnosticsData()
+
     fun attr(id: AttributeId) = clusterState.getAttributeState(id.toLong())?.value
     return ThreadNetworkDiagnosticsData()
   }
@@ -381,6 +386,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
               interfaceTypeMap[it.type] ?: Enums.DiagnosticsGeneralClusterInterfaceType.Unspecified,
           )
         }
+
       else -> emptyList()
     }
 
@@ -432,6 +438,7 @@ class DiagnosticsRepository @Inject constructor(private val chipClient: ChipClie
             stackSize = it.stackSize?.toUIntOrNull(),
           )
         }
+
       else -> emptyList()
     }
 
