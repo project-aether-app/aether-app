@@ -76,7 +76,7 @@ class DevicePreviewTest {
         DeviceUiState(
           isFirstTimeLoading = false,
           device = testDevice,
-        ),
+        )
     )
   }
 
@@ -87,7 +87,7 @@ class DevicePreviewTest {
         DeviceUiState(
           isFirstTimeLoading = false,
           errorMessageRes = R.string.controllers_offline,
-        ),
+        )
     )
   }
 }

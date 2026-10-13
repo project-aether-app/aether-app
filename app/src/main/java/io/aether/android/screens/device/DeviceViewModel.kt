@@ -67,15 +67,11 @@ constructor(
 
   val uiState: StateFlow<DeviceUiState> =
     combine(
-      device,
-      devicesRepository.lastUpdatedEndpointState,
-      msgDialogInfo,
-      _isBackgroundRefreshing,
-    ) {
-        currentDevice,
-        lastUpdatedEndpointState,
-        dialog,
-        isBackgroundRefreshing ->
+        device,
+        devicesRepository.lastUpdatedEndpointState,
+        msgDialogInfo,
+        _isBackgroundRefreshing,
+      ) { currentDevice, lastUpdatedEndpointState, dialog, isBackgroundRefreshing ->
         DeviceUiState(
           isFirstTimeLoading = currentDevice == null,
           isBackgroundRefreshing = isBackgroundRefreshing,
@@ -225,7 +221,7 @@ constructor(
       viewModelScope.launch {
         runCatching {
           subscriptionHelper.awaitUnsubscribeToPeriodicUpdates(
-            chipClient.getConnectedDevicePointer(nodeId),
+            chipClient.getConnectedDevicePointer(nodeId)
           )
         }
           .onFailure { Timber.w(it, "Failed to unsubscribe nodeId=$nodeId") }

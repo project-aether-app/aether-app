@@ -136,7 +136,7 @@ fun DeviceScreen(
           }
         },
       )
-    },
+    }
   ) { innerPadding ->
     when {
       uiState.isFirstTimeLoading -> {
