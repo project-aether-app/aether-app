@@ -5,9 +5,6 @@ package io.aether.android
 
 import android.content.Context
 import android.content.Intent
-import android.os.Looper
-import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import com.google.protobuf.Timestamp
 import java.io.File
 import java.lang.Long.max
@@ -143,20 +140,6 @@ fun stripLinkLocalInIpAddress(ipAddress: String): String {
 }
 
 // -------------------------------------------------------------------------------------------------
-// Constants
-
-// -------------------------------------------------------------------------------------------------
-// Constants used when creating devices on the app's fabric.
-
-// Shared device creation
-const val SHARED_DEVICE_NAME_PREFIX = "Shared-"
-const val SHARED_DEVICE_NAME_SUFFIX = ""
-const val SHARED_DEVICE_ROOM_PREFIX = "Room-"
-
-// Temporary device name used when commissioning the device to the 3P fabric.
-const val REAL_DEVICE_NAME_PREFIX = "Real-"
-
-// -------------------------------------------------------------------------------------------------
 // Device Sharing constants
 
 // How long a commissioning window for Device Sharing should be open.
@@ -178,9 +161,6 @@ const val MIN_COMMISSIONING_WINDOW_EXPIRATION_SECONDS = 20
 // -------------------------------------------------------------------------------------------------
 // Constants to modify the behavior of the app.
 
-// Whether the on/off switch is disabled when the device is offline.
-const val ON_OFF_SWITCH_DISABLED_WHEN_DEVICE_OFFLINE = false
-
 // ----- Periodic monitoring of device state changes -----
 
 // Modes supported for monitoring state changes.
@@ -198,11 +178,6 @@ const val PERIODIC_READ_INTERVAL_HOME_SCREEN_SECONDS = 10
 const val PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS = 2
 
 // ----- Device Sharing -----
-
-// Whether DeviceSharing does commissioning with GPS.
-// Alternative is using DNS-SD to discover the device and get its IP address, and then
-// do the standard 3P commissioning.
-const val DEVICE_SHARING_WITH_GPS = true
 
 // Which API should be used for opening the commissioning window for DeviceSharing.
 enum class OpenCommissioningWindowApi {
@@ -233,29 +208,3 @@ enum class CommissioningWindowStatus(val status: Int) {
 }
 
 val OPEN_COMMISSIONING_WINDOW_API = OpenCommissioningWindowApi.ChipDeviceController
-
-/**
- * ToastTimber logs the same message on both Timber and Toast, thus giving some feedback to the user
- * that doesn't have ADB connected
- */
-object ToastTimber {
-  fun d(msg: String, activity: FragmentActivity) {
-    Timber.d(msg)
-    checkLooper()
-    Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
-  }
-
-  fun e(msg: String, activity: FragmentActivity) {
-    Timber.e(msg)
-    checkLooper()
-    Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
-  }
-
-  /**
-   * Asserts Looper is running in the current thread. Important when using Timber in coroutine
-   * Threads that don't have a Looper running
-   */
-  private fun checkLooper() {
-    if (Looper.myLooper() == null) Looper.prepare()
-  }
-}

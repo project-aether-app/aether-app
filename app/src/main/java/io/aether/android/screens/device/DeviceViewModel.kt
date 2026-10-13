@@ -274,7 +274,7 @@ constructor(
         endpoint.id,
         Clusters.OnOff.ID,
         Clusters.OnOff.Attributes.OnOff.ID.toLong(),
-      ) as Boolean? ?: return
+      ) as? Boolean ?: return
     val level =
       if (endpoint.hasLevelControlSupport) {
         subscriptionHelper.extractAttribute(
