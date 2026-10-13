@@ -112,7 +112,7 @@ internal fun DeviceSettingsRoute(
   }
 
   LifecycleResumeEffect(nodeId) {
-    viewModel.loadDevice(nodeId)
+    viewModel.loadDevice(nodeId, forceRefresh = true)
     onPauseOrDispose {}
   }
 

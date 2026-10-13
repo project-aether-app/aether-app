@@ -93,11 +93,13 @@ constructor(
     refreshTrigger
       .flatMapLatest { nodeId ->
         flow {
+          var isRefreshing = false
           // Use existing state as a local cache: emit stale data immediately so the UI
           // never flashes "Loading" or shows unknown values while refreshing.
           val cached = deviceCoreDataState.value
           if (cached.device != null && cached.device.id == nodeId) {
             emit(cached.copy(isBackgroundRefreshing = true))
+            isRefreshing = true
           } else {
             emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
           }
@@ -129,6 +131,7 @@ constructor(
                     DeviceSettingsCoreData(
                       device = fallbackDevice,
                       basicInformation = cachedBasicInfo,
+                      isBackgroundRefreshing = isRefreshing,
                     ),
                   )
                   deviceDeferred.await()
@@ -136,7 +139,13 @@ constructor(
               }
             // Emit storage-fresh device with cached basicInfo so e.g. a rename is
             // reflected immediately without waiting for the network round-trip.
-            emit(DeviceSettingsCoreData(device = device, basicInformation = cachedBasicInfo))
+            emit(
+              DeviceSettingsCoreData(
+                device = device,
+                basicInformation = cachedBasicInfo,
+                isBackgroundRefreshing = isRefreshing,
+              ),
+            )
             // Await network result and update with live basic information.
             val basicInfo = networkDeferred.await()
             if (basicInfo != null) {
@@ -155,7 +164,10 @@ constructor(
       )
 
   fun loadDevice(nodeId: NodeId, forceRefresh: Boolean = false) {
-    refreshTrigger.tryEmit(nodeId)
+    val currentRequest = refreshTrigger.replayCache.firstOrNull()
+    if (forceRefresh || currentRequest != nodeId || deviceCoreDataState.value.device == null) {
+      viewModelScope.launch { refreshTrigger.emit(nodeId) }
+    }
   }
 
   private suspend fun syncBasicInfoToStorage(
@@ -244,7 +256,7 @@ constructor(
       val result =
         setDeviceNameUseCase.execute(nodeId, newName) {
           // Refresh from storage immediately so the UI reflects the new name.
-          loadDevice(nodeId)
+          loadDevice(nodeId, forceRefresh = true)
         }
       if (result is SetDeviceNameResult.LocalError) {
         showMsgDialog(R.string.set_device_name_failed, result.exception.message)
@@ -260,7 +272,7 @@ constructor(
     viewModelScope.launch {
       try {
         devicesRepository.updateDeviceTypes(nodeId, listOf(deviceType))
-        loadDevice(nodeId)
+        loadDevice(nodeId, forceRefresh = true)
       } catch (e: Exception) {
         Timber.e(e, "changeDeviceType failed")
       }
