@@ -41,7 +41,6 @@ class DeviceSettingsFabricsPreviewTest {
     snapshotFabricsScreen(
       uiState =
         FabricsUiState(
-          isFirstTimeLoading = false,
           fabrics =
             listOf(
               ManagedFabric(
@@ -77,7 +76,6 @@ class DeviceSettingsFabricsPreviewTest {
     snapshotFabricsScreen(
       uiState =
         FabricsUiState(
-          isFirstTimeLoading = false,
           errorMessageRes = R.string.device_fabrics_error,
         ),
     )

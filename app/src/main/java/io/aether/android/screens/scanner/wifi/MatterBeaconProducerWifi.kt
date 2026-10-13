@@ -15,13 +15,14 @@ import io.aether.android.screens.scanner.MatterBeaconProducer
 import io.aether.android.screens.scanner.Transport
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import timber.log.Timber
 
-private const val SCAN_QUERY_DELAY_MILLIS = 30_000L
+private val SCAN_QUERY_DELAY = 30.seconds
 // See section 5.4.2.6 "Using Wi-Fi Temporary Access Points (Soft-AP)" of the Matter Specification.
 private val MATTER_SSID_PATTERN =
   """MATTER-(\p{XDigit}{3})-(\p{XDigit}{4})-(\p{XDigit}{4})""".toRegex()
@@ -51,7 +52,7 @@ constructor(@param:MatterBeaconInject private val wifiManager: WifiManager) : Ma
         }
 
       requestScan()
-      delay(SCAN_QUERY_DELAY_MILLIS)
+      delay(SCAN_QUERY_DELAY)
     }
   }
 

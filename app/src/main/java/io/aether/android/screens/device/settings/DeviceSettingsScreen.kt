@@ -7,10 +7,12 @@ import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -108,13 +112,14 @@ internal fun DeviceSettingsRoute(
   }
 
   LifecycleResumeEffect(nodeId) {
-    viewModel.loadDevice(nodeId)
+    viewModel.loadDevice(nodeId, forceRefresh = true)
     onPauseOrDispose {}
   }
 
   DeviceSettingsScreen(
     uiState = uiState,
     onBackClick = onBackClick,
+    onRefresh = { viewModel.loadDevice(nodeId, forceRefresh = true) },
     onDismissMsgDialog = { viewModel.dismissMsgDialog() },
     onDeviceNameChange = { name -> viewModel.renameDevice(nodeId, name) },
     onDeviceTypeChange = { type -> viewModel.changeDeviceType(nodeId, type) },
@@ -143,6 +148,7 @@ internal fun DeviceSettingsRoute(
 fun DeviceSettingsScreen(
   uiState: DeviceSettingsUiState,
   onBackClick: () -> Unit,
+  onRefresh: () -> Unit,
   onDismissMsgDialog: () -> Unit,
   onDeviceNameChange: (String) -> Unit,
   onDeviceTypeChange: (DeviceType) -> Unit,
@@ -170,37 +176,46 @@ fun DeviceSettingsScreen(
       )
     },
   ) { innerPadding ->
-    when {
-      uiState.isFirstTimeLoading -> {
-        LoadingIndicator(
-          stringResource(R.string.loading_device_info),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
+    if (uiState.isFirstTimeLoading) {
+      LoadingIndicator(
+        stringResource(R.string.loading_device_info),
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+      )
+    } else {
+      PullToRefreshBox(
+        isRefreshing = uiState.isBackgroundRefreshing,
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+      ) {
+        if (uiState.errorMessageRes != null) {
+          // Satisfy the requirement of having a scrollable container.
+          Box(
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center,
+          ) {
+            EmptyStateErrorBanner(
+              stringResource(uiState.errorMessageRes),
+              modifier = Modifier.fillMaxSize(),
+            )
+          }
+        } else {
+          DeviceSettings(
+            uiState = uiState,
+            onDismissMsgDialog = onDismissMsgDialog,
+            onDeviceNameChange = onDeviceNameChange,
+            onDeviceTypeChange = onDeviceTypeChange,
+            onManageFabricsClick = onManageFabricsClick,
+            onDataModelExplorerClick = onDataModelExplorerClick,
+            onDiagnosticsClick = onDiagnosticsClick,
+            onShareDeviceClick = onShareDeviceClick,
+            onShareDeviceResult = onShareDeviceResult,
+            onRemoveDeviceClick = onRemoveDeviceClick,
+            onRemoveDeviceResult = onRemoveDeviceResult,
+            onForceRemoveDeviceResult = onForceRemoveDeviceResult,
+            modifier = Modifier.fillMaxSize(),
+          )
+        }
       }
-      uiState.errorMessageRes != null -> {
-        EmptyStateErrorBanner(
-          stringResource(uiState.errorMessageRes),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
-      }
-      else ->
-        DeviceSettings(
-          uiState = uiState,
-          onDismissMsgDialog = onDismissMsgDialog,
-          onDeviceNameChange = onDeviceNameChange,
-          onDeviceTypeChange = onDeviceTypeChange,
-          onManageFabricsClick = onManageFabricsClick,
-          onDataModelExplorerClick = onDataModelExplorerClick,
-          onDiagnosticsClick = onDiagnosticsClick,
-          onShareDeviceClick = onShareDeviceClick,
-          onShareDeviceResult = onShareDeviceResult,
-          onRemoveDeviceClick = onRemoveDeviceClick,
-          onRemoveDeviceResult = onRemoveDeviceResult,
-          onForceRemoveDeviceResult = onForceRemoveDeviceResult,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
     }
   }
 }

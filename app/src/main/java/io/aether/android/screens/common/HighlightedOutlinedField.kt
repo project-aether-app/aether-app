@@ -27,9 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import io.aether.android.success
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 
-private const val SUCCESS_HIGHLIGHT_DURATION_MS = 2000L
+private val SUCCESS_HIGHLIGHT_DURATION = 2.seconds
 
 internal enum class FieldHighlight {
   STANDARD,
@@ -108,7 +109,7 @@ fun HighlightedOutlinedTextField(
     if (successTrigger > lastSeen) {
       lastSeen = successTrigger
       highlight = FieldHighlight.SUCCESS
-      delay(SUCCESS_HIGHLIGHT_DURATION_MS)
+      delay(SUCCESS_HIGHLIGHT_DURATION)
       if (highlight == FieldHighlight.SUCCESS) highlight = FieldHighlight.STANDARD
     }
   }
@@ -147,7 +148,7 @@ internal fun HighlightedOutlinedComboField(
     if (successTrigger > lastSeen) {
       lastSeen = successTrigger
       highlight = FieldHighlight.SUCCESS
-      delay(SUCCESS_HIGHLIGHT_DURATION_MS)
+      delay(SUCCESS_HIGHLIGHT_DURATION)
       if (highlight == FieldHighlight.SUCCESS) highlight = FieldHighlight.STANDARD
     }
   }

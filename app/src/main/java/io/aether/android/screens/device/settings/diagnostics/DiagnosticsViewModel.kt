@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 data class DiagnosticsUiState(
   // Lifecycle Flags
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   @field:StringRes val errorMessageRes: Int? = null,
 
@@ -171,10 +171,9 @@ constructor(private val diagnosticsRepository: DeviceDiagnosticsRepository) : Vi
   fun loadDiagnostics(nodeId: NodeId, forceRefresh: Boolean = false) {
     val currentRequest = refreshTrigger.replayCache.firstOrNull()
     if (
-      !forceRefresh && currentRequest?.nodeId == nodeId && uiState.value.generalDiagnostics != null
+      forceRefresh || currentRequest?.nodeId != nodeId || uiState.value.generalDiagnostics == null
     ) {
-      return
+      viewModelScope.launch { refreshTrigger.emit(RefreshRequest(nodeId)) }
     }
-    viewModelScope.launch { refreshTrigger.emit(RefreshRequest(nodeId)) }
   }
 }

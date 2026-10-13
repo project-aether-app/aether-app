@@ -6,6 +6,7 @@ package io.aether.android.screens.device
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,10 +25,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -90,6 +93,7 @@ internal fun DeviceRoute(
     uiState = uiState,
     onBackClick = onBackClick,
     onSettingsClick = { navigateToDeviceSettings(nodeId) },
+    onRefresh = { deviceViewModel.loadDevice(nodeId, forceRefresh = true) },
     onOnOffClick = onOnOffClick,
     onBrightnessChange = onBrightnessChange,
     onColorTemperatureChange = onColorTemperatureChange,
@@ -103,6 +107,7 @@ fun DeviceScreen(
   uiState: DeviceUiState,
   onBackClick: () -> Unit,
   onSettingsClick: () -> Unit,
+  onRefresh: () -> Unit,
   onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
   onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
   onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
@@ -133,30 +138,39 @@ fun DeviceScreen(
       )
     },
   ) { innerPadding ->
-    when {
-      uiState.isFirstTimeLoading -> {
-        LoadingIndicator(
-          stringResource(R.string.loading_device_info),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
+    if (uiState.isFirstTimeLoading) {
+      LoadingIndicator(
+        stringResource(R.string.loading_device_info),
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+      )
+    } else {
+      PullToRefreshBox(
+        isRefreshing = uiState.isBackgroundRefreshing,
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+      ) {
+        if (uiState.errorMessageRes != null) {
+          // Satisfy the requirement of having a scrollable container.
+          Box(
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center,
+          ) {
+            EmptyStateErrorBanner(
+              stringResource(uiState.errorMessageRes),
+              modifier = Modifier.fillMaxSize(),
+            )
+          }
+        } else {
+          Device(
+            uiState = uiState,
+            onOnOffClick = onOnOffClick,
+            onBrightnessChange = onBrightnessChange,
+            onColorTemperatureChange = onColorTemperatureChange,
+            onDismissMsgDialog = onDismissMsgDialog,
+            modifier = Modifier.fillMaxSize(),
+          )
+        }
       }
-      uiState.errorMessageRes != null -> {
-        EmptyStateErrorBanner(
-          stringResource(uiState.errorMessageRes),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
-      }
-      else ->
-        Device(
-          uiState = uiState,
-          onOnOffClick = onOnOffClick,
-          onBrightnessChange = onBrightnessChange,
-          onColorTemperatureChange = onColorTemperatureChange,
-          onDismissMsgDialog = onDismissMsgDialog,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
     }
   }
 }

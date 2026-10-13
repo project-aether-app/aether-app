@@ -132,7 +132,6 @@ class DeviceSettingsDiagnosticsPreviewTest {
     snapshotDiagnosticsScreen(
       uiState =
         DiagnosticsUiState(
-          isFirstTimeLoading = false,
           generalDiagnostics = testGeneralDiagnostics,
         ),
     )
@@ -143,7 +142,6 @@ class DeviceSettingsDiagnosticsPreviewTest {
     snapshotDiagnosticsScreen(
       uiState =
         DiagnosticsUiState(
-          isFirstTimeLoading = false,
           softwareDiagnostics = testSoftwareDiagnostics,
         ),
     )
@@ -154,7 +152,6 @@ class DeviceSettingsDiagnosticsPreviewTest {
     snapshotDiagnosticsScreen(
       uiState =
         DiagnosticsUiState(
-          isFirstTimeLoading = false,
           ethernetNetworkDiagnostics = testEthernetNetworkDiagnostics,
         ),
     )
@@ -165,7 +162,6 @@ class DeviceSettingsDiagnosticsPreviewTest {
     snapshotDiagnosticsScreen(
       uiState =
         DiagnosticsUiState(
-          isFirstTimeLoading = false,
           wifiNetworkDiagnostics = testWifiNetworkDiagnostics,
         ),
     )
@@ -176,7 +172,6 @@ class DeviceSettingsDiagnosticsPreviewTest {
     snapshotDiagnosticsScreen(
       uiState =
         DiagnosticsUiState(
-          isFirstTimeLoading = false,
           threadNetworkDiagnostics = testThreadNetworkDiagnostics,
         ),
     )
@@ -187,7 +182,6 @@ class DeviceSettingsDiagnosticsPreviewTest {
     snapshotDiagnosticsScreen(
       uiState =
         DiagnosticsUiState(
-          isFirstTimeLoading = false,
           errorMessageRes = R.string.device_diagnostics_load_failed,
         ),
     )

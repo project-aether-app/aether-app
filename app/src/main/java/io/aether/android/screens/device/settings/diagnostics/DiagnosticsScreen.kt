@@ -68,7 +68,10 @@ fun DiagnosticsScreen(
           title = { Text(stringResource(R.string.device_settings_admin_diagnostics)) },
           navigationIcon = {
             IconButton(onClick = onBackClick) {
-              Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+              Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back_button),
+              )
             }
           },
         )

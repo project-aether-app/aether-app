@@ -49,7 +49,7 @@ import timber.log.Timber
 
 data class DeviceSettingsUiState(
   // Lifecycle Flags
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   @field:StringRes val errorMessageRes: Int? = null,
 
@@ -70,7 +70,7 @@ data class DeviceSettingsUiState(
 private data class DeviceSettingsCoreData(
   val device: Device? = null,
   val basicInformation: BasicInformationAttributes? = null,
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   val errorMessageRes: Int? = null,
 )
@@ -93,11 +93,13 @@ constructor(
     refreshTrigger
       .flatMapLatest { nodeId ->
         flow {
+          var isRefreshing = false
           // Use existing state as a local cache: emit stale data immediately so the UI
           // never flashes "Loading" or shows unknown values while refreshing.
           val cached = deviceCoreDataState.value
           if (cached.device != null && cached.device.id == nodeId) {
             emit(cached.copy(isBackgroundRefreshing = true))
+            isRefreshing = true
           } else {
             emit(DeviceSettingsCoreData(isFirstTimeLoading = true))
           }
@@ -129,8 +131,7 @@ constructor(
                     DeviceSettingsCoreData(
                       device = fallbackDevice,
                       basicInformation = cachedBasicInfo,
-                      isFirstTimeLoading = false,
-                      isBackgroundRefreshing = true,
+                      isBackgroundRefreshing = isRefreshing,
                     ),
                   )
                   deviceDeferred.await()
@@ -142,31 +143,16 @@ constructor(
               DeviceSettingsCoreData(
                 device = device,
                 basicInformation = cachedBasicInfo,
-                isFirstTimeLoading = false,
-                isBackgroundRefreshing = true,
+                isBackgroundRefreshing = isRefreshing,
               ),
             )
             // Await network result and update with live basic information.
             val basicInfo = networkDeferred.await()
             if (basicInfo != null) {
               syncBasicInfoToStorage(nodeId, basicInfo)
-              emit(
-                DeviceSettingsCoreData(
-                  device = device,
-                  basicInformation = basicInfo,
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                ),
-              )
+              emit(DeviceSettingsCoreData(device = device, basicInformation = basicInfo))
             } else {
-              emit(
-                DeviceSettingsCoreData(
-                  device = device,
-                  basicInformation = cachedBasicInfo,
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                ),
-              )
+              emit(DeviceSettingsCoreData(device = device, basicInformation = cachedBasicInfo))
             }
           }
         }
@@ -177,8 +163,11 @@ constructor(
         DeviceSettingsCoreData(),
       )
 
-  fun loadDevice(nodeId: NodeId) {
-    refreshTrigger.tryEmit(nodeId)
+  fun loadDevice(nodeId: NodeId, forceRefresh: Boolean = false) {
+    val currentRequest = refreshTrigger.replayCache.firstOrNull()
+    if (forceRefresh || currentRequest != nodeId || deviceCoreDataState.value.device == null) {
+      viewModelScope.launch { refreshTrigger.emit(nodeId) }
+    }
   }
 
   private suspend fun syncBasicInfoToStorage(
@@ -267,7 +256,7 @@ constructor(
       val result =
         setDeviceNameUseCase.execute(nodeId, newName) {
           // Refresh from storage immediately so the UI reflects the new name.
-          loadDevice(nodeId)
+          loadDevice(nodeId, forceRefresh = true)
         }
       if (result is SetDeviceNameResult.LocalError) {
         showMsgDialog(R.string.set_device_name_failed, result.exception.message)
@@ -283,7 +272,7 @@ constructor(
     viewModelScope.launch {
       try {
         devicesRepository.updateDeviceTypes(nodeId, listOf(deviceType))
-        loadDevice(nodeId)
+        loadDevice(nodeId, forceRefresh = true)
       } catch (e: Exception) {
         Timber.e(e, "changeDeviceType failed")
       }

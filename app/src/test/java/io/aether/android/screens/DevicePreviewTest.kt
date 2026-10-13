@@ -55,6 +55,7 @@ class DevicePreviewTest {
         uiState = uiState,
         onBackClick = {},
         onSettingsClick = {},
+        onRefresh = {},
         onOnOffClick = { _: Endpoint, _: Boolean -> },
         onBrightnessChange = { _: Endpoint, _: Int -> },
         onColorTemperatureChange = { _: Endpoint, _: Int -> },
@@ -73,7 +74,6 @@ class DevicePreviewTest {
     snapshotDeviceScreen(
       uiState =
         DeviceUiState(
-          isFirstTimeLoading = false,
           device = testDevice,
         ),
     )
@@ -84,7 +84,6 @@ class DevicePreviewTest {
     snapshotDeviceScreen(
       uiState =
         DeviceUiState(
-          isFirstTimeLoading = false,
           errorMessageRes = R.string.controllers_offline,
         ),
     )

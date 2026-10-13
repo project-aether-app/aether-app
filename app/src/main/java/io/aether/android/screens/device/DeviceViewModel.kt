@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chip.devicecontroller.model.NodeState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.aether.android.PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS
+import io.aether.android.PERIODIC_READ_INTERVAL_DEVICE_SCREEN
 import io.aether.android.STATE_CHANGES_MONITORING_MODE
 import io.aether.android.StateChangesMonitoringMode
 import io.aether.android.chip.ChipClient
@@ -38,7 +38,7 @@ import timber.log.Timber
 
 data class DeviceUiState(
   // Lifecycle Flags
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   @field:StringRes val errorMessageRes: Int? = null,
 
@@ -62,15 +62,19 @@ constructor(
   private val device = _device.asStateFlow()
   private val _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
   private val msgDialogInfo = _msgDialogInfo.asStateFlow()
+  private val _isBackgroundRefreshing = MutableStateFlow(false)
   private var devicePeriodicPingEnabled = true
 
   val uiState: StateFlow<DeviceUiState> =
-    combine(device, devicesRepository.lastUpdatedEndpointState, msgDialogInfo) {
-        currentDevice,
-        lastUpdatedEndpointState,
-        dialog ->
+    combine(
+        device,
+        devicesRepository.lastUpdatedEndpointState,
+        msgDialogInfo,
+        _isBackgroundRefreshing,
+      ) { currentDevice, lastUpdatedEndpointState, dialog, isBackgroundRefreshing ->
         DeviceUiState(
           isFirstTimeLoading = currentDevice == null,
+          isBackgroundRefreshing = isBackgroundRefreshing,
           device = currentDevice,
           lastUpdatedEndpointState = lastUpdatedEndpointState,
           msgDialogInfo = dialog,
@@ -80,14 +84,19 @@ constructor(
 
   private var deviceObserverJob: Job? = null
 
-  fun loadDevice(nodeId: NodeId) {
+  fun loadDevice(nodeId: NodeId, forceRefresh: Boolean = false) {
     deviceObserverJob?.cancel()
     deviceObserverJob = viewModelScope.launch {
       devicesRepository.deviceFlow(nodeId).collect { _device.value = it }
     }
     viewModelScope.launch {
-      _device.value = runCatching { devicesRepository.getDevice(nodeId) }.getOrNull()
-      syncEndpointsFromDevice(nodeId)
+      _isBackgroundRefreshing.value = forceRefresh && _device.value != null
+      try {
+        _device.value = runCatching { devicesRepository.getDevice(nodeId) }.getOrNull()
+        syncEndpointsFromDevice(nodeId)
+      } finally {
+        _isBackgroundRefreshing.value = false
+      }
     }
   }
 
@@ -340,7 +349,7 @@ constructor(
             colorTemperature ?: 0,
           )
         }
-        delay(PERIODIC_READ_INTERVAL_DEVICE_SCREEN_SECONDS * 1000L)
+        delay(PERIODIC_READ_INTERVAL_DEVICE_SCREEN)
       }
     }
   }
