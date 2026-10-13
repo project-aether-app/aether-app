@@ -93,11 +93,11 @@ internal fun DeviceRoute(
     uiState = uiState,
     onBackClick = onBackClick,
     onSettingsClick = { navigateToDeviceSettings(nodeId) },
+    onRefresh = { deviceViewModel.loadDevice(nodeId, forceRefresh = true) },
     onOnOffClick = onOnOffClick,
     onBrightnessChange = onBrightnessChange,
     onColorTemperatureChange = onColorTemperatureChange,
     onDismissMsgDialog = onDismissMsgDialog,
-    onRefresh = { deviceViewModel.loadDevice(nodeId, forceRefresh = true) },
   )
 }
 
@@ -107,11 +107,11 @@ fun DeviceScreen(
   uiState: DeviceUiState,
   onBackClick: () -> Unit,
   onSettingsClick: () -> Unit,
+  onRefresh: () -> Unit,
   onOnOffClick: (endpoint: Endpoint, value: Boolean) -> Unit,
   onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
   onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
   onDismissMsgDialog: () -> Unit,
-  onRefresh: () -> Unit,
 ) {
   Scaffold(
     topBar = {
@@ -136,22 +136,21 @@ fun DeviceScreen(
           }
         },
       )
-    }
+    },
   ) { innerPadding ->
-    when {
-      uiState.isFirstTimeLoading -> {
-        LoadingIndicator(
-          stringResource(R.string.loading_device_info),
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
-      }
-      uiState.errorMessageRes != null -> {
-        PullToRefreshBox(
-          isRefreshing = uiState.isBackgroundRefreshing,
-          onRefresh = onRefresh,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        ) {
+    if (uiState.isFirstTimeLoading) {
+      LoadingIndicator(
+        stringResource(R.string.loading_device_info),
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+      )
+    } else {
+      PullToRefreshBox(
+        isRefreshing = uiState.isBackgroundRefreshing,
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+      ) {
+        if (uiState.errorMessageRes != null) {
+          // Satisfy the requirement of having a scrollable container.
           Box(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.Center,
@@ -161,14 +160,7 @@ fun DeviceScreen(
               modifier = Modifier.fillMaxSize(),
             )
           }
-        }
-      }
-      else ->
-        PullToRefreshBox(
-          isRefreshing = uiState.isBackgroundRefreshing,
-          onRefresh = onRefresh,
-          modifier = Modifier.fillMaxSize().padding(innerPadding),
-        ) {
+        } else {
           Device(
             uiState = uiState,
             onOnOffClick = onOnOffClick,
@@ -178,6 +170,7 @@ fun DeviceScreen(
             modifier = Modifier.fillMaxSize(),
           )
         }
+      }
     }
   }
 }

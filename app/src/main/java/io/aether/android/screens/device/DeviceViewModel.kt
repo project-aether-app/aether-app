@@ -221,7 +221,7 @@ constructor(
       viewModelScope.launch {
         runCatching {
           subscriptionHelper.awaitUnsubscribeToPeriodicUpdates(
-            chipClient.getConnectedDevicePointer(nodeId)
+            chipClient.getConnectedDevicePointer(nodeId),
           )
         }
           .onFailure { Timber.w(it, "Failed to unsubscribe nodeId=$nodeId") }
