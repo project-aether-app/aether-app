@@ -177,7 +177,7 @@ constructor(
         DeviceSettingsCoreData(),
       )
 
-  fun loadDevice(nodeId: NodeId) {
+  fun loadDevice(nodeId: NodeId, forceRefresh: Boolean = false) {
     refreshTrigger.tryEmit(nodeId)
   }
 

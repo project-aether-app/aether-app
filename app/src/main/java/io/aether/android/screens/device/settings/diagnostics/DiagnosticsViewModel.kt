@@ -171,10 +171,9 @@ constructor(private val diagnosticsRepository: DeviceDiagnosticsRepository) : Vi
   fun loadDiagnostics(nodeId: NodeId, forceRefresh: Boolean = false) {
     val currentRequest = refreshTrigger.replayCache.firstOrNull()
     if (
-      !forceRefresh && currentRequest?.nodeId == nodeId && uiState.value.generalDiagnostics != null
+      forceRefresh || currentRequest?.nodeId != nodeId || uiState.value.generalDiagnostics == null
     ) {
-      return
+      viewModelScope.launch { refreshTrigger.emit(RefreshRequest(nodeId)) }
     }
-    viewModelScope.launch { refreshTrigger.emit(RefreshRequest(nodeId)) }
   }
 }
