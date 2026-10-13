@@ -42,6 +42,7 @@ class HomePreviewTest {
           Endpoint(
             id = io.aether.android.matter.EndpointId(1u),
             deviceTypes = listOf(Devices.DimmableLight.ID).map { DeviceType(id = it) },
+            isOn = true,
           ),
         ),
     )
@@ -63,11 +64,22 @@ class HomePreviewTest {
 
   @Test
   fun previewEmpty() {
-    snapshotHomeScreen(uiState = HomeUiState())
+    snapshotHomeScreen(
+      uiState =
+        HomeUiState(
+          showNetworkValidityWarning = true,
+        ),
+    )
   }
 
   @Test
   fun previewDevices() {
-    snapshotHomeScreen(uiState = HomeUiState(devices = listOf(testDevice1, testDevice2)))
+    snapshotHomeScreen(
+      uiState =
+        HomeUiState(
+          showNetworkValidityWarning = true,
+          devices = listOf(testDevice1, testDevice2),
+        ),
+    )
   }
 }
