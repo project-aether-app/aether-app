@@ -50,6 +50,7 @@ data class HomeUiState(
   // Core Screen Data
   val devices: List<Device> = emptyList(),
   val showOfflineDevices: Boolean = true,
+  val showNetworkValidityWarning: Boolean = false,
   val multiadminCommissionDeviceTaskStatus: TaskStatus = TaskStatus.NotStarted,
   val deviceAttestationFailureIgnored: Boolean = true,
 
@@ -89,6 +90,7 @@ constructor(
     combine(
         fabricRepository.devicesFlow,
         userPreferencesRepository.userPreferencesFlow,
+        deviceCommissioner.isNetworkValidFlow,
         combine(
           _msgDialogInfo,
           _showNewDeviceNameAlertDialog,
@@ -97,10 +99,11 @@ constructor(
           Triple(dialog, showNameDialog, showUpdate)
         },
         _multiadminCommissionDeviceTaskStatus,
-      ) { devices, preferences, (dialog, showNameDialog, showUpdate), status ->
+      ) { devices, preferences, isNetworkValid, (dialog, showNameDialog, showUpdate), status ->
         HomeUiState(
           devices = devices.filter { !preferences.hideOfflineDevices || it.isOnline },
           showOfflineDevices = !preferences.hideOfflineDevices,
+          showNetworkValidityWarning = !isNetworkValid,
           multiadminCommissionDeviceTaskStatus = status,
           msgDialogInfo = dialog,
           showNewDeviceNameAlertDialog = showNameDialog,

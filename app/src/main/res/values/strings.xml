@@ -48,6 +48,10 @@ SPDX-License-Identifier: Apache-2.0
     <string name="home_empty_dashboard_title">No devices yet</string>
     <string name="home_empty_dashboard_subtitle">Start by adding your first Matter device</string>
     <string name="home_device_add_button">Add</string>
+    <string name="home_network_validity_warning">
+        You are not connected to the local network or a VPN is active.
+        This may prevent access to your local Matter devices.
+    </string>
     <string name="home_device_add_intent_sender_failed_title">Failed to get the IntentSender</string>
     <string name="home_device_add_commissioning_failed_title">Commissioning the device failed</string>
     <string name="home_device_add_commissioning_failed_message">Result code: %1$d</string>

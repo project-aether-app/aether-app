@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,6 +68,7 @@ import io.aether.android.isOnDisplayString
 import io.aether.android.matter.NodeId
 import io.aether.android.screens.common.MsgAlertDialog
 import io.aether.android.screens.common.OfflineLabel
+import io.aether.android.screens.common.WarningSurfaceBanner
 import io.aether.android.screens.thread.getActivity
 import io.aether.android.spacing
 
@@ -138,7 +140,7 @@ fun HomeScreen(
       )
     }
     if (uiState.devices.isEmpty()) {
-      NoDevices()
+      NoDevicesPlaceholder()
     }
     Scaffold(
       containerColor = Color.Transparent,
@@ -210,6 +212,15 @@ private fun Home(
   }
 
   LazyColumn(modifier = modifier) {
+    if (uiState.showNetworkValidityWarning) {
+      item(key = "networkValidityWarning") {
+        WarningSurfaceBanner(
+          message = stringResource(R.string.home_network_validity_warning),
+          modifier = Modifier.fillMaxWidth(),
+          icon = Icons.Default.Warning,
+        )
+      }
+    }
     this.items(uiState.devices) { device ->
       val onDeviceItemClick: () -> Unit = { onDeviceClick(device) }
       DeviceItem(
@@ -318,7 +329,7 @@ private fun NewDeviceAlertDialog(
 }
 
 @Composable
-private fun NoDevices() {
+private fun NoDevicesPlaceholder() {
   BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
     // Crop-scale fills the entire area on both axes without letterboxing —
     // the image is scaled uniformly to whichever dimension (width or height)

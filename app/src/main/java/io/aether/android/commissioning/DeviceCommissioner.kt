@@ -8,6 +8,7 @@ import android.content.IntentSender
 import io.aether.android.matter.NodeId
 import io.aether.android.matter.ProductId
 import io.aether.android.matter.VendorId
+import kotlinx.coroutines.flow.Flow
 
 data class CommissionedDevice(val nodeId: NodeId, val vendorId: VendorId, val productId: ProductId)
 
@@ -16,6 +17,10 @@ class CommissioningWindowExpiringException(val secondsLeft: Long) :
 
 /** Starts Matter commissioning through an external commissioner (Google Play Services). */
 interface DeviceCommissioner {
+
+  /** Emits the current network validity status. */
+  val isNetworkValidFlow: Flow<Boolean>
+
   /** Returns the sender of the activity driving the commissioning UI. */
   suspend fun createIntentSender(): IntentSender
 
