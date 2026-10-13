@@ -6,6 +6,7 @@ package io.aether.android.screens.device
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,10 +25,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -94,6 +97,7 @@ internal fun DeviceRoute(
     onBrightnessChange = onBrightnessChange,
     onColorTemperatureChange = onColorTemperatureChange,
     onDismissMsgDialog = onDismissMsgDialog,
+    onRefresh = { deviceViewModel.loadDevice(nodeId, forceRefresh = true) },
   )
 }
 
@@ -107,6 +111,7 @@ fun DeviceScreen(
   onBrightnessChange: (endpoint: Endpoint, value: Int) -> Unit,
   onColorTemperatureChange: (endpoint: Endpoint, value: Int) -> Unit,
   onDismissMsgDialog: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
   Scaffold(
     topBar = {
@@ -142,21 +147,37 @@ fun DeviceScreen(
         return@Scaffold
       }
       uiState.errorMessageRes != null -> {
-        EmptyStateErrorBanner(
-          stringResource(uiState.errorMessageRes),
+        PullToRefreshBox(
+          isRefreshing = uiState.isBackgroundRefreshing,
+          onRefresh = onRefresh,
           modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
-        return@Scaffold
+        ) {
+          Box(
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center,
+          ) {
+            EmptyStateErrorBanner(
+              stringResource(uiState.errorMessageRes),
+              modifier = Modifier.fillMaxSize(),
+            )
+          }
+        }
       }
       else ->
-        Device(
-          uiState = uiState,
-          onOnOffClick = onOnOffClick,
-          onBrightnessChange = onBrightnessChange,
-          onColorTemperatureChange = onColorTemperatureChange,
-          onDismissMsgDialog = onDismissMsgDialog,
+        PullToRefreshBox(
+          isRefreshing = uiState.isBackgroundRefreshing,
+          onRefresh = onRefresh,
           modifier = Modifier.fillMaxSize().padding(innerPadding),
-        )
+        ) {
+          Device(
+            uiState = uiState,
+            onOnOffClick = onOnOffClick,
+            onBrightnessChange = onBrightnessChange,
+            onColorTemperatureChange = onColorTemperatureChange,
+            onDismissMsgDialog = onDismissMsgDialog,
+            modifier = Modifier.fillMaxSize(),
+          )
+        }
     }
   }
 }
