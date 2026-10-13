@@ -62,15 +62,23 @@ constructor(
   private val device = _device.asStateFlow()
   private val _msgDialogInfo = MutableStateFlow<DialogInfo?>(null)
   private val msgDialogInfo = _msgDialogInfo.asStateFlow()
+  private val _isBackgroundRefreshing = MutableStateFlow(false)
   private var devicePeriodicPingEnabled = true
 
   val uiState: StateFlow<DeviceUiState> =
-    combine(device, devicesRepository.lastUpdatedEndpointState, msgDialogInfo) {
+    combine(
+      device,
+      devicesRepository.lastUpdatedEndpointState,
+      msgDialogInfo,
+      _isBackgroundRefreshing,
+    ) {
         currentDevice,
         lastUpdatedEndpointState,
-        dialog ->
+        dialog,
+        isBackgroundRefreshing ->
         DeviceUiState(
           isFirstTimeLoading = currentDevice == null,
+          isBackgroundRefreshing = isBackgroundRefreshing,
           device = currentDevice,
           lastUpdatedEndpointState = lastUpdatedEndpointState,
           msgDialogInfo = dialog,
@@ -80,14 +88,19 @@ constructor(
 
   private var deviceObserverJob: Job? = null
 
-  fun loadDevice(nodeId: NodeId) {
+  fun loadDevice(nodeId: NodeId, forceRefresh: Boolean = false) {
     deviceObserverJob?.cancel()
     deviceObserverJob = viewModelScope.launch {
       devicesRepository.deviceFlow(nodeId).collect { _device.value = it }
     }
     viewModelScope.launch {
-      _device.value = runCatching { devicesRepository.getDevice(nodeId) }.getOrNull()
-      syncEndpointsFromDevice(nodeId)
+      _isBackgroundRefreshing.value = forceRefresh && _device.value != null
+      try {
+        _device.value = runCatching { devicesRepository.getDevice(nodeId) }.getOrNull()
+        syncEndpointsFromDevice(nodeId)
+      } finally {
+        _isBackgroundRefreshing.value = false
+      }
     }
   }
 

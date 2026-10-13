@@ -59,6 +59,7 @@ class DevicePreviewTest {
         onBrightnessChange = { _: Endpoint, _: Int -> },
         onColorTemperatureChange = { _: Endpoint, _: Int -> },
         onDismissMsgDialog = {},
+        onRefresh = {},
       )
     }
   }
