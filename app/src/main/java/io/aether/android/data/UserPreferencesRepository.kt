@@ -32,23 +32,9 @@ class UserPreferencesRepository @Inject constructor(@ApplicationContext context:
       }
     }
 
-  suspend fun updateHideOfflineDevices(hide: Boolean) {
-    Timber.d("Updating offline device visibility hide=$hide")
-    userPreferencesDataStore.updateData { prefs ->
-      prefs.toBuilder().setHideOfflineDevices(hide).build()
-    }
-  }
-
   suspend fun shouldShowGpsMatterDiscoveryNotification(): Boolean {
     Timber.d("shouldShowGpsMatterDiscoveryNotification")
     return userPreferencesFlow.first().showHalfsheetNotification
-  }
-
-  suspend fun updateShowGpsMatterDiscoveryNotification(show: Boolean) {
-    Timber.d("Updating GPS discovery notification show=$show")
-    userPreferencesDataStore.updateData { prefs ->
-      prefs.toBuilder().setShowHalfsheetNotification(show).build()
-    }
   }
 
   suspend fun getData(): UserPreferences {

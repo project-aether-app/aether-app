@@ -85,12 +85,6 @@ fun displayPreferences(context: Context) {
   }
 }
 
-/** Returns a com.google.protobuf.Timestamp for the current time. */
-fun getTimestampForNow(): Timestamp {
-  val now = Instant.now()
-  return Timestamp.newBuilder().setSeconds(now.epochSecond).setNanos(now.nano).build()
-}
-
 /**
  * Formats a com.google.protobuf.Timestamp using Android date/time formatters so user 12/24-hour
  * settings are respected.
