@@ -54,6 +54,7 @@ class DeviceSettingsPreviewTest {
       DeviceSettingsScreen(
         uiState = uiState,
         onBackClick = {},
+        onRefresh = {},
         onDismissMsgDialog = {},
         onDeviceNameChange = {},
         onDeviceTypeChange = {},

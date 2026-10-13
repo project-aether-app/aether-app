@@ -195,7 +195,7 @@ fun DeviceSettingsScreen(
           ) {
             EmptyStateErrorBanner(
               stringResource(uiState.errorMessageRes),
-              modifier = Modifier.fillMaxSize().padding(innerPadding),
+              modifier = Modifier.fillMaxSize(),
             )
           }
         } else {
@@ -212,7 +212,7 @@ fun DeviceSettingsScreen(
             onRemoveDeviceClick = onRemoveDeviceClick,
             onRemoveDeviceResult = onRemoveDeviceResult,
             onForceRemoveDeviceResult = onForceRemoveDeviceResult,
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier.fillMaxSize(),
           )
         }
       }
