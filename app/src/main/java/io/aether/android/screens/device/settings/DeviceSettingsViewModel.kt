@@ -49,7 +49,7 @@ import timber.log.Timber
 
 data class DeviceSettingsUiState(
   // Lifecycle Flags
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   @field:StringRes val errorMessageRes: Int? = null,
 
@@ -70,7 +70,7 @@ data class DeviceSettingsUiState(
 private data class DeviceSettingsCoreData(
   val device: Device? = null,
   val basicInformation: BasicInformationAttributes? = null,
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   val errorMessageRes: Int? = null,
 )
@@ -129,8 +129,6 @@ constructor(
                     DeviceSettingsCoreData(
                       device = fallbackDevice,
                       basicInformation = cachedBasicInfo,
-                      isFirstTimeLoading = false,
-                      isBackgroundRefreshing = true,
                     ),
                   )
                   deviceDeferred.await()
@@ -138,35 +136,14 @@ constructor(
               }
             // Emit storage-fresh device with cached basicInfo so e.g. a rename is
             // reflected immediately without waiting for the network round-trip.
-            emit(
-              DeviceSettingsCoreData(
-                device = device,
-                basicInformation = cachedBasicInfo,
-                isFirstTimeLoading = false,
-                isBackgroundRefreshing = true,
-              ),
-            )
+            emit(DeviceSettingsCoreData(device = device, basicInformation = cachedBasicInfo))
             // Await network result and update with live basic information.
             val basicInfo = networkDeferred.await()
             if (basicInfo != null) {
               syncBasicInfoToStorage(nodeId, basicInfo)
-              emit(
-                DeviceSettingsCoreData(
-                  device = device,
-                  basicInformation = basicInfo,
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                ),
-              )
+              emit(DeviceSettingsCoreData(device = device, basicInformation = basicInfo))
             } else {
-              emit(
-                DeviceSettingsCoreData(
-                  device = device,
-                  basicInformation = cachedBasicInfo,
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                ),
-              )
+              emit(DeviceSettingsCoreData(device = device, basicInformation = cachedBasicInfo))
             }
           }
         }

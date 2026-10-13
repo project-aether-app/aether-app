@@ -74,7 +74,6 @@ class DevicePreviewTest {
     snapshotDeviceScreen(
       uiState =
         DeviceUiState(
-          isFirstTimeLoading = false,
           device = testDevice,
         ),
     )
@@ -85,7 +84,6 @@ class DevicePreviewTest {
     snapshotDeviceScreen(
       uiState =
         DeviceUiState(
-          isFirstTimeLoading = false,
           errorMessageRes = R.string.controllers_offline,
         ),
     )

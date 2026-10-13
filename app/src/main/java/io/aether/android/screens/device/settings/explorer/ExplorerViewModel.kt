@@ -72,7 +72,7 @@ data class ExplorerClusterDetails(
 
 data class ExplorerUiState(
   // Lifecycle Flags
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   @field:StringRes val errorMessageRes: Int? = null,
 
@@ -98,7 +98,7 @@ data class ExplorerUiState(
 
 private data class ExplorerCoreData(
   val deviceMatterInfoList: List<DeviceMatterInfo> = emptyList(),
-  val isFirstTimeLoading: Boolean = true,
+  val isFirstTimeLoading: Boolean = false,
   val isBackgroundRefreshing: Boolean = false,
   val errorMessageRes: Int? = null,
 )
@@ -143,22 +143,12 @@ class ExplorerViewModel @Inject constructor(private val clustersHelper: Clusters
             clustersHelper.fetchDeviceMatterInfo(nodeId).sortedBy { it.endpointId }
           }
             .onSuccess { list ->
-              emit(
-                ExplorerCoreData(
-                  deviceMatterInfoList = list,
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                ),
-              )
+              emit(ExplorerCoreData(deviceMatterInfoList = list))
             }
             .onFailure {
-              Timber.e(it, "loadExplorer failed")
+              Timber.e(it, "Loading device matter info for nodeId=$nodeId failed")
               emit(
-                ExplorerCoreData(
-                  isFirstTimeLoading = false,
-                  isBackgroundRefreshing = false,
-                  errorMessageRes = R.string.device_explorer_error_action_failed,
-                ),
+                ExplorerCoreData(errorMessageRes = R.string.device_explorer_error_action_failed),
               )
             }
         }

@@ -80,7 +80,6 @@ class DeviceSettingsPreviewTest {
     snapshotDeviceSettingsScreen(
       uiState =
         DeviceSettingsUiState(
-          isFirstTimeLoading = false,
           device = testDevice,
           basicInformation = testDeviceBasicInformation,
           dateCommissioned = Instant.ofEpochSecond(1680000000L),
@@ -93,7 +92,6 @@ class DeviceSettingsPreviewTest {
     snapshotDeviceSettingsScreen(
       uiState =
         DeviceSettingsUiState(
-          isFirstTimeLoading = false,
           device = testDevice,
           dateCommissioned = Instant.ofEpochSecond(1680000000L),
           showShareDeviceAlertDialog = true,
@@ -106,7 +104,6 @@ class DeviceSettingsPreviewTest {
     snapshotDeviceSettingsScreen(
       uiState =
         DeviceSettingsUiState(
-          isFirstTimeLoading = false,
           device = testDevice,
           dateCommissioned = Instant.ofEpochSecond(1680000000L),
           showRemoveDeviceAlertDialog = true,
@@ -119,7 +116,6 @@ class DeviceSettingsPreviewTest {
     snapshotDeviceSettingsScreen(
       uiState =
         DeviceSettingsUiState(
-          isFirstTimeLoading = false,
           device = testDevice,
           dateCommissioned = Instant.ofEpochSecond(1680000000L),
           showLocalRemoveDeviceAlertDialog = true,
@@ -132,7 +128,6 @@ class DeviceSettingsPreviewTest {
     snapshotDeviceSettingsScreen(
       uiState =
         DeviceSettingsUiState(
-          isFirstTimeLoading = false,
           errorMessageRes = R.string.controllers_offline,
         ),
     )
