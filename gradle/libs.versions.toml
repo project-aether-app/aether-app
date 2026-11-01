@@ -45,7 +45,7 @@ kotlinx-coroutines-play-services = "1.11.0"
 ktfmt-gradle = "0.27.0"
 paparazzi = "2.0.0-alpha05.1"
 timber = "5.0.1"
-version-catalog-update = "1.1.1"
+version-catalog-update = "1.1.2"
 zhanghai-compose-preference = "1.1.1"
 zxing = "4.3.0"
 
